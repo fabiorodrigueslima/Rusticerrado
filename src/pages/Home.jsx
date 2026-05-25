@@ -10,7 +10,7 @@ import Loading from "../components/Loading";
 import logoRusticerrado from "../assets/img/RustiCerrado.oficial.png";
 
 // ✅ IMPORTAR IMAGENS CORRETAMENTE
-import tabuaChurrasco from "../assets/img/Tábua de churrasco.jpeg";
+import tabuaChurrasco from "../assets/img/Tábua de Churrasco.jpeg";
 import abridorMagnetico from "../assets/img/Abridor magnetico.jpeg";
 import portaJoias from "../assets/img/Porta Joias.jpeg";
 import resina from "../assets/img/Resina.png";

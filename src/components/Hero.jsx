@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FaLeaf } from 'react-icons/fa';
 import "../styles/style.css"
-import logoRusticerrado from '../assets/img/Rusticerrado.oficial.png';
+import logoRusticerrado from '../assets/img/RustiCerrado.oficial.png';
 
 export default function Hero() {
     return (

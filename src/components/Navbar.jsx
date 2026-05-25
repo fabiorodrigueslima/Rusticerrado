@@ -4,7 +4,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import UserMenu from './UserMenu';
 import CartIcon from './CartIcon';
 import "../styles/style.css"
-import logoRusticerrado from '../assets/img/Rusticerrado.oficial.png';
+import logoRusticerrado from '../assets/img/RustiCerrado.oficial.png';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -13,7 +13,7 @@ import petisqueiraDeMadeira from "../assets/img/Pestiqueira de madeira.jpeg";
 import portaFaca from "../assets/img/Porta Faca.jpeg";
 import portaJoias from "../assets/img/Porta Joias.jpeg";
 import resina from "../assets/img/Resina.png";
-import tabuaChurrasco from "../assets/img/Tábua de churrasco.jpeg";
+import tabuaChurrasco from "../assets/img/Tábua de Churrasco.jpeg";
 import tabuaDeCorteMachetada from "../assets/img/Tábua de corte machetada.jpeg";
 import tabuaDeServir from "../assets/img/Tábua de Servir.jpeg";
 
