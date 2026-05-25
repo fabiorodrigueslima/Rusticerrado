@@ -1,0 +1,58 @@
+{
+  "depoimentos": [
+    {
+      "id": 1,
+      "nome": "Fernanda Oliveira",
+      "profissao": "Arquiteta",
+      "foto": "/img/depoimentos/fernanda.jpg",
+      "depoimento": "Os produtos da RustiCerrado são incríveis! Uso em meus projetos de decoração e meus clientes sempre perguntam onde consegui. A qualidade é impecável!",
+      "estrelas": 5,
+      "data": "2024-01-20"
+    },
+    {
+      "id": 2,
+      "nome": "Roberto Costa",
+      "profissao": "Empresário",
+      "foto": "/img/depoimentos/roberto.jpg",
+      "depoimento": "Comprei várias peças para meu escritório e todos os visitantes comentam sobre elas. Muito bom mesmo!",
+      "estrelas": 5,
+      "data": "2024-01-18"
+    },
+    {
+      "id": 3,
+      "nome": "Juliana Martins",
+      "profissao": "Influenciadora Digital",
+      "foto": "/img/depoimentos/juliana.jpg",
+      "depoimento": "Adoro os produtos da RustiCerrado! Cada peça é uma obra de arte. Meus seguidores sempre perguntam sobre as peças que aparecem nos meus posts.",
+      "estrelas": 5,
+      "data": "2024-01-15"
+    },
+    {
+      "id": 4,
+      "nome": "Paulo Santos",
+      "profissao": "Designer de Interiores",
+      "foto": "/img/depoimentos/paulo.jpg",
+      "depoimento": "Trabalho com a RustiCerrado há mais de um ano. Confiável, criativo e sempre com produtos de qualidade. Recomendo!",
+      "estrelas": 5,
+      "data": "2024-01-12"
+    },
+    {
+      "id": 5,
+      "nome": "Beatriz Lima",
+      "profissao": "Dona de Casa",
+      "foto": "/img/depoimentos/beatriz.jpg",
+      "depoimento": "Comprei uma tábua de churrasco e virou meu item favorito! Muito bonita e funcional. Já comprei mais presentes!",
+      "estrelas": 5,
+      "data": "2024-01-10"
+    },
+    {
+      "id": 6,
+      "nome": "Gustavo Ferreira",
+      "profissao": "Chef de Cozinha",
+      "foto": "/img/depoimentos/gustavo.jpg",
+      "depoimento": "Uso as tábuas da RustiCerrado no meu restaurante. Além de bonitas, são muito práticas e duráveis. Excelente qualidade!",
+      "estrelas": 5,
+      "data": "2024-01-08"
+    }
+  ]
+}

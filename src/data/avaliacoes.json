@@ -1,0 +1,76 @@
+{
+  "avaliacoes": [
+    {
+      "id": 1,
+      "produtoId": 1,
+      "usuario": "Maria Silva",
+      "email": "maria@email.com",
+      "estrelas": 5,
+      "titulo": "Excelente qualidade!",
+      "comentario": "A tábua chegou perfeita! Muito bem acabada e a resina é linda. Recomendo!",
+      "data": "2024-01-15",
+      "verificado": true,
+      "uteis": 12
+    },
+    {
+      "id": 2,
+      "produtoId": 1,
+      "usuario": "João Santos",
+      "email": "joao@email.com",
+      "estrelas": 4,
+      "titulo": "Muito bom",
+      "comentario": "Produto de qualidade. Chegou rápido. Apenas achei um pouco caro.",
+      "data": "2024-01-10",
+      "verificado": true,
+      "uteis": 8
+    },
+    {
+      "id": 3,
+      "produtoId": 2,
+      "usuario": "Ana Costa",
+      "email": "ana@email.com",
+      "estrelas": 5,
+      "titulo": "Perfeito para minha casa!",
+      "comentario": "Adorei a bandeja! Ficou linda na minha mesa de centro. Muito artesanal e bem feito.",
+      "data": "2024-01-12",
+      "verificado": true,
+      "uteis": 15
+    },
+    {
+      "id": 4,
+      "produtoId": 3,
+      "usuario": "Pedro Oliveira",
+      "email": "pedro@email.com",
+      "estrelas": 4,
+      "titulo": "Bom custo benefício",
+      "comentario": "O vaso é bonito e bem feito. Colocou uma planta dentro e ficou perfeito.",
+      "data": "2024-01-08",
+      "verificado": true,
+      "uteis": 6
+    },
+    {
+      "id": 5,
+      "produtoId": 4,
+      "usuario": "Carla Mendes",
+      "email": "carla@email.com",
+      "estrelas": 5,
+      "titulo": "Luminária incrível!",
+      "comentario": "A luminária é de qualidade premium! O LED é perfeito e cria um ambiente muito aconchegante. Superou minhas expectativas!",
+      "data": "2024-01-05",
+      "verificado": true,
+      "uteis": 22
+    },
+    {
+      "id": 6,
+      "produtoId": 6,
+      "usuario": "Lucas Ferreira",
+      "email": "lucas@email.com",
+      "estrelas": 5,
+      "titulo": "Abridor perfeito!",
+      "comentario": "Que abridor legal! Muito bem feito e o imã é bem forte. Já é meu acessório favorito.",
+      "data": "2024-01-02",
+      "verificado": true,
+      "uteis": 18
+    }
+  ]
+}

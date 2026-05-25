@@ -1,0 +1,94 @@
+{
+  "faq": [
+    {
+      "id": 1,
+      "categoria": "Produtos",
+      "pergunta": "Os produtos são realmente únicos?",
+      "resposta": "Sim! Cada peça é artesanal e única. Embora sigamos um padrão de qualidade, as variações naturais da madeira e resina tornam cada produto especial."
+    },
+    {
+      "id": 2,
+      "categoria": "Produtos",
+      "pergunta": "Qual é a durabilidade dos produtos?",
+      "resposta": "Nossos produtos são feitos para durar muitos anos! A madeira de demolição é resistente e a resina epóxi é muito durável. Com cuidados básicos, suas peças vão durar décadas."
+    },
+    {
+      "id": 3,
+      "categoria": "Produtos",
+      "pergunta": "Como limpar e manter os produtos?",
+      "resposta": "Limpe com pano úmido e sabão neutro. Evite produtos químicos agressivos. Para a resina, use apenas água morna e sabão. Não coloque em máquina de lavar louça."
+    },
+    {
+      "id": 4,
+      "categoria": "Pedidos",
+      "pergunta": "Qual é o prazo de entrega?",
+      "resposta": "Entregamos em todo o Brasil. O prazo varia de 5 a 15 dias úteis dependendo da localização. Você receberá um código de rastreamento."
+    },
+    {
+      "id": 5,
+      "categoria": "Pedidos",
+      "pergunta": "Qual é o valor do frete?",
+      "resposta": "O frete é calculado automaticamente no carrinho de acordo com seu CEP e peso do produto. Oferecemos frete grátis para compras acima de R$ 300."
+    },
+    {
+      "id": 6,
+      "categoria": "Pedidos",
+      "pergunta": "Posso rastrear meu pedido?",
+      "resposta": "Sim! Após o envio, você receberá um email com o código de rastreamento. Pode acompanhar pelo site dos Correios ou por nossa plataforma."
+    },
+    {
+      "id": 7,
+      "categoria": "Pagamento",
+      "pergunta": "Quais são as formas de pagamento?",
+      "resposta": "Aceitamos cartão de crédito (parcelado em até 12x), débito, PIX e boleto bancário. Todas as transações são seguras e criptografadas."
+    },
+    {
+      "id": 8,
+      "categoria": "Pagamento",
+      "pergunta": "Meu pagamento é seguro?",
+      "resposta": "Sim! Usamos o protocolo SSL de criptografia e processadores de pagamento certificados. Seus dados nunca são armazenados em nossos servidores."
+    },
+    {
+      "id": 9,
+      "categoria": "Devolução",
+      "pergunta": "Qual é a política de devolução?",
+      "resposta": "Aceitamos devoluções em até 30 dias. O produto deve estar em perfeito estado e com a embalagem original. O frete de retorno é por conta do cliente."
+    },
+    {
+      "id": 10,
+      "categoria": "Devolução",
+      "pergunta": "E se o produto chegar com defeito?",
+      "resposta": "Se receber um produto com defeito, entre em contato conosco imediatamente. Faremos a troca ou reembolso sem custo adicional."
+    },
+    {
+      "id": 11,
+      "categoria": "Personalização",
+      "pergunta": "Posso personalizar um produto?",
+      "resposta": "Sim! Oferecemos serviço de personalização. Você pode escolher cores, tamanhos e até adicionar gravações. Entre em contato conosco para orçamento."
+    },
+    {
+      "id": 12,
+      "categoria": "Personalização",
+      "pergunta": "Quanto tempo leva para um produto personalizado?",
+      "resposta": "Produtos personalizados levam de 7 a 21 dias úteis dependendo da complexidade. Você será informado do prazo exato após confirmar o pedido."
+    },
+    {
+      "id": 13,
+      "categoria": "Sustentabilidade",
+      "pergunta": "De onde vem a madeira?",
+      "resposta": "Usamos madeira de demolição recuperada de construções antigas. Isso reduz o desperdício e preserva as florestas. É uma escolha sustentável!"
+    },
+    {
+      "id": 14,
+      "categoria": "Sustentabilidade",
+      "pergunta": "A resina é tóxica?",
+      "resposta": "Não! Usamos resina epóxi de qualidade alimentar, atóxica e segura. Pode ser usada em produtos que entram em contato com alimentos."
+    },
+    {
+      "id": 15,
+      "categoria": "Contato",
+      "pergunta": "Como posso entrar em contato?",
+      "resposta": "Você pode nos contatar por email (contato@rusticerrado.com.br), WhatsApp (61) 99999-2341 ou pelo formulário de contato no site."
+    }
+  ]
+}

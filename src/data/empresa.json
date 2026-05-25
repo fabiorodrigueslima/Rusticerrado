@@ -1,0 +1,90 @@
+{
+  "empresa": {
+    "nome": "RustiCerrado",
+    "tagline": "Artesanato que conecta pessoas e histórias",
+    "descricao": "A RustiCerrado é uma empresa de artesanato que transforma madeira de demolição e resina epóxi em peças únicas e funcionais. Cada produto é criado com paixão, cuidado e dedicação.",
+    "missao": "Transformar materiais reutilizados em obras de arte que trazem beleza, funcionalidade e sustentabilidade para os lares das pessoas.",
+    "visao": "Ser referência em artesanato sustentável, criando peças que conectam tradição, inovação e respeito ao meio ambiente.",
+    "valores": [
+      "Sustentabilidade - Reutilizamos materiais para criar um futuro melhor",
+      "Qualidade - Cada peça é feita com excelência e atenção aos detalhes",
+      "Criatividade - Inovamos constantemente para oferecer designs únicos",
+      "Responsabilidade - Comprometidos com o bem-estar das pessoas e do planeta"
+    ],
+    "logo": "/img/logo.png",
+    "logoCompleta": "/img/logo-completa.png",
+    "cores": {
+      "primaria": "#8B3A3A",
+      "secundaria": "#C97C5D",
+      "escura": "#3D2F2F",
+      "clara": "#F4EFE8"
+    },
+    "contato": {
+      "email": "contato@rusticerrado.com.br",
+      "telefone": "(61) 99999-2341",
+      "whatsapp": "5561999952341",
+      "endereco": "Brasília, DF - Brasil",
+      "cep": "70000-000"
+    },
+    "redes_sociais": {
+      "instagram": "https://www.instagram.com/rusticerrado/",
+      "facebook": "https://www.facebook.com/rusticerrado",
+      "pinterest": "https://www.pinterest.com/rusticerrado",
+      "tiktok": "https://www.tiktok.com/@rusticerrado"
+    },
+    "horario_funcionamento": {
+      "segunda": "09:00 - 18:00",
+      "terca": "09:00 - 18:00",
+      "quarta": "09:00 - 18:00",
+      "quinta": "09:00 - 18:00",
+      "sexta": "09:00 - 18:00",
+      "sabado": "10:00 - 14:00",
+      "domingo": "Fechado"
+    },
+    "sobre": {
+      "historia": "A RustiCerrado nasceu de uma paixão por artesanato e sustentabilidade. Tudo começou quando nossos fundadores perceberam a quantidade de madeira sendo desperdiçada. Decidiram transformar esse material em peças de arte que combinam funcionalidade, beleza e responsabilidade ambiental.",
+      "processo": "Cada peça passa por um processo cuidadoso de seleção de materiais, design, execução e acabamento. Utilizamos madeira de demolição recuperada e resina epóxi de alta qualidade para criar produtos duráveis e únicos.",
+      "diferenciais": [
+        "Peças 100% artesanais e únicas",
+        "Materiais sustentáveis e reutilizados",
+        "Qualidade premium em cada detalhe",
+        "Personalização disponível",
+        "Embalagem eco-friendly",
+        "Garantia de satisfação"
+      ]
+    },
+    "equipe": [
+      {
+        "id": 1,
+        "nome": "Ana Silva",
+        "cargo": "Fundadora e Designer",
+        "foto": "/img/equipe/ana.jpg",
+        "bio": "Apaixonada por design e sustentabilidade, Ana lidera a criação de todos os produtos."
+      },
+      {
+        "id": 2,
+        "nome": "Carlos Santos",
+        "cargo": "Mestre Artesão",
+        "foto": "/img/equipe/carlos.jpg",
+        "bio": "Com 15 anos de experiência, Carlos é responsável pela execução impecável de cada peça."
+      },
+      {
+        "id": 3,
+        "nome": "Marina Costa",
+        "cargo": "Especialista em Resina",
+        "foto": "/img/equipe/marina.jpg",
+        "bio": "Marina domina a arte de trabalhar com resina epóxi, criando acabamentos perfeitos."
+      }
+    ],
+    "certificacoes": [
+      "Empresa Sustentável Certificada",
+      "Artesanato Brasileiro Autêntico",
+      "Qualidade ISO 9001"
+    ],
+    "premios": [
+      "Melhor Artesanato 2023 - Brasília",
+      "Produto Sustentável do Ano 2023",
+      "Empresa Inovadora 2024"
+    ]
+  }
+}

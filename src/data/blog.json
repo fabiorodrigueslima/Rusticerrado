@@ -1,0 +1,69 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "titulo": "Como Cuidar de Seus Produtos de Madeira e Resina",
+      "slug": "como-cuidar-produtos-madeira-resina",
+      "autor": "Ana Silva",
+      "data": "2024-01-20",
+      "categoria": "Dicas",
+      "imagem": "/img/blog/cuidados-madeira.jpg",
+      "resumo": "Aprenda as melhores práticas para manter seus produtos de madeira e resina como novos por muitos anos.",
+      "conteudo": "A madeira e a resina são materiais nobres que precisam de cuidados especiais. Neste artigo, vamos compartilhar dicas essenciais para preservar a beleza e durabilidade dos seus produtos RustiCerrado...",
+      "tags": ["madeira", "resina", "cuidados", "limpeza"],
+      "destaque": true
+    },
+    {
+      "id": 2,
+      "titulo": "Sustentabilidade: Por Que Escolher Artesanato Eco-Friendly",
+      "slug": "sustentabilidade-artesanato-eco-friendly",
+      "autor": "Carlos Santos",
+      "data": "2024-01-15",
+      "categoria": "Sustentabilidade",
+      "imagem": "/img/blog/sustentabilidade.jpg",
+      "resumo": "Descubra como o artesanato sustentável pode fazer diferença no planeta e em sua casa.",
+      "conteudo": "Cada peça que você compra da RustiCerrado contribui para um planeta mais sustentável. Usamos madeira de demolição recuperada e resina eco-friendly...",
+      "tags": ["sustentabilidade", "eco-friendly", "meio-ambiente"],
+      "destaque": true
+    },
+    {
+      "id": 3,
+      "titulo": "Tendências de Decoração 2024: Artesanato em Alta",
+      "slug": "tendencias-decoracao-2024",
+      "autor": "Marina Costa",
+      "data": "2024-01-10",
+      "categoria": "Tendências",
+      "imagem": "/img/blog/tendencias-2024.jpg",
+      "resumo": "Conheça as principais tendências de decoração para 2024 e como o artesanato está em destaque.",
+      "conteudo": "2024 é o ano do artesanato! As pessoas estão buscando peças únicas, autênticas e com história. Descubra como incorporar essas tendências em sua casa...",
+      "tags": ["decoração", "tendências", "2024"],
+      "destaque": false
+    },
+    {
+      "id": 4,
+      "titulo": "A História da Madeira de Demolição",
+      "slug": "historia-madeira-demolicao",
+      "autor": "Paulo Santos",
+      "data": "2024-01-05",
+      "categoria": "Educação",
+      "imagem": "/img/blog/madeira-demolicao.jpg",
+      "resumo": "Conheça a história e as características da madeira de demolição que usamos em nossos produtos.",
+      "conteudo": "A madeira de demolição é recuperada de construções antigas, geralmente com 50 a 100 anos de idade. Essa madeira tem características únicas...",
+      "tags": ["madeira", "demolição", "história"],
+      "destaque": false
+    },
+    {
+      "id": 5,
+      "titulo": "DIY: Crie Seu Próprio Suporte para Plantas",
+      "slug": "diy-suporte-plantas",
+      "autor": "Beatriz Lima",
+      "data": "2024-01-01",
+      "categoria": "DIY",
+      "imagem": "/img/blog/diy-plantas.jpg",
+      "resumo": "Tutorial passo a passo para criar um suporte para plantas inspirado nos nossos produtos.",
+      "conteudo": "Neste tutorial, vamos mostrar como criar um lindo suporte para plantas usando materiais simples e técnicas básicas...",
+      "tags": ["DIY", "plantas", "tutorial"],
+      "destaque": false
+    }
+  ]
+}

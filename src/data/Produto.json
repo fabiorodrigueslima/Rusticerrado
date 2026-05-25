@@ -1,0 +1,215 @@
+{
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "Tábua de Churrasco Premium",
+      "descricao": "Tábua de madeira maciça com resina epóxi azul. Perfeita para servir carnes, queijos e frutas. Acabamento artesanal.",
+      "preco": 189.90,
+      "categoria": "tábuas",
+      "imagem": "/img/produtos/tabua-churrasco-1.jpg",
+      "imagens": [
+        "/img/produtos/tabua-churrasco-1.jpg",
+        "/img/produtos/tabua-churrasco-2.jpg",
+        "/img/produtos/tabua-churrasco-3.jpg"
+      ],
+      "avaliacoes": 4.8,
+      "numeroAvaliacoes": 45,
+      "estoque": 12,
+      "dimensoes": "40cm x 25cm x 2cm",
+      "peso": "850g",
+      "material": "Madeira de demolição + Resina Epóxi",
+      "cores": ["Azul", "Verde", "Marrom"],
+      "destaque": true,
+      "novo": false
+    },
+    {
+      "id": 2,
+      "nome": "Bandeja Decorativa Rustica",
+      "descricao": "Bandeja de madeira com resina em tons naturais. Ideal para organizar objetos ou servir bebidas. Peça única.",
+      "preco": 129.90,
+      "categoria": "bandejas",
+      "imagem": "/img/produtos/bandeja-rustica-1.jpg",
+      "imagens": [
+        "/img/produtos/bandeja-rustica-1.jpg",
+        "/img/produtos/bandeja-rustica-2.jpg"
+      ],
+      "avaliacoes": 4.6,
+      "numeroAvaliacoes": 28,
+      "estoque": 8,
+      "dimensoes": "35cm x 20cm x 3cm",
+      "peso": "650g",
+      "material": "Madeira de demolição + Resina Epóxi",
+      "cores": ["Natural", "Bege"],
+      "destaque": false,
+      "novo": true
+    },
+    {
+      "id": 3,
+      "nome": "Vaso Artesanal com Resina",
+      "descricao": "Vaso cilíndrico feito com madeira e resina colorida. Ótimo para plantas ou como peça decorativa.",
+      "preco": 99.90,
+      "categoria": "vasos",
+      "imagem": "/img/produtos/vaso-resina-1.jpg",
+      "imagens": [
+        "/img/produtos/vaso-resina-1.jpg",
+        "/img/produtos/vaso-resina-2.jpg"
+      ],
+      "avaliacoes": 4.5,
+      "numeroAvaliacoes": 32,
+      "estoque": 15,
+      "dimensoes": "15cm x 15cm x 20cm",
+      "peso": "400g",
+      "material": "Madeira + Resina Epóxi",
+      "cores": ["Rosa", "Azul", "Verde"],
+      "destaque": true,
+      "novo": false
+    },
+    {
+      "id": 4,
+      "nome": "Luminária de Madeira e Resina",
+      "descricao": "Luminária artesanal com LED integrado. Cria ambiente aconchegante. Perfeita para sala ou quarto.",
+      "preco": 159.90,
+      "categoria": "luminárias",
+      "imagem": "/img/produtos/luminaria-1.jpg",
+      "imagens": [
+        "/img/produtos/luminaria-1.jpg",
+        "/img/produtos/luminaria-2.jpg",
+        "/img/produtos/luminaria-3.jpg"
+      ],
+      "avaliacoes": 4.9,
+      "numeroAvaliacoes": 52,
+      "estoque": 6,
+      "dimensoes": "12cm x 12cm x 25cm",
+      "peso": "500g",
+      "material": "Madeira + Resina Epóxi + LED",
+      "cores": ["Azul", "Roxo", "Âmbar"],
+      "destaque": true,
+      "novo": true
+    },
+    {
+      "id": 5,
+      "nome": "Caixa Decorativa Quadrada",
+      "descricao": "Caixa de madeira com resina para guardar pequenos objetos. Fechamento com imã. Acabamento impecável.",
+      "preco": 79.90,
+      "categoria": "caixas",
+      "imagem": "/img/produtos/caixa-decorativa-1.jpg",
+      "imagens": [
+        "/img/produtos/caixa-decorativa-1.jpg",
+        "/img/produtos/caixa-decorativa-2.jpg"
+      ],
+      "avaliacoes": 4.4,
+      "numeroAvaliacoes": 18,
+      "estoque": 20,
+      "dimensoes": "20cm x 20cm x 10cm",
+      "peso": "350g",
+      "material": "Madeira + Resina Epóxi",
+      "cores": ["Natural", "Preto", "Cinza"],
+      "destaque": false,
+      "novo": false
+    },
+    {
+      "id": 6,
+      "nome": "Abridor Magnético de Garrafas",
+      "descricao": "Abridor de garrafas com design único em madeira e resina. Imã potente. Presente perfeito.",
+      "preco": 49.90,
+      "categoria": "acessórios",
+      "imagem": "/img/produtos/abridor-1.jpg",
+      "imagens": [
+        "/img/produtos/abridor-1.jpg"
+      ],
+      "avaliacoes": 4.7,
+      "numeroAvaliacoes": 35,
+      "estoque": 30,
+      "dimensoes": "8cm x 3cm x 2cm",
+      "peso": "120g",
+      "material": "Madeira + Resina Epóxi + Imã",
+      "cores": ["Azul", "Vermelho", "Verde"],
+      "destaque": true,
+      "novo": false
+    },
+    {
+      "id": 7,
+      "nome": "Espelho Decorativo Rustico",
+      "descricao": "Espelho com moldura de madeira e detalhes em resina. Traz elegância e rusticidade ao ambiente.",
+      "preco": 199.90,
+      "categoria": "espelhos",
+      "imagem": "/img/produtos/espelho-1.jpg",
+      "imagens": [
+        "/img/produtos/espelho-1.jpg",
+        "/img/produtos/espelho-2.jpg"
+      ],
+      "avaliacoes": 4.8,
+      "numeroAvaliacoes": 22,
+      "estoque": 5,
+      "dimensoes": "50cm x 40cm",
+      "peso": "1200g",
+      "material": "Madeira + Resina Epóxi + Vidro",
+      "cores": ["Natural", "Escuro"],
+      "destaque": true,
+      "novo": true
+    },
+    {
+      "id": 8,
+      "nome": "Suporte para Plantas Suspenso",
+      "descricao": "Suporte de madeira para pendurar plantas. Design moderno com acabamento em resina. Corda de algodão.",
+      "preco": 89.90,
+      "categoria": "suportes",
+      "imagem": "/img/produtos/suporte-plantas-1.jpg",
+      "imagens": [
+        "/img/produtos/suporte-plantas-1.jpg",
+        "/img/produtos/suporte-plantas-2.jpg"
+      ],
+      "avaliacoes": 4.6,
+      "numeroAvaliacoes": 19,
+      "estoque": 11,
+      "dimensoes": "20cm x 20cm",
+      "peso": "250g",
+      "material": "Madeira + Resina Epóxi + Corda",
+      "cores": ["Natural", "Branco"],
+      "destaque": false,
+      "novo": false
+    },
+    {
+      "id": 9,
+      "nome": "Jogo de Copos com Suporte",
+      "descricao": "Conjunto de 4 copos de vidro com suporte de madeira e resina. Perfeito para bebidas quentes ou frias.",
+      "preco": 139.90,
+      "categoria": "copos",
+      "imagem": "/img/produtos/copos-1.jpg",
+      "imagens": [
+        "/img/produtos/copos-1.jpg",
+        "/img/produtos/copos-2.jpg"
+      ],
+      "avaliacoes": 4.7,
+      "numeroAvaliacoes": 41,
+      "estoque": 9,
+      "dimensoes": "25cm x 15cm x 10cm",
+      "peso": "800g",
+      "material": "Vidro + Madeira + Resina Epóxi",
+      "cores": ["Azul", "Transparente"],
+      "destaque": true,
+      "novo": false
+    },
+    {
+      "id": 10,
+      "nome": "Relógio de Parede Artesanal",
+      "descricao": "Relógio de parede com design único em madeira e resina. Mecanismo silencioso. Bateria incluída.",
+      "preco": 169.90,
+      "categoria": "relógios",
+      "imagem": "/img/produtos/relogio-1.jpg",
+      "imagens": [
+        "/img/produtos/relogio-1.jpg",
+        "/img/produtos/relogio-2.jpg"
+      ],
+      "avaliacoes": 4.8,
+      "numeroAvaliacoes": 38,
+      "estoque": 7,
+      "dimensoes": "30cm diâmetro",
+      "peso": "600g",
+      "material": "Madeira + Resina Epóxi + Mecanismo",
+      "cores": ["Natural", "Preto", "Azul"],
+      "destaque": true,
+      "novo": true
+    }
+  ]
+}

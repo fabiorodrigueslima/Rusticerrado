@@ -1,0 +1,94 @@
+{
+  "categorias": [
+    {
+      "id": 1,
+      "nome": "Tábuas",
+      "slug": "tabuas",
+      "descricao": "Tábuas de madeira com resina para servir e decorar",
+      "icone": "🔪",
+      "imagem": "/img/categorias/tabuas.jpg",
+      "produtosCount": 3
+    },
+    {
+      "id": 2,
+      "nome": "Bandejas",
+      "slug": "bandejas",
+      "descricao": "Bandejas decorativas e funcionais",
+      "icone": "🍽️",
+      "imagem": "/img/categorias/bandejas.jpg",
+      "produtosCount": 2
+    },
+    {
+      "id": 3,
+      "nome": "Vasos",
+      "slug": "vasos",
+      "descricao": "Vasos artesanais para plantas e decoração",
+      "icone": "🌿",
+      "imagem": "/img/categorias/vasos.jpg",
+      "produtosCount": 2
+    },
+    {
+      "id": 4,
+      "nome": "Luminárias",
+      "slug": "luminárias",
+      "descricao": "Luminárias com LED integrado",
+      "icone": "💡",
+      "imagem": "/img/categorias/luminárias.jpg",
+      "produtosCount": 1
+    },
+    {
+      "id": 5,
+      "nome": "Caixas",
+      "slug": "caixas",
+      "descricao": "Caixas decorativas para organização",
+      "icone": "📦",
+      "imagem": "/img/categorias/caixas.jpg",
+      "produtosCount": 1
+    },
+    {
+      "id": 6,
+      "nome": "Acessórios",
+      "slug": "acessórios",
+      "descricao": "Acessórios diversos em madeira e resina",
+      "icone": "✨",
+      "imagem": "/img/categorias/acessórios.jpg",
+      "produtosCount": 2
+    },
+    {
+      "id": 7,
+      "nome": "Espelhos",
+      "slug": "espelhos",
+      "descricao": "Espelhos com moldura artesanal",
+      "icone": "🪞",
+      "imagem": "/img/categorias/espelhos.jpg",
+      "produtosCount": 1
+    },
+    {
+      "id": 8,
+      "nome": "Suportes",
+      "slug": "suportes",
+      "descricao": "Suportes para plantas e objetos",
+      "icone": "🌱",
+      "imagem": "/img/categorias/suportes.jpg",
+      "produtosCount": 1
+    },
+    {
+      "id": 9,
+      "nome": "Copos",
+      "slug": "copos",
+      "descricao": "Copos e bebidas com design especial",
+      "icone": "🥤",
+      "imagem": "/img/categorias/copos.jpg",
+      "produtosCount": 1
+    },
+    {
+      "id": 10,
+      "nome": "Relógios",
+      "slug": "relógios",
+      "descricao": "Relógios de parede artesanais",
+      "icone": "🕐",
+      "imagem": "/img/categorias/relógios.jpg",
+      "produtosCount": 1
+    }
+  ]
+}
