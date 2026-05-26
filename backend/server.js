@@ -605,6 +605,10 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ message: "Erro interno do servidor" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
+
+export default app;
