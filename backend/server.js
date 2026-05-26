@@ -10,15 +10,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
-const JWT_SECRET = process.env.JWT_SECRET || "dev-only-change-this-secret";
+const JWT_SECRET = process.env.JWT_SECRET || (IS_PRODUCTION ? null : "dev-only-change-this-secret");
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
   .split(",")
   .map((email) => email.trim().toLowerCase())
   .filter(Boolean);
-
-if (IS_PRODUCTION && !process.env.JWT_SECRET) {
-  throw new Error("JWT_SECRET deve ser definido em producao.");
-}
 
 app.disable("x-powered-by");
 
@@ -106,6 +102,10 @@ function parsePositiveInt(value) {
 }
 
 function signToken(usuario) {
+  if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET nao configurado");
+  }
+
   return jwt.sign(
     {
       id: usuario.id,
@@ -131,6 +131,10 @@ function publicUser(row) {
 }
 
 function authenticate(req, res, next) {
+  if (!JWT_SECRET) {
+    return res.status(503).json({ message: "JWT_SECRET nao configurado no servidor" });
+  }
+
   const authHeader = req.headers.authorization || "";
   const [scheme, token] = authHeader.split(" ");
 
@@ -175,6 +179,18 @@ function requireDatabaseConfig(req, res, next) {
     return res.status(503).json({
       message: "Banco de dados nao configurado no servidor",
       missing,
+    });
+  }
+
+  return next();
+}
+
+function requireAuthConfig(req, res, next) {
+  if (!JWT_SECRET) {
+    console.error("JWT_SECRET nao configurado no servidor");
+    return res.status(503).json({
+      message: "JWT_SECRET nao configurado no servidor",
+      missing: ["JWT_SECRET"],
     });
   }
 
@@ -338,10 +354,10 @@ async function loginUsuario(req, res) {
   }
 }
 
-app.post("/api/usuarios/cadastro", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
-app.post("/api/auth/cadastro", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
-app.post("/api/usuarios/login", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
-app.post("/api/auth/login", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
+app.post("/api/usuarios/cadastro", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
+app.post("/api/auth/cadastro", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
+app.post("/api/usuarios/login", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
+app.post("/api/auth/login", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
 
 app.get("/api/usuarios/me", authenticate, async (req, res) => {
   req.params.id = Number(req.user.id);
