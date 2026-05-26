@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { pool } from "./db.js";
+import { getMissingDatabaseEnv, pool } from "./db.js";
 
 dotenv.config();
 
@@ -167,6 +167,20 @@ function requireAdmin(req, res, next) {
   return next();
 }
 
+function requireDatabaseConfig(req, res, next) {
+  const missing = getMissingDatabaseEnv();
+
+  if (missing.length > 0) {
+    console.error(`Banco de dados nao configurado. Variaveis ausentes: ${missing.join(", ")}`);
+    return res.status(503).json({
+      message: "Banco de dados nao configurado no servidor",
+      missing,
+    });
+  }
+
+  return next();
+}
+
 app.get("/", (req, res) => {
   res.json({ message: "API RustiCerrado funcionando" });
 });
@@ -324,10 +338,10 @@ async function loginUsuario(req, res) {
   }
 }
 
-app.post("/api/usuarios/cadastro", rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
-app.post("/api/auth/cadastro", rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
-app.post("/api/usuarios/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
-app.post("/api/auth/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
+app.post("/api/usuarios/cadastro", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
+app.post("/api/auth/cadastro", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
+app.post("/api/usuarios/login", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
+app.post("/api/auth/login", requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
 
 app.get("/api/usuarios/me", authenticate, async (req, res) => {
   req.params.id = Number(req.user.id);

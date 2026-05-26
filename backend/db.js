@@ -17,7 +17,18 @@ export const pool = new Pool({
       : undefined,
 });
 
-pool
-  .connect()
-  .then(() => console.log("✅ Conectado ao PostgreSQL"))
-  .catch((err) => console.error("❌ Erro ao conectar no banco:", err));
+export function getMissingDatabaseEnv() {
+  return ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"].filter(
+    (key) => !process.env[key],
+  );
+}
+
+if (!process.env.VERCEL) {
+  pool
+    .connect()
+    .then((client) => {
+      client.release();
+      console.log("Conectado ao PostgreSQL");
+    })
+    .catch((err) => console.error("Erro ao conectar no banco:", err.message));
+}
