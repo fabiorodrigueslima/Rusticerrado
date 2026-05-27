@@ -488,7 +488,7 @@ app.post("/api/pedidos", authenticate, async (req, res) => {
 
   try {
     const itens = Array.isArray(req.body.itens) ? req.body.itens : [];
-    const enderecoId = req.body.endereco_id ? parsePositiveInt(req.body.endereco_id) : null;
+    let enderecoId = req.body.endereco_id ? parsePositiveInt(req.body.endereco_id) : null;
     const frete = Number(req.body.frete || 0);
 
     if (itens.length === 0 || itens.length > 50 || !Number.isFinite(frete) || frete < 0) {
@@ -496,6 +496,48 @@ app.post("/api/pedidos", authenticate, async (req, res) => {
     }
 
     await client.query("BEGIN");
+
+    if (!enderecoId && req.body.entrega) {
+      const entrega = req.body.entrega;
+      const endereco = optionalString(entrega.endereco, 255);
+      const numero = optionalString(entrega.numero, 30);
+      const complemento = optionalString(entrega.complemento, 120);
+      const bairro = optionalString(entrega.bairro, 120);
+      const cidade = optionalString(entrega.cidade, 120);
+      const estado = optionalString(entrega.estado, 2);
+      const cep = optionalString(entrega.cep, 20);
+
+      if (!endereco || !numero || !bairro || !cidade || !estado || !cep) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ message: "Endereco de entrega incompleto" });
+      }
+
+      const enderecoExistente = await client.query(
+        "SELECT id FROM enderecos WHERE usuario_id = $1 LIMIT 1",
+        [req.user.id],
+      );
+
+      if (enderecoExistente.rows.length > 0) {
+        const result = await client.query(
+          `UPDATE enderecos
+           SET endereco = $1, numero = $2, complemento = $3, bairro = $4,
+               cidade = $5, estado = $6, cep = $7, atualizado_em = NOW()
+           WHERE id = $8 AND usuario_id = $9
+           RETURNING id`,
+          [endereco, numero, complemento, bairro, cidade, estado, cep, enderecoExistente.rows[0].id, req.user.id],
+        );
+        enderecoId = result.rows[0].id;
+      } else {
+        const result = await client.query(
+          `INSERT INTO enderecos
+           (usuario_id, endereco, numero, complemento, bairro, cidade, estado, cep)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+           RETURNING id`,
+          [req.user.id, endereco, numero, complemento, bairro, cidade, estado, cep],
+        );
+        enderecoId = result.rows[0].id;
+      }
+    }
 
     const pedidoItens = [];
     let subtotal = 0;
@@ -510,7 +552,7 @@ app.post("/api/pedidos", authenticate, async (req, res) => {
       }
 
       const produto = await client.query(
-        "SELECT id, preco, estoque FROM produtos WHERE id = $1 AND ativo = true",
+        "SELECT id, preco, estoque FROM produtos WHERE id = $1 AND ativo = true FOR UPDATE",
         [produtoId],
       );
 
@@ -539,6 +581,11 @@ app.post("/api/pedidos", authenticate, async (req, res) => {
         `INSERT INTO itens_pedido (pedido_id, produto_id, quantidade, preco)
          VALUES ($1, $2, $3, $4)`,
         [pedidoId, item.produtoId, item.quantidade, item.preco],
+      );
+
+      await client.query(
+        "UPDATE produtos SET estoque = estoque - $1, atualizado_em = NOW() WHERE id = $2",
+        [item.quantidade, item.produtoId],
       );
     }
 

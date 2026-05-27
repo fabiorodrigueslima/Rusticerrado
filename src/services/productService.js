@@ -4,7 +4,9 @@
  */
 
 import { api } from './api';
-import { produtos as produtosLocais } from '../data/produtos.json';
+import produtosData from '../data/Produto.json';
+
+const produtosLocais = produtosData.produtos || [];
 
 const productService = {
   /**
@@ -27,7 +29,8 @@ const productService = {
       const queryString = params.toString();
       const endpoint = queryString ? `/produtos?${queryString}` : '/produtos';
 
-      return await api.get(endpoint);
+      const response = await api.get(endpoint);
+      return Array.isArray(response) ? { produtos: response } : response;
     } catch (error) {
       console.warn('Erro ao buscar produtos da API, usando dados locais');
       return { produtos: produtosLocais };
@@ -41,7 +44,8 @@ const productService = {
    */
   obterProduto: async (id) => {
     try {
-      return await api.get(`/produtos/${id}`);
+      const response = await api.get(`/produtos/${id}`);
+      return response.produto || response;
     } catch (error) {
       // Fallback para dados locais
       const produto = produtosLocais.find(p => p.id === parseInt(id));

@@ -10,7 +10,7 @@ import "../styles/style.css";
 
 export default function Checkout() {
     const navigate = useNavigate();
-    const { carrinho } = useContext(CartContext);
+    const { carrinho, limparCarrinho } = useContext(CartContext);
 
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState(null);
@@ -116,14 +116,19 @@ export default function Checkout() {
                 total,
             };
 
-            const data = await api.post("/pagamento/mercado-pago", pedido);
+            const data = await api.post("/pedidos", pedido);
 
-            window.location.href = data.init_point;
+            limparCarrinho();
+            navigate("/sucesso", {
+                state: {
+                    pedido: data.pedido,
+                },
+            });
         } catch (error) {
             console.error("Erro no pagamento:", error);
             setAlert({
                 type: "error",
-                message: "Pagamento ainda não conectado ao backend.",
+                message: error.message || "Não foi possível finalizar o pedido.",
             });
         } finally {
             setLoading(false);

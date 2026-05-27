@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
 import { FaCheckCircle, FaBox, FaEnvelope } from 'react-icons/fa';
 import "../styles/style.css"
 
 export default function Sucesso() {
-    const pedidoNumero = useMemo(() => Math.floor(Math.random() * 1000000), []);
+    const location = useLocation();
+    const pedido = location.state?.pedido;
+    const numeroFallback = useMemo(() => Math.floor(Math.random() * 1000000), []);
+    const pedidoNumero = pedido?.id || numeroFallback;
     const dataAtual = useMemo(() => new Date().toLocaleDateString('pt-BR'), []);
 
     return (
@@ -35,7 +38,9 @@ export default function Sucesso() {
                             </div>
                             <div className="info-item">
                                 <span className="info-label">Status:</span>
-                                <span className="info-valor status-processando">Processando</span>
+                                <span className="info-valor status-processando">
+                                    {pedido?.status || "Processando"}
+                                </span>
                             </div>
                         </div>
 

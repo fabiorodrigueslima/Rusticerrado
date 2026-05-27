@@ -1,42 +1,32 @@
-import { useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { FaBox, FaTruck, FaCheckCircle } from 'react-icons/fa';
+import api from '../services/api';
 import "../styles/style.css"
 
 export default function Pedidos() {
     const { user } = useContext(AuthContext);
     const [filtro, setFiltro] = useState('todos');
+    const [pedidos, setPedidos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [erro, setErro] = useState("");
 
-    const pedidos = [
-        {
-            id: 1,
-            numero: '#123456',
-            data: '10 de Janeiro de 2024',
-            status: 'entregue',
-            total: 450.00,
-            itens: 2,
-            rastreamento: 'BR123456789BR'
-        },
-        {
-            id: 2,
-            numero: '#123455',
-            data: '08 de Janeiro de 2024',
-            status: 'processando',
-            total: 280.00,
-            itens: 1,
-            rastreamento: null
-        },
-        {
-            id: 3,
-            numero: '#123454',
-            data: '05 de Janeiro de 2024',
-            status: 'enviado',
-            total: 165.00,
-            itens: 1,
-            rastreamento: 'BR987654321BR'
+    useEffect(() => {
+        async function carregarPedidos() {
+            try {
+                const data = await api.get("/compras/minhas");
+                setPedidos(data);
+            } catch (error) {
+                console.error("Erro ao buscar pedidos:", error);
+                setErro("Não foi possível carregar seus pedidos.");
+            } finally {
+                setLoading(false);
+            }
         }
-    ];
+
+        carregarPedidos();
+    }, []);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -52,6 +42,7 @@ export default function Pedidos() {
             case 'enviado':
                 return <FaTruck />;
             case 'processando':
+            case 'pendente':
                 return <FaBox />;
             default:
                 return <FaBox />;
@@ -62,14 +53,20 @@ export default function Pedidos() {
         const labels = {
             'entregue': 'Entregue',
             'enviado': 'Enviado',
-            'processando': 'Processando'
+            'preparando': 'Preparando',
+            'processando': 'Processando',
+            'pendente': 'Pendente',
+            'pago': 'Pago',
+            'cancelado': 'Cancelado'
         };
         return labels[status] || status;
     };
 
     const pedidosFiltrados = filtro === 'todos'
         ? pedidos
-        : pedidos.filter(p => p.status === filtro);
+        : filtro === 'processando'
+            ? pedidos.filter(p => ['pendente', 'processando', 'preparando'].includes(p.status))
+            : pedidos.filter(p => p.status === filtro);
 
     if (!user) {
         return (
@@ -77,6 +74,10 @@ export default function Pedidos() {
                 <div>Carregando...</div>
             </ProtectedRoute>
         );
+    }
+
+    if (loading) {
+        return <p className="compras-loading">Carregando pedidos...</p>;
     }
 
     return (
@@ -104,7 +105,7 @@ export default function Pedidos() {
                             className={`filtro-btn ${filtro === 'processando' ? 'active' : ''}`}
                             onClick={() => setFiltro('processando')}
                         >
-                            Processando ({pedidos.filter(p => p.status === 'processando').length})
+                            Processando ({pedidos.filter(p => ['pendente', 'processando', 'preparando'].includes(p.status)).length})
                         </button>
                         <button
                             className={`filtro-btn ${filtro === 'enviado' ? 'active' : ''}`}
@@ -122,25 +123,31 @@ export default function Pedidos() {
 
                     {/* LISTA DE PEDIDOS */}
                     <div className="pedidos-list">
-                        {pedidosFiltrados.length > 0 ? (
+                        {erro ? (
+                            <div className="no-pedidos">
+                                <p>{erro}</p>
+                            </div>
+                        ) : pedidosFiltrados.length > 0 ? (
                             pedidosFiltrados.map(pedido => (
                                 <div key={pedido.id} className="pedido-card-expanded">
                                     <div className="pedido-header-expanded">
                                         <div className="pedido-numero-status">
-                                            <h3>{pedido.numero}</h3>
+                                            <h3>#{pedido.id}</h3>
                                             <span className={`pedido-status status-${pedido.status}`}>
                                                 {getStatusIcon(pedido.status)}
                                                 {getStatusLabel(pedido.status)}
                                             </span>
                                         </div>
                                         <div className="pedido-data-total">
-                                            <p className="pedido-data">{pedido.data}</p>
+                                            <p className="pedido-data">
+                                                {new Date(pedido.criado_em).toLocaleDateString('pt-BR')}
+                                            </p>
                                             <p className="pedido-total">{formatPrice(pedido.total)}</p>
                                         </div>
                                     </div>
 
                                     <div className="pedido-timeline">
-                                        <div className={`timeline-item ${pedido.status === 'processando' || pedido.status === 'enviado' || pedido.status === 'entregue' ? 'completed' : ''}`}>
+                                        <div className={`timeline-item ${['pendente', 'processando', 'preparando', 'enviado', 'entregue'].includes(pedido.status) ? 'completed' : ''}`}>
                                             <div className="timeline-dot"></div>
                                             <div className="timeline-label">
                                                 <strong>Pedido Confirmado</strong>
@@ -148,7 +155,7 @@ export default function Pedidos() {
                                             </div>
                                         </div>
 
-                                        <div className={`timeline-item ${pedido.status === 'enviado' || pedido.status === 'entregue' ? 'completed' : ''}`}>
+                                        <div className={`timeline-item ${['preparando', 'enviado', 'entregue'].includes(pedido.status) ? 'completed' : ''}`}>
                                             <div className="timeline-dot"></div>
                                             <div className="timeline-label">
                                                 <strong>Preparação</strong>
@@ -179,7 +186,7 @@ export default function Pedidos() {
                                     </div>
 
                                     <div className="pedido-footer">
-                                        <p><strong>{pedido.itens}</strong> item(ns) neste pedido</p>
+                                        <p>Frete: <strong>{formatPrice(pedido.frete || 0)}</strong></p>
                                         <div className="pedido-acoes">
                                             <button className="btn btn-outline btn-small">
                                                 Ver Detalhes
