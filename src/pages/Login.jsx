@@ -111,10 +111,10 @@ export default function Login() {
             setTimeout(() => {
                 navigate('/perfil');
             }, 1000);
-        } catch {
+        } catch (error) {
             setAlert({
                 type: 'error',
-                message: 'Email ou senha incorretos. Tente novamente.'
+                message: error.message || 'Email ou senha incorretos. Tente novamente.'
             });
         } finally {
             setLoading(false);

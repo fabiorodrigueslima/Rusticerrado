@@ -1,6 +1,7 @@
+import { getMissingDatabaseEnv } from "../backend/db.js";
+
 export default function handler(req, res) {
-  const requiredDatabaseVars = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
-  const missingDatabase = requiredDatabaseVars.filter((key) => !process.env[key]);
+  const missingDatabase = getMissingDatabaseEnv();
 
   res.status(200).json({
     ok: true,

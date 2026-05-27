@@ -96,10 +96,10 @@ export default function Cadastro() {
                 navigate('/minha-conta');
             }, 1000);
 
-        } catch {
+        } catch (error) {
             setAlert({
                 type: 'error',
-                message: 'Erro ao cadastrar'
+                message: error.message || 'Erro ao cadastrar'
             });
         } finally {
             setLoading(false);

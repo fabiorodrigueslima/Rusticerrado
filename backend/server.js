@@ -171,7 +171,7 @@ function requireAdmin(req, res, next) {
   return next();
 }
 
-function requireDatabaseConfig(req, res, next) {
+async function requireDatabaseReady(req, res, next) {
   const missing = getMissingDatabaseEnv();
 
   if (missing.length > 0) {
@@ -182,7 +182,29 @@ function requireDatabaseConfig(req, res, next) {
     });
   }
 
-  return next();
+  try {
+    await pool.query("SELECT 1");
+
+    const tables = await pool.query(
+      "SELECT to_regclass('public.usuarios') AS usuarios",
+    );
+
+    if (!tables.rows[0]?.usuarios) {
+      console.error("Tabela usuarios nao encontrada no banco de dados");
+      return res.status(503).json({
+        message: "Banco de dados sem a tabela de usuarios. Execute a inicializacao do banco.",
+        missingTables: ["usuarios"],
+      });
+    }
+
+    return next();
+  } catch (error) {
+    console.error("Banco de dados indisponivel:", error.message);
+    return res.status(503).json({
+      message: "Banco de dados indisponivel no servidor",
+      code: error.code || null,
+    });
+  }
 }
 
 function requireAuthConfig(req, res, next) {
@@ -354,10 +376,10 @@ async function loginUsuario(req, res) {
   }
 }
 
-app.post("/api/usuarios/cadastro", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
-app.post("/api/auth/cadastro", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
-app.post("/api/usuarios/login", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
-app.post("/api/auth/login", requireAuthConfig, requireDatabaseConfig, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
+app.post("/api/usuarios/cadastro", requireAuthConfig, requireDatabaseReady, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
+app.post("/api/auth/cadastro", requireAuthConfig, requireDatabaseReady, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), cadastrarUsuario);
+app.post("/api/usuarios/login", requireAuthConfig, requireDatabaseReady, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
+app.post("/api/auth/login", requireAuthConfig, requireDatabaseReady, rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), loginUsuario);
 
 app.get("/api/usuarios/me", authenticate, async (req, res) => {
   req.params.id = Number(req.user.id);
