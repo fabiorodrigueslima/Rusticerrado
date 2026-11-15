@@ -1,5 +1,6 @@
 import pg from "pg";
 import { env } from "./env.js";
+import { databaseSsl } from "./databaseSsl.js";
 
 const { Pool } = pg;
 
@@ -11,7 +12,7 @@ const pool = env.DATABASE_URL
       connectionTimeoutMillis: env.DB_CONNECTION_TIMEOUT_MS,
       application_name: "rusticerrado-api",
 
-      ssl: env.DB_SSL ? { rejectUnauthorized: true } : false,
+      ssl: databaseSsl(env),
     })
   : null;
 

@@ -21,6 +21,8 @@ const schema = z
     TRUST_PROXY: z.coerce.number().int().min(0).max(2).default(process.env.VERCEL ? 1 : 0),
     DATABASE_URL: z.string().min(1).optional(),
     DB_SSL: booleanString,
+    DB_SSL_CA: z.string().optional(),
+    DB_SSL_CA_FILE: z.string().optional(),
     DB_POOL_MAX: z.coerce.number().int().min(1).max(30).default(3),
     DB_IDLE_TIMEOUT_MS: z.coerce
       .number()

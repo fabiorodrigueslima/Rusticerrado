@@ -1,5 +1,6 @@
 import { resolve } from 'node:path'
 import pg from 'pg'
+import { databaseSsl } from '../config/databaseSsl.js'
 import { assertDevelopmentSeedTarget, resolveAdminConnection } from '../database/adminConnection.js'
 import { runSqlFile } from '../database/sqlFileRunner.js'
 
@@ -11,7 +12,7 @@ assertDevelopmentSeedTarget(adminUrl)
 const client = new Client({
   connectionString: adminUrl.toString(),
   application_name: 'rusticerrado-development-seed',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : false,
+  ssl: databaseSsl(),
 })
 
 await client.connect()

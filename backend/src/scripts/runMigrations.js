@@ -1,5 +1,6 @@
 import { resolve } from 'node:path'
 import pg from 'pg'
+import { databaseSsl } from '../config/databaseSsl.js'
 import { resolveAdminConnection } from '../database/adminConnection.js'
 import { runMigrations } from '../database/migrationRunner.js'
 
@@ -9,7 +10,7 @@ const { adminUrl } = resolveAdminConnection()
 const client = new Client({
   connectionString: adminUrl.toString(),
   application_name: 'rusticerrado-migrations',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : false,
+  ssl: databaseSsl(),
 })
 
 await client.connect()
