@@ -4,6 +4,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Alert from '../components/Alert';
 import "../styles/style.css"
+import { whatsappLink } from "../config/contact.js";
 
 export default function Personalizados() {
     const [formData, setFormData] = useState({
@@ -319,7 +320,7 @@ export default function Personalizados() {
                         <h2>Dúvidas sobre Personalização?</h2>
                         <p>Entre em contato conosco via WhatsApp para conversar com nossa equipe.</p>
                         <a
-                            href="https://wa.me/5561999952341"
+                            href={whatsappLink("Olá! Quero fazer um orçamento de uma peça personalizada.")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-primary"

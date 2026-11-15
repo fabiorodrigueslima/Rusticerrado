@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaWhatsapp, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaWhatsapp, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import "../styles/style.css"
 import logoRusticerrado from '../assets/img/RustiCerrado.oficial.png';
+import { contact, formatPhone, whatsappLink } from '../config/contact.js';
 
 
 export default function Footer() {
@@ -22,7 +23,7 @@ export default function Footer() {
                     </p>
                     <div className="social-links">
                         <a
-                            href="https://www.instagram.com/rusticerrado/"
+                            href={contact.instagram}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Instagram"
@@ -30,7 +31,15 @@ export default function Footer() {
                             <FaInstagram />
                         </a>
                         <a
-                            href="https://wa.me/5561999952341"
+                            href={contact.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook"
+                        >
+                            <FaFacebookF />
+                        </a>
+                        <a
+                            href={whatsappLink()}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="WhatsApp"
@@ -58,7 +67,7 @@ export default function Footer() {
                 <div className="footer-col">
                     <h4>Contato</h4>
                     <p>
-                        <FaPhone /> (61) 99995-2341
+                        <FaPhone /> {formatPhone()}
                     </p>
                     <p>
                         <FaEnvelope /> contato@rusticerrado.com.br

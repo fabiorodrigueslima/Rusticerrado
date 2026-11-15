@@ -5,6 +5,7 @@ import UserMenu from './UserMenu';
 import CartIcon from './CartIcon';
 import "../styles/style.css"
 import logoRusticerrado from '../assets/img/RustiCerrado.oficial.png';
+import { whatsappLink } from "../config/contact.js";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -62,7 +63,7 @@ export default function Navbar() {
 
                     {/* WHATSAPP */}
                     <a
-                        href="https://wa.me/5561999952341"
+                        href={whatsappLink()}
                         className="header-whatsapp"
                         target="_blank"
                         rel="noopener noreferrer"

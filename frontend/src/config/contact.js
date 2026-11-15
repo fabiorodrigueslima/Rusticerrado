@@ -1,11 +1,26 @@
 // Dados oficiais da loja. Preencha somente com dados confirmados pela RustiCerrado.
 
-// Canais de atendimento.
+// Canais de atendimento. É o ÚNICO lugar com o WhatsApp e as redes: o site inteiro lê daqui
+// (cabeçalho, rodapé, botão verde, Contato, Loja, peça, Personalizados, páginas legais).
 export const contact = {
   // Somente números, com DDI e DDD. Ex.: '5561999999999'
   whatsapp: '5561999952341',
+  instagram: 'https://www.instagram.com/rusticerrado/',
+  facebook: 'https://www.facebook.com/rusticerrado',
   // E-mail de atendimento (aparece nas páginas de Privacidade, Termos e Trocas).
+  // Preencher quando o e-mail da loja estiver funcionando.
   email: '',
+}
+
+// "5561999952341" -> "(61) 99995-2341"
+export function formatPhone(digits = contact.whatsapp) {
+  const match = String(digits).match(/^55(\d{2})(\d{4,5})(\d{4})$/)
+  return match ? `(${match[1]}) ${match[2]}-${match[3]}` : `+${digits}`
+}
+
+// Link para conversar no WhatsApp da loja, já com a mensagem escrita (opcional).
+export function whatsappLink(text, digits = contact.whatsapp) {
+  return `https://wa.me/${digits}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 }
 
 // Identificação de quem vende, exigida para lojas online (Decreto 7.962/2013).

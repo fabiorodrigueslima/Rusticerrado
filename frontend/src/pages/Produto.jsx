@@ -8,8 +8,8 @@ import Alert from "../components/Alert";
 import { IMAGEM_PADRAO, formatarPreco, itemDoCarrinho, obterProduto } from "../services/catalogo";
 
 import "../styles/style.css";
+import { whatsappLink } from "../config/contact.js";
 
-const WHATSAPP = "5561999952341";
 
 // Página de uma peça, com os dados que a dona cadastrou no painel.
 export default function Produto() {
@@ -63,7 +63,7 @@ export default function Produto() {
     const disponivel = variante?.disponivel ?? 0;
     const foto = produto.imagens[fotoAtual] ?? produto.imagens[0];
     const link = `${window.location.origin}/produto/${produto.slug}`;
-    const textoWhats = encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome}${variante && produto.variantes.length > 1 ? ` (${variante.nome})` : ""} — ${link}`);
+    const textoWhats = (`Olá! Tenho interesse no produto: ${produto.nome}${variante && produto.variantes.length > 1 ? ` (${variante.nome})` : ""} — ${link}`);
 
     const escolherVariante = (event) => {
         setVarianteId(Number(event.target.value));
@@ -183,7 +183,7 @@ export default function Produto() {
                                 </button>
                             )}
                             <a
-                                href={`https://wa.me/${WHATSAPP}?text=${textoWhats}`}
+                                href={whatsappLink(textoWhats)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={`btn ${vendeOnline ? "btn-secondary" : "btn-primary"} btn-full`}

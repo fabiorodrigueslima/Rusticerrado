@@ -12,6 +12,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import Alert from "../components/Alert";
 import "../styles/style.css";
+import { contact, formatPhone, whatsappLink } from "../config/contact.js";
 
 export default function Contato() {
     const [formData, setFormData] = useState({
@@ -122,11 +123,11 @@ export default function Contato() {
                             <div>
                                 <h3>WhatsApp</h3>
                                 <a
-                                    href="https://wa.me/5561999952341"
+                                    href={whatsappLink()}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    (61) 99995-2341
+                                    {formatPhone()}
                                 </a>
                                 <p>Resposta rápida</p>
                             </div>
@@ -138,7 +139,7 @@ export default function Contato() {
                             </div>
                             <div>
                                 <h3>Telefone</h3>
-                                <p>(61) 99995-2341</p>
+                                <p>{formatPhone()}</p>
                                 <small>Segunda a sexta, 9h às 18h</small>
                             </div>
                         </div>
@@ -170,7 +171,7 @@ export default function Contato() {
 
                             <div className="contato-social-links">
                                 <a
-                                    href="https://www.instagram.com/rusticerrado/"
+                                    href={contact.instagram}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -178,7 +179,7 @@ export default function Contato() {
                                 </a>
 
                                 <a
-                                    href="https://www.facebook.com/rusticerrado"
+                                    href={contact.facebook}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >

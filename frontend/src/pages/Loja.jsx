@@ -10,6 +10,7 @@ import { useOnlineSales } from "../context/storefrontContext";
 import { formatarPreco, itemParaCarrinho, listarProdutos } from "../services/catalogo";
 
 import "../styles/style.css";
+import { whatsappLink } from "../config/contact.js";
 
 export default function Loja() {
     const navigate = useNavigate();
@@ -152,7 +153,7 @@ export default function Loja() {
                                             </span>
 
                                             <a
-                                                href={`https://wa.me/5561999952341?text=${encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome}`)}`}
+                                                href={whatsappLink(`Olá! Tenho interesse no produto: ${produto.nome}`)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="btn-whats"
@@ -184,7 +185,7 @@ export default function Loja() {
                                         <div className="loja-card-actions">
                                             <a
                                                 className="btn btn-primary"
-                                                href={`https://wa.me/5561999952341?text=${encodeURIComponent(`Olá! Quero encomendar: ${produto.nome}`)}`}
+                                                href={whatsappLink(`Olá! Quero encomendar: ${produto.nome}`)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >

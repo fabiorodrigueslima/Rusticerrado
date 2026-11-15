@@ -189,7 +189,7 @@ export const LINKS = {
 // ========== CONTATO ==========
 export const CONTATO = {
   EMAIL: 'contato@rusticerrado.com.br',
-  TELEFONE: '(61) 99999-2341',
+  TELEFONE: '(61) 99995-2341',
   WHATSAPP: '5561999952341',
   ENDERECO: 'Brasília, DF - Brasil'
 };

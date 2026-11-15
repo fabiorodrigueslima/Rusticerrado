@@ -1,13 +1,13 @@
 import { FaWhatsapp } from "react-icons/fa";
+import { whatsappLink } from "../config/contact.js";
 import"../styles/style.css"
 
 export default function WhatsAppButton() {
-    const numero = "5561984882881"; // seu número
     const mensagem = "Olá! Vim pelo site e quero mais informações.";
 
     return (
         <a
-            href={`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`}
+            href={whatsappLink(mensagem)}
             className="whatsapp-float"
             target="_blank"
             rel="noopener noreferrer"

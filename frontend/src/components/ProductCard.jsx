@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
 import { formatarPreco } from '../services/catalogo';
+import { whatsappLink } from '../config/contact.js';
 
 export default function ProductCard({ produto }) {
     return (
@@ -24,7 +25,7 @@ export default function ProductCard({ produto }) {
                         {formatarPreco(produto.preco)}
                     </span>
                     <a
-                        href={`https://wa.me/5561999952341?text=${encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome}`)}`}
+                        href={whatsappLink(`Olá! Tenho interesse no produto: ${produto.nome}`)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-whats"
