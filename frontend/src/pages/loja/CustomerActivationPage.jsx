@@ -5,6 +5,7 @@ import { customerActivate, customerRequestActivation } from '../../services/loja
 import { TurnstileWidget } from '../../components/common/TurnstileWidget.jsx'
 import { useHumanCheck } from '../../context/useHumanCheck.js'
 import './CustomerActivationPage.css'
+import { PasswordInput } from '../../components/common/PasswordInput.jsx'
 
 export function CustomerActivationPage() {
   const [params] = useSearchParams()
@@ -43,7 +44,7 @@ export function CustomerActivationPage() {
       {!activated && <form className="activation-page__form" onSubmit={submit}>
         {token ? <div className="activation-page__field">
           <label htmlFor="activation-password">Nova senha</label>
-          <input id="activation-password" type="password" minLength="8" maxLength="200" autoComplete="new-password" value={password} onChange={event => setPassword(event.target.value)} required />
+          <PasswordInput id="activation-password" minLength="8" maxLength="200" autoComplete="new-password" value={password} onChange={event => setPassword(event.target.value)} required />
         </div> : <div className="activation-page__field">
           <label htmlFor="activation-email">E-mail</label>
           <input id="activation-email" type="email" maxLength="254" autoComplete="email" value={email} onChange={event => setEmail(event.target.value)} required />

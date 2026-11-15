@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageMeta } from '../../components/common/PageMeta.jsx'
 import { acceptAdminInvite, inspectAdminInvite } from '../../services/lojaApi.js'
+import { PasswordInput } from '../../components/common/PasswordInput.jsx'
 
 const roleLabel = { OWNER: 'Dona/Dono (acesso completo)', MANAGER: 'Gerente', FULFILLMENT: 'Expedição (estoque e pedidos)' }
 
@@ -46,8 +47,8 @@ export function AdminInvitePage() {
     <h1>Olá, {state.invite.name.split(' ')[0]}!</h1>
     <p>Você foi convidada(o) para administrar a loja RustiCerrado como <strong>{roleLabel[state.invite.role] ?? state.invite.role}</strong>. Crie a sua senha para entrar.</p>
     <label>E-mail<input type="email" value={state.invite.email} autoComplete="username" readOnly /></label>
-    <label>Crie uma senha<input type="password" autoComplete="new-password" minLength="10" maxLength="200" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required /><small>Pelo menos 10 caracteres. Uma frase fácil de lembrar funciona bem.</small></label>
-    <label>Repita a senha<input type="password" autoComplete="new-password" minLength="10" maxLength="200" value={form.confirm} onChange={(event) => setForm({ ...form, confirm: event.target.value })} required /></label>
+    <label>Crie uma senha<PasswordInput autoComplete="new-password" minLength="10" maxLength="200" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required /><small>Pelo menos 10 caracteres. Uma frase fácil de lembrar funciona bem.</small></label>
+    <label>Repita a senha<PasswordInput autoComplete="new-password" minLength="10" maxLength="200" value={form.confirm} onChange={(event) => setForm({ ...form, confirm: event.target.value })} required /></label>
     <p className="admin-message" role="alert">{message}</p>
     <button className="button button-primary" disabled={busy}>{busy ? 'Criando acesso…' : 'Criar meu acesso'}</button>
   </>)

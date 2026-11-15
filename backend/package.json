@@ -12,6 +12,7 @@
     "db:status": "node --env-file-if-exists=.env src/scripts/migrationStatus.js",
     "db:migrate": "node --env-file-if-exists=.env src/scripts/runMigrations.js",
     "admin:create": "node --env-file-if-exists=.env src/scripts/createAdmin.js",
+    "admin:reset-password": "node --env-file-if-exists=.env src/scripts/resetAdminPassword.js",
     "jobs:expire-orders": "node --env-file-if-exists=.env src/scripts/expireOrders.js",
     "jobs:send-emails": "node --env-file-if-exists=.env src/scripts/sendEmails.js",
     "setup:check": "node --env-file-if-exists=.env src/scripts/setupCheck.js",

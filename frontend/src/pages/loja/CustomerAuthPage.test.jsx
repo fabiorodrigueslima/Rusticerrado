@@ -9,7 +9,8 @@ globalThis.React = React
 describe('customer password forms', () => {
   it.each(['login', 'register', 'reset'])('%s uses an eight-character minimum', mode => {
     const html = renderToStaticMarkup(<MemoryRouter><CustomerAuthPage mode={mode} /></MemoryRouter>)
-    expect(html).toMatch(/type="password"[^>]*minLength="8"/)
+    expect(html).toMatch(/<input(?=[^>]*type="password")(?=[^>]*minLength="8")[^>]*>/)
+    expect(html).toContain('aria-label="Mostrar senha"')
     expect(html).not.toContain('minLength="12"')
   })
   it('returns only to same-site paths after login', () => {

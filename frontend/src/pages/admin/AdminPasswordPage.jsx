@@ -5,6 +5,7 @@ import { PageMeta } from '../../components/common/PageMeta.jsx'
 import { requestAdminPasswordReset, resetAdminPassword } from '../../services/lojaApi.js'
 import { TurnstileWidget } from '../../components/common/TurnstileWidget.jsx'
 import { useHumanCheck } from '../../context/useHumanCheck.js'
+import { PasswordInput } from '../../components/common/PasswordInput.jsx'
 
 // The token travels in the URL fragment (#...), which browsers never send to servers or logs.
 const readToken = () => window.location.hash.replace(/^#/, '')
@@ -58,8 +59,8 @@ export function AdminResetPasswordPage() {
   return card('Criar senha nova', <>
     <p className="eyebrow">Recuperar acesso</p>
     <h1>Criar senha nova</h1>
-    <label>Senha nova<input type="password" autoComplete="new-password" minLength="10" maxLength="200" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required /><small>Pelo menos 10 caracteres. Uma frase fácil de lembrar funciona bem.</small></label>
-    <label>Repita a senha<input type="password" autoComplete="new-password" minLength="10" maxLength="200" value={form.confirm} onChange={(event) => setForm({ ...form, confirm: event.target.value })} required /></label>
+    <label>Senha nova<PasswordInput autoComplete="new-password" minLength="10" maxLength="200" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required /><small>Pelo menos 10 caracteres. Uma frase fácil de lembrar funciona bem.</small></label>
+    <label>Repita a senha<PasswordInput autoComplete="new-password" minLength="10" maxLength="200" value={form.confirm} onChange={(event) => setForm({ ...form, confirm: event.target.value })} required /></label>
     <p className="admin-message" role="alert">{message}</p>
     <button className="button button-primary" disabled={busy}>{busy ? 'Salvando…' : 'Salvar senha nova'}</button>
   </>, submit)

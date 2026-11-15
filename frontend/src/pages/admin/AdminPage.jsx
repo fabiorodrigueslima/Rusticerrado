@@ -9,6 +9,7 @@ import { TeamPanel } from './TeamPanel.jsx'
 import { productStatusLabel, roleLabel, slugify, toPrice } from './adminFormat.js'
 import { PageMeta } from '../../components/common/PageMeta.jsx'
 import { adminLogin, adminLogout, adminMe, getAdminResource, mutateAdminResource } from '../../services/lojaApi.js'
+import { PasswordInput } from '../../components/common/PasswordInput.jsx'
 
 const sections = [{key:'dashboard',label:'Visão geral'},{key:'products',label:'Produtos'},{key:'stock',label:'Estoque'},{key:'orders',label:'Pedidos'},{key:'payment-incidents',label:'Ocorrências de pagamento',roles:['OWNER','MANAGER']},{key:'privacy-requests',label:'Privacidade (LGPD)',roles:['OWNER','MANAGER']},{key:'categories',label:'Categorias'},{key:'collections',label:'Coleções'},{key:'settings',label:'Configurações'},{key:'team',label:'Equipe',roles:['OWNER']}]
 const money = (value) => value == null ? '—' : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(value))
@@ -16,7 +17,7 @@ const money = (value) => value == null ? '—' : new Intl.NumberFormat('pt-BR',{
 function Login({ onSuccess }) {
   const [form,setForm]=useState({email:'',password:''});const [error,setError]=useState('');const [loading,setLoading]=useState(false)
   const submit=async(event)=>{event.preventDefault();setLoading(true);setError('');try{const {data}=await adminLogin(form);onSuccess(data)}catch(reason){setError(reason.message)}finally{setLoading(false)}}
-  return <main className="admin-login"><PageMeta title="Acesso administrativo" description="Área restrita da RustiCerrado." noindex /><form onSubmit={submit}><p className="eyebrow">Área restrita</p><h1>Painel administrativo</h1><p>Entre com o e-mail e a senha do seu acesso ao painel.</p><label>E-mail<input type="email" autoComplete="username" value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} required /></label><label>Senha<input type="password" autoComplete="current-password" minLength="8" value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})} required /></label><p className="admin-message" role="alert">{error}</p><button className="button button-primary" disabled={loading}>{loading?'Entrando…':'Entrar'}</button><p><Link to="/admin/esqueci-a-senha">Esqueci a senha</Link></p></form></main>
+  return <main className="admin-login"><PageMeta title="Acesso administrativo" description="Área restrita da RustiCerrado." noindex /><form onSubmit={submit}><p className="eyebrow">Área restrita</p><h1>Painel administrativo</h1><p>Entre com o e-mail e a senha do seu acesso ao painel.</p><label>E-mail<input type="email" autoComplete="username" value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} required /></label><label>Senha<PasswordInput autoComplete="current-password" minLength="8" value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})} required /></label><p className="admin-message" role="alert">{error}</p><button className="button button-primary" disabled={loading}>{loading?'Entrando…':'Entrar'}</button><p><Link to="/admin/esqueci-a-senha">Esqueci a senha</Link></p></form></main>
 }
 
 const emptyCreateForm={name:'',slug:'',slugEdited:false,description:'',sku:'',price:'',stock:1}

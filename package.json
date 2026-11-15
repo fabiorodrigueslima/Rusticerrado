@@ -16,6 +16,7 @@
     "db:status": "npm run db:status --workspace backend",
     "db:migrate": "npm run db:migrate --workspace backend",
     "admin:create": "npm run admin:create --workspace backend",
+    "admin:reset-password": "npm run admin:reset-password --workspace backend",
     "jobs:expire-orders": "npm run jobs:expire-orders --workspace backend",
     "jobs:send-emails": "npm run jobs:send-emails --workspace backend",
     "setup:check": "npm run setup:check --workspace backend",
