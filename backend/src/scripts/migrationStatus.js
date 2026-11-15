@@ -1,12 +1,13 @@
 import pg from 'pg';
 import { resolve } from 'node:path';
+import { databaseSsl } from '../config/databaseSsl.js';
 import { resolveAdminConnection } from '../database/adminConnection.js';
 import { readMigrationStatus } from '../database/migrationStatus.js';
 
 let client;
 try {
   const {adminUrl}=resolveAdminConnection();
-  client=new pg.Client({connectionString:adminUrl.toString(),connectionTimeoutMillis:5000});
+  client=new pg.Client({connectionString:adminUrl.toString(),connectionTimeoutMillis:5000,ssl:databaseSsl()});
   await client.connect();
   await client.query('BEGIN READ ONLY');
   const status=await readMigrationStatus(client,resolve(import.meta.dirname,'../../../database/migrations'));

@@ -1,12 +1,12 @@
 import pg from "pg";
 import { env } from "./env.js";
-import { databaseSsl } from "./databaseSsl.js";
+import { cleanDatabaseUrl, databaseSsl } from "./databaseSsl.js";
 
 const { Pool } = pg;
 
 const pool = env.DATABASE_URL
   ? new Pool({
-      connectionString: env.DATABASE_URL,
+      connectionString: cleanDatabaseUrl(env.DATABASE_URL),
       max: env.DB_POOL_MAX,
       idleTimeoutMillis: env.DB_IDLE_TIMEOUT_MS,
       connectionTimeoutMillis: env.DB_CONNECTION_TIMEOUT_MS,

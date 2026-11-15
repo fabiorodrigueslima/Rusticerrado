@@ -1,3 +1,5 @@
+import { cleanDatabaseUrl } from '../config/databaseSsl.js'
+
 const localHosts = new Set(['localhost', '127.0.0.1', '::1'])
 
 export function databaseName(url) {
@@ -17,11 +19,11 @@ export function resolveAdminConnection({ target = 'development' } = {}) {
 
   if (!runtimeValue) throw new Error(`Defina ${runtimeVariable} para identificar o banco de destino`)
 
-  const runtimeUrl = new URL(runtimeValue)
+  const runtimeUrl = cleanDatabaseUrl(new URL(runtimeValue))
   let adminUrl
 
   if (process.env[explicitAdminVariable]) {
-    adminUrl = new URL(process.env[explicitAdminVariable])
+    adminUrl = cleanDatabaseUrl(new URL(process.env[explicitAdminVariable]))
   } else if (target === 'development' && process.env.NODE_ENV !== 'production' && process.env.TEST_DATABASE_ADMIN_URL) {
     adminUrl = new URL(process.env.TEST_DATABASE_ADMIN_URL)
     adminUrl.pathname = runtimeUrl.pathname

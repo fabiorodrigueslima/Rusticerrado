@@ -48,7 +48,7 @@ export function legalContent(commerce) {
           "Com quem compartilhamos",
           commerce
             ? [
-                "Somente com quem é necessário para atender você: o Mercado Pago (pagamento), os Correios ou a transportadora (entrega), e os serviços que fazem o site funcionar: Netlify (hospedagem do site) e Supabase (banco de dados e fotos das peças), além do serviço que envia os e-mails do pedido.",
+                "Somente com quem é necessário para atender você: o Mercado Pago (pagamento), os Correios ou a transportadora (entrega), e os serviços que fazem o site funcionar: Netlify (hospedagem do site), Neon (banco de dados) e Supabase (fotos das peças), além do serviço que envia os e-mails do pedido.",
                 "Alguns desses serviços guardam dados fora do Brasil, com as garantias previstas na LGPD. Não vendemos nem alugamos dados pessoais.",
               ]
             : "Somente com quem é necessário para atender você: a empresa de pagamento escolhida (por exemplo, Mercado Pago), a transportadora ou os Correios para a entrega, e os serviços que hospedam o site e guardam as fotos das peças. Não vendemos nem alugamos dados pessoais.",

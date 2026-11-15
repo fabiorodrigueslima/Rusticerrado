@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { databaseSsl } from '../src/config/databaseSsl.js'
+import { cleanDatabaseUrl, databaseSsl } from '../src/config/databaseSsl.js'
 
 describe('databaseSsl', () => {
   it('turns TLS off only when DB_SSL is not true', () => {
@@ -20,5 +20,27 @@ describe('databaseSsl', () => {
 
   it('explains where to get a missing CA file', () => {
     expect(() => databaseSsl({ DB_SSL: 'true', DB_SSL_CA_FILE: 'certs/nao-existe.crt' })).toThrow(/Supabase/)
+  })
+})
+
+describe('cleanDatabaseUrl', () => {
+  const neon = 'postgresql://neondb_owner:segredo@ep-cool-river-123456.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+
+  it('drops the TLS parameters copied from Neon and keeps user, host and database', () => {
+    const clean = new URL(cleanDatabaseUrl(neon))
+    expect(clean.search).toBe('')
+    expect(clean.username).toBe('neondb_owner')
+    expect(clean.hostname).toBe('ep-cool-river-123456.sa-east-1.aws.neon.tech')
+    expect(clean.pathname).toBe('/neondb')
+  })
+
+  it('keeps other parameters and accepts URL objects', () => {
+    const clean = cleanDatabaseUrl(new URL('postgresql://u:p@host/db?application_name=x&sslmode=verify-full'))
+    expect(clean).toBeInstanceOf(URL)
+    expect(clean.search).toBe('?application_name=x')
+  })
+
+  it('leaves an empty value alone', () => {
+    expect(cleanDatabaseUrl(undefined)).toBeUndefined()
   })
 })

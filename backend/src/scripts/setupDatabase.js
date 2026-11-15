@@ -1,7 +1,8 @@
-// Prepara o banco do RustiCerrado no Supabase (uma vez por projeto do Supabase).
+// Prepara o banco do RustiCerrado num PostgreSQL na nuvem (Neon; também funciona no Supabase).
+// Rode uma vez por banco novo; depois, pode repetir sem risco.
 //
-// Precisa só de DATABASE_ADMIN_URL em backend/.env: a URI do "Session pooler" do Supabase,
-// com o usuário postgres.<ref> e a senha do banco. O script:
+// Precisa só de DATABASE_ADMIN_URL em backend/.env: o endereço de conexão do dono do banco
+// (no Neon: Connect > endereço "direto", sem "-pooler", usuário neondb_owner). O script:
 //   1. cria os papéis rustic_owner (dono das tabelas, sem login) e rustic_app (o que o site usa);
 //   2. gera uma senha nova para rustic_app e grava DATABASE_URL em backend/.env;
 //   3. cria o schema "app" com tabelas, índices, dados base e permissões mínimas;
@@ -12,7 +13,7 @@ import { randomBytes } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import pg from 'pg'
-import { databaseSsl } from '../config/databaseSsl.js'
+import { cleanDatabaseUrl, databaseSsl } from '../config/databaseSsl.js'
 import { databaseName, resolveAdminConnection } from '../database/adminConnection.js'
 import { runMigrations } from '../database/migrationRunner.js'
 
@@ -43,7 +44,7 @@ async function readSql(fileName, currentDatabase) {
     .replaceAll('ON DATABASE rusticerrado', `ON DATABASE ${quoteIdentifier(currentDatabase)}`)
 }
 
-// No pooler do Supabase o usuário é "<papel>.<ref-do-projeto>".
+// No pooler do Supabase o usuário é "<papel>.<ref-do-projeto>"; no Neon é só o nome do papel.
 function runtimeUserFor(adminUser) {
   const dot = adminUser.indexOf('.')
   return dot === -1 ? RUNTIME_ROLE : `${RUNTIME_ROLE}${adminUser.slice(dot)}`
@@ -74,13 +75,13 @@ async function ensureRuntimeUrl(adminUrl) {
 
 const rawAdminUrl = process.env.DATABASE_ADMIN_URL
 if (!rawAdminUrl || rawAdminUrl.includes('COLE_AQUI') || rawAdminUrl.includes('[YOUR-PASSWORD]')) {
-  fail('Cole em DATABASE_ADMIN_URL (backend/.env) a URI do Session pooler do Supabase, com a senha do banco.')
+  fail('Cole em DATABASE_ADMIN_URL (backend/.env) o endereço de conexão do banco (no Neon: Connect > endereço direto), com a senha.')
 }
 const localHosts = new Set(['localhost', '127.0.0.1', '::1'])
-// Sem TLS só um banco de teste no próprio computador; o Supabase sempre usa conexão segura.
-if (process.env.DB_SSL !== 'true' && !localHosts.has(new URL(rawAdminUrl).hostname)) fail('Use DB_SSL=true em backend/.env: o Supabase exige conexão segura.')
+// Sem TLS só um banco de teste no próprio computador; na nuvem a conexão é sempre segura.
+if (process.env.DB_SSL !== 'true' && !localHosts.has(new URL(rawAdminUrl).hostname)) fail('Use DB_SSL=true em backend/.env: o banco na nuvem exige conexão segura.')
 
-const { password: newRuntimePassword } = await ensureRuntimeUrl(new URL(rawAdminUrl))
+const { password: newRuntimePassword } = await ensureRuntimeUrl(cleanDatabaseUrl(new URL(rawAdminUrl)))
 const { adminUrl, runtimeUrl } = resolveAdminConnection()
 
 const client = new Client({
@@ -102,7 +103,7 @@ try {
   if (owner.rowCount === 0) {
     await client.query(`CREATE ROLE ${OWNER_ROLE} NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT`)
   }
-  // O administrador do Supabase precisa poder agir como dono das tabelas (SET ROLE).
+  // O dono do banco (neondb_owner no Neon) precisa poder agir como dono das tabelas (SET ROLE).
   await client.query(`GRANT ${OWNER_ROLE} TO CURRENT_USER`)
 
   const runtime = await client.query('SELECT 1 FROM pg_roles WHERE rolname = $1', [RUNTIME_ROLE])
@@ -142,8 +143,8 @@ try {
 
   console.log('4/4 Migrations...')
   const result = await runMigrations({ client, directory: resolve(databaseDirectory, 'migrations') })
-  console.log({ event: 'SUPABASE_SETUP_COMPLETE', database, applied: result.applied, skipped: result.skipped, pending: result.pending })
-  console.log('Banco do Supabase pronto.')
+  console.log({ event: 'DATABASE_SETUP_COMPLETE', database, applied: result.applied, skipped: result.skipped, pending: result.pending })
+  console.log('Banco pronto.')
 } finally {
   await client.end()
 }

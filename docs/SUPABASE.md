@@ -1,67 +1,19 @@
-# Banco de dados no Supabase
+# Fotos dos produtos no Supabase Storage
 
-O RustiCerrado guarda tudo (produtos, pedidos, clientes, painel) no PostgreSQL do Supabase.
-As fotos dos produtos também vão para o Supabase, no Storage (parte "Fotos", mais abaixo).
+O banco de dados fica no **Neon** (veja [NEON.md](NEON.md)). O Supabase é usado só para guardar
+as **fotos das peças**.
 
-O site **nunca** fala direto com o banco: tudo passa pelo servidor (`backend/`). Por isso as
-tabelas ficam no schema `app`, que o Supabase não expõe na internet, e o site não usa as
-chaves `anon` nem `service_role` para o banco.
+> O plano grátis do Supabase permite 2 projetos ativos por pessoa. Se a conta já tiver 2,
+> é preciso liberar uma vaga (pausar um projeto parado) ou usar outro serviço de fotos.
+> Enquanto as fotos não estiverem configuradas, o painel cadastra as peças normalmente e o
+> site mostra a logo da RustiCerrado no lugar da foto.
 
 ## Passo 1 — Criar o projeto
 
 1. Entre em **supabase.com** → **New project**.
 2. Nome: `rusticerrado`. Região: **South America (São Paulo)**.
-3. **Database Password**: use uma senha forte só com **letras e números** (símbolos como `@ # / ?`
-   atrapalham o endereço de conexão). Guarde-a num lugar seguro.
+3. Crie uma senha forte para o banco do Supabase (ele não será usado, mas o Supabase pede).
 4. **Create new project** e espere uns 2 minutos.
-
-## Passo 2 — Copiar o endereço de conexão
-
-1. No alto da página do projeto, clique em **Connect**.
-2. Em **Connection String**, escolha o tipo **Session pooler** e copie a **URI**. Ela é assim:
-   `postgresql://postgres.abcdefgh:[YOUR-PASSWORD]@aws-0-sa-east-1.pooler.supabase.com:5432/postgres`
-3. Abra `backend/.env` e cole na linha `DATABASE_ADMIN_URL=`, trocando `[YOUR-PASSWORD]`
-   pela senha do passo 1 (sem os colchetes).
-
-> Use o **Session pooler**, não o "Direct connection": a conexão direta do Supabase só funciona
-> em internet com IPv6.
-
-## Passo 3 — Baixar o certificado de segurança
-
-1. **Project Settings** → **Database** → **SSL Configuration** → **Download certificate**.
-2. Salve o arquivo como `backend/certs/supabase-ca.crt`.
-
-Com ele o servidor confere que está falando com o Supabase de verdade (a verificação nunca é
-desligada). O certificado é público e pode ir para o Git.
-
-## Passo 4 — Preparar o banco
-
-Na pasta principal do projeto:
-
-```bash
-npm run db:setup
-```
-
-O comando:
-
-1. cria o usuário `rustic_app` (o que o site usa, com o mínimo de permissões) e o `rustic_owner`
-   (dono das tabelas, sem login);
-2. gera uma senha nova para o `rustic_app` e grava `DATABASE_URL` no `backend/.env`;
-3. cria as tabelas no schema `app`;
-4. aplica as migrations.
-
-Pode rodar de novo sem medo: se as tabelas já existirem, ele só aplica migrations novas.
-
-## Passo 5 — Testar
-
-```bash
-npm run db:check
-npm run dev
-```
-
-Em http://localhost:3000/api/v1/health/ready o banco deve aparecer como `"database":"ok"`.
-
-## Fotos dos produtos (Supabase Storage)
 
 As fotos ficam numa "pasta" pública do Supabase chamada **bucket** (`rusticerrado`). Qualquer
 pessoa vê uma foto publicada, mas só o servidor consegue autorizar um envio, conferir ou apagar
@@ -74,7 +26,7 @@ Como funciona quando a dona cadastra uma foto no painel:
 3. O servidor **confere** a foto que chegou: tamanho e os primeiros bytes do arquivo (precisa
    ser JPG, PNG ou WEBP de verdade, com até 5 MB). Só então ela entra no produto.
 
-### Passo 6 — Pegar o endereço e a chave secreta
+## Passo 2 — Pegar o endereço e a chave secreta
 
 1. **Project Settings** → **Data API** → copie a **Project URL** (`https://xxxx.supabase.co`).
 2. **Project Settings** → **API Keys** → copie a **Secret key** (começa com `sb_secret_`).
@@ -89,7 +41,7 @@ Como funciona quando a dona cadastra uma foto no painel:
 > A chave secreta dá acesso total ao projeto. Ela fica **só** no `backend/.env` e, depois, nas
 > variáveis do Netlify. Nunca no código, no chat, no GitHub ou com prefixo `VITE_`.
 
-### Passo 7 — Criar o bucket de fotos
+## Passo 3 — Criar o bucket de fotos
 
 ```bash
 npm run storage:setup
@@ -100,8 +52,6 @@ novo: se ele já existir, só atualiza essas regras.
 
 ## Cuidados
 
-- `backend/.env` nunca vai para o GitHub.
-- `DATABASE_ADMIN_URL` (usuário `postgres`) serve só para preparar o banco e rodar migrations.
-  No Netlify vai apenas a `DATABASE_URL` do `rustic_app`.
-- Não crie tabelas pelo Table Editor nem pelo SQL Editor: toda mudança no banco é uma migration
-  nova em `database/migrations/`.
+- A chave secreta (`SUPABASE_SECRET_KEY`) fica só no `backend/.env` e nas variáveis do Netlify.
+- O bucket é público para leitura (qualquer pessoa vê uma foto publicada), mas só o servidor
+  envia, confere ou apaga fotos.

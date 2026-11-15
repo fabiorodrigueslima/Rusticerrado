@@ -23,3 +23,15 @@ export function databaseSsl(source = process.env) {
 
   return ca ? { rejectUnauthorized: true, ca } : { rejectUnauthorized: true }
 }
+
+// Os endereços copiados do Neon (e de outros provedores) terminam com ?sslmode=require&
+// channel_binding=require. A segurança da conexão já é decidida por DB_SSL (sempre validando
+// o certificado), então esses parâmetros saem para não brigar com a configuração acima.
+const TLS_PARAMS = ['sslmode', 'channel_binding', 'sslrootcert', 'sslcert', 'sslkey', 'sslpassword', 'uselibpqcompat']
+
+export function cleanDatabaseUrl(value) {
+  if (!value) return value
+  const url = value instanceof URL ? new URL(value) : new URL(String(value))
+  for (const param of TLS_PARAMS) url.searchParams.delete(param)
+  return value instanceof URL ? url : url.toString()
+}

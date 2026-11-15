@@ -8,12 +8,12 @@ O projeto segue o mesmo modelo do Brinco de Princesa:
 |---|---|---|
 | Site (o que o cliente vê) | `frontend/` | React + Vite |
 | Servidor (API e painel) | `backend/` | Node.js + Express |
-| Banco de dados | `database/` | PostgreSQL no Supabase |
+| Banco de dados | `database/` | PostgreSQL no Neon |
 | Hospedagem | `netlify/` e `netlify.toml` | Netlify |
 
 Fotos dos produtos: Supabase Storage (`npm run storage:setup` cria o bucket; veja [docs/SUPABASE.md](docs/SUPABASE.md)).
 
-Não é preciso instalar PostgreSQL no computador: o banco fica no Supabase, para testar e para o site no ar.
+Não é preciso instalar PostgreSQL no computador: o banco fica no Neon, para testar e para o site no ar.
 
 ## Rodar no computador
 
@@ -23,7 +23,7 @@ Precisa de Node 24 e npm 11.
    ```bash
    npm install
    ```
-2. Prepare o banco no Supabase (uma vez só). Siga o passo a passo em [docs/SUPABASE.md](docs/SUPABASE.md) e depois rode:
+2. Prepare o banco no Neon (uma vez só). Siga o passo a passo em [docs/NEON.md](docs/NEON.md) e depois rode:
    ```bash
    npm run db:setup
    ```
@@ -37,7 +37,7 @@ Precisa de Node 24 e npm 11.
 ## Comandos úteis
 
 ```bash
-npm run db:setup      # prepara o banco no Supabase (pode repetir)
+npm run db:setup      # prepara o banco no Neon (pode repetir)
 npm run storage:setup # cria o bucket de fotos no Supabase (pode repetir)
 npm run db:check      # testa a conexão com o banco
 npm run db:migrate    # aplica as migrations novas
