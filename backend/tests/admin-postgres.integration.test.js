@@ -1,0 +1,44 @@
+import pg from 'pg'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { adminAuthRepository } from '../src/repositories/adminAuthRepository.js'
+import { adminRepository } from '../src/repositories/adminRepository.js'
+import { catalogRepository } from '../src/repositories/catalogRepository.js'
+import { hashPassword } from '../src/security/password.js'
+
+const { Client }=pg;const url=process.env.TEST_DATABASE_ADMIN_URL;const suffix=`${process.pid}-${Date.now()}`
+let admin,userId,productId,variantId,categoryId,collectionId
+describe('admin operations with isolated PostgreSQL',()=>{
+  beforeAll(async()=>{admin=new Client({connectionString:url});await admin.connect();userId=(await admin.query({text:`INSERT INTO app.usuarios_admin(email,nome,password_hash,papel)VALUES($1,'Owner teste',$2,'OWNER')RETURNING id`,values:[`owner-${suffix}@example.com`,await hashPassword('secure admin password 123')]})).rows[0].id})
+  afterAll(async()=>{if(!admin)return;await admin.query({text:`DELETE FROM app.audit_logs WHERE admin_id=$1`,values:[userId]});await admin.query({text:`DELETE FROM app.sessoes WHERE admin_id=$1`,values:[userId]});if(variantId){await admin.query({text:`DELETE FROM app.movimentos_estoque WHERE variante_id=$1`,values:[variantId]});await admin.query({text:`DELETE FROM app.produto_variantes WHERE id=$1`,values:[variantId]})}if(productId)await admin.query({text:`DELETE FROM app.produtos WHERE id=$1`,values:[productId]});if(categoryId)await admin.query({text:`DELETE FROM app.categorias WHERE id=$1`,values:[categoryId]});if(collectionId)await admin.query({text:`DELETE FROM app.colecoes WHERE id=$1`,values:[collectionId]});await admin.query({text:`DELETE FROM app.usuarios_admin WHERE id=$1`,values:[userId]});await admin.end()})
+  it('creates, validates and revokes server sessions',async()=>{const token=`${'a'.repeat(43)}`,csrf=`${'b'.repeat(64)}`;await adminAuthRepository.createSession(userId,token,csrf,'c'.repeat(64),'d'.repeat(64),8);expect(await adminAuthRepository.findSession(token)).toMatchObject({papel:'OWNER'});await adminAuthRepository.revoke(token);expect(await adminAuthRepository.findSession(token)).toBeNull()})
+  it('creates auditable product and traceable stock adjustment',async()=>{const category=(await admin.query("SELECT id FROM app.categorias WHERE slug='brincos'")).rows[0].id;productId=(await adminRepository.createProduct({name:'Admin teste',slug:`admin-${suffix}`,description:'Texto seguro',productionDays:0,categoryId:Number(category),status:'DRAFT'})).id;variantId=(await adminRepository.createVariant(productId,{name:'Única',sku:`ADM-${suffix}`,price:'20.00',stock:2,active:true,attributes:{acabamento:'fosco'}})).id;const adjusted=await adminRepository.adjustStock(Number(variantId),3,'Entrada conferida',Number(userId));expect(adjusted).toEqual({stock:5,reserved:0,available:5});expect((await admin.query({text:`SELECT tipo,quantidade,admin_id FROM app.movimentos_estoque WHERE variante_id=$1`,values:[variantId]})).rows[0]).toMatchObject({tipo:'ADJUSTMENT',quantidade:3,admin_id:userId})})
+  it('writes minimal audit records',async()=>{await adminAuthRepository.audit({adminId:userId,action:'PRODUCT_CREATE',resourceType:'PRODUCT',resourceId:String(productId),requestId:'request-admin-test'});expect((await admin.query({text:`SELECT acao,tipo_recurso,recurso_id FROM app.audit_logs WHERE admin_id=$1`,values:[userId]})).rows[0]).toEqual({acao:'PRODUCT_CREATE',tipo_recurso:'PRODUCT',recurso_id:String(productId)})})
+  it('returns the full product for editing, publishes it and keeps a single primary image',async()=>{
+    const detail=await adminRepository.product(Number(productId))
+    expect(detail).toMatchObject({slug:`admin-${suffix}`,status:'DRAFT'})
+    expect(detail.variants).toHaveLength(1)
+    await adminRepository.updateProduct(Number(productId),{name:'Admin teste',slug:`admin-${suffix}`,description:'Texto seguro',productionDays:0,categoryId:detail.categoria_id,status:'ACTIVE'})
+    expect((await adminRepository.product(Number(productId)))).toMatchObject({status:'ACTIVE',publicado_em:expect.any(Date)})
+    const first=await adminRepository.addImage({productId:Number(productId),alt:'Primeira',mime:'image/png',key:null,url:'https://res.cloudinary.com/demo/a.png',primary:true})
+    const second=await adminRepository.addImage({productId:Number(productId),alt:'Segunda',mime:'image/png',key:null,url:'https://res.cloudinary.com/demo/b.png',primary:false})
+    await adminRepository.setPrimaryImage(Number(second.id))
+    expect((await adminRepository.product(Number(productId))).images.map((image)=>[image.alt_text,image.principal])).toEqual([['Segunda',true],['Primeira',false]])
+    await expect(adminRepository.setPrimaryImage(999999999)).rejects.toMatchObject({code:'IMAGE_NOT_FOUND'})
+    await expect(adminRepository.product(999999999)).rejects.toMatchObject({code:'PRODUCT_NOT_FOUND'})
+    await admin.query({text:`DELETE FROM app.produto_imagens WHERE id = ANY($1)`,values:[[first.id,second.id]]})
+  })
+  it('hides a collection from the public catalog without deleting it and shows it again with its description',async()=>{
+    const id=(await adminRepository.createCollection({name:'Coleção esconder',slug:`esconder-${suffix}`,description:'Descrição guardada',active:true,featured:true})).id
+    const publicSlugs=async()=>(await catalogRepository.listCollections()).map((collection)=>collection.slug)
+    expect(await publicSlugs()).toContain(`esconder-${suffix}`)
+    await adminRepository.deactivateCollection(Number(id))
+    expect(await publicSlugs()).not.toContain(`esconder-${suffix}`)
+    const hidden=(await adminRepository.collections()).find((row)=>String(row.id)===String(id))
+    expect(hidden).toMatchObject({ativa:false,descricao:'Descrição guardada',destaque:true})
+    await adminRepository.updateCollection(Number(id),{name:hidden.nome,slug:hidden.slug,description:hidden.descricao,active:true,featured:hidden.destaque})
+    expect(await publicSlugs()).toContain(`esconder-${suffix}`)
+    expect((await admin.query({text:`SELECT descricao,ativa FROM app.colecoes WHERE id=$1`,values:[id]})).rows[0]).toEqual({descricao:'Descrição guardada',ativa:true})
+    await admin.query({text:`DELETE FROM app.colecoes WHERE id=$1`,values:[id]})
+  })
+  it('creates, updates and deactivates categories and collections',async()=>{categoryId=(await adminRepository.createCategory({name:'Categoria teste',slug:`categoria-${suffix}`,description:null,active:true,order:1})).id;await expect(adminRepository.updateCategory(Number(categoryId),{name:'Categoria atualizada',slug:`categoria-${suffix}`,description:'ok',active:true,order:2})).resolves.toMatchObject({id:categoryId});await expect(adminRepository.deactivateCategory(Number(categoryId))).resolves.toMatchObject({ativa:false});collectionId=(await adminRepository.createCollection({name:'Coleção teste',slug:`colecao-${suffix}`,description:null,active:true,featured:false})).id;await expect(adminRepository.updateCollection(Number(collectionId),{name:'Coleção atualizada',slug:`colecao-${suffix}`,description:'ok',active:true,featured:true})).resolves.toMatchObject({id:collectionId});await expect(adminRepository.deactivateCollection(Number(collectionId))).resolves.toMatchObject({ativa:false})})
+})

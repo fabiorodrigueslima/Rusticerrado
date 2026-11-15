@@ -10,7 +10,29 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.vite
+.vite-temp
+.cache
+.audit-npm-cache/
 *.local
+*.tmp
+.env
+.env.*
+!.env.example
+coverage
+uploads
+tmp
+
+# Local credentials and private keys
+*.secret
+*.secrets
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_ed25519*
 
 # Editor directories and files
 .vscode/*
@@ -22,8 +44,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-.vercel
-.env
-.env.*
-.env*.local

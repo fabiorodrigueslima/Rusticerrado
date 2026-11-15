@@ -1,0 +1,50 @@
+# Hospedagem no Netlify: frontend estático (frontend/dist) + API Express numa Netlify Function.
+# Guia: docs/NETLIFY.md
+
+[build]
+  command = "npm run build"
+  publish = "frontend/dist"
+  functions = "netlify/functions"
+  edge_functions = "netlify/edge-functions"
+  # O plano grátis tem 300 créditos por mês e cada publicação gasta 15. Só publica a main
+  # (sem prévias de PR) e só quando muda algo que vai para o site.
+  # Exit 0 = skip. The same commit again (first deploy, or "Trigger deploy" after changing a
+  # variable) always builds.
+  ignore = "[ \"$CONTEXT\" != \"production\" ] || ( [ \"$CACHED_COMMIT_REF\" != \"$COMMIT_REF\" ] && git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- frontend backend netlify netlify.toml package.json package-lock.json .nvmrc )"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# A API inteira é uma função só. O prefixo /api é mantido para as rotas do Express.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/api/sitemap.xml"
+  status = 200
+  force = true
+
+# Aplicação React: qualquer outro caminho abre o index.html (arquivos existentes têm prioridade).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com; connect-src 'self' https://api.cloudinary.com; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Arquivos com hash no nome nunca mudam: cache longo economiza banda (e créditos).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

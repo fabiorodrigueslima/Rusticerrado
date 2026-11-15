@@ -1,16 +1,42 @@
-# React + Vite
+# RustiCerrado
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Loja virtual de peças artesanais em madeira e resina.
 
-Currently, two official plugins are available:
+O projeto segue o mesmo modelo do Brinco de Princesa:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Parte | Pasta | Tecnologia |
+|---|---|---|
+| Site (o que o cliente vê) | `frontend/` | React + Vite |
+| Servidor (API e painel) | `backend/` | Node.js + Express |
+| Banco de dados | `database/` | PostgreSQL (Neon na internet, PostgreSQL local no computador) |
+| Hospedagem | `netlify/` e `netlify.toml` | Netlify |
 
-## React Compiler
+Fotos dos produtos: Supabase Storage (em preparação).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Rodar no computador
 
-## Expanding the ESLint configuration
+Precisa de Node 24 e npm 11.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Instale tudo pela pasta principal:
+   ```bash
+   npm install
+   ```
+2. Crie o banco local (uma vez só). Antes, abra `backend/.env` e troque `SENHA_DO_POSTGRES` pela senha do usuário `postgres`:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\criar-banco-local.ps1
+   ```
+3. Rode o site e o servidor juntos:
+   ```bash
+   npm run dev
+   ```
+   - Site: http://localhost:5173
+   - Servidor: http://localhost:3000 (o site chama `/api` e o Vite repassa para cá)
+
+## Comandos úteis
+
+```bash
+npm run db:check      # testa a conexão com o banco
+npm run db:migrate    # aplica as migrations novas
+npm run setup:check   # confere a configuração do servidor
+npm test              # roda os testes
+```

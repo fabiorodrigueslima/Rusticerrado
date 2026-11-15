@@ -1,0 +1,57 @@
+import { spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
+import { describe, expect, it } from 'vitest'
+
+const backendRoot = fileURLToPath(new URL('..', import.meta.url))
+const setupCheck = fileURLToPath(new URL('../src/scripts/setupCheck.js', import.meta.url))
+
+function runSetupCheck(storageProvider, storageConfig = {}) {
+  const env = {
+    ...process.env,
+    NODE_ENV: 'production',
+    DATABASE_URL: 'postgresql://user:pass@localhost:5432/rusticerrado',
+    FRONTEND_ORIGINS: 'https://shop.example.com',
+    PUBLIC_BACKEND_URL: 'https://api.example.com',
+    PUBLIC_FRONTEND_URL: 'https://shop.example.com',
+    PAYMENT_PROVIDER: 'mercado-pago',
+    MERCADO_PAGO_ACCESS_TOKEN: 'test-token',
+    MERCADO_PAGO_WEBHOOK_SECRET: '1234567890abcdef',
+    SHIPPING_PROVIDER: 'superfrete',
+    SUPERFRETE_TOKEN: 'test-token',
+    SUPERFRETE_ORIGIN_CEP: '01001000',
+    CLOUDINARY_CLOUD_NAME: 'test-cloud',
+    CLOUDINARY_API_KEY: 'test-key',
+    CLOUDINARY_API_SECRET: 'test-secret',
+    STORAGE_PROVIDER: storageProvider,
+    SUPERFRETE_API_BASE_URL:'https://api.superfrete.com/api/v0',
+    CRON_SECRET:'test-cron-secret-12345678901234567890',
+    EMAIL_PROVIDER:'http',
+    EMAIL_WEBHOOK_URL:'https://mail.example.com/send',
+    EMAIL_WEBHOOK_TOKEN:'test-only',
+    OPS_ALERT_EMAIL:'loja@example.com',
+    ...storageConfig,
+  }
+  return spawnSync(process.execPath, [setupCheck], {
+    cwd: backendRoot,
+    env,
+    encoding: 'utf8',
+  })
+}
+
+// Each case spawns a Node process; under a parallel suite on Windows that exceeds the 5s default.
+const SUBPROCESS_TIMEOUT_MS = 30_000
+
+describe('production setup check', () => {
+  it('passes only with complete Cloudinary storage configuration', () => {
+    const result = runSetupCheck('cloudinary')
+
+    expect(result.status).toBe(0)
+    expect(result.stdout).toContain('Storage provider')
+  }, SUBPROCESS_TIMEOUT_MS)
+
+  it('fails before accepting the disabled storage configuration', () => {
+    const result = runSetupCheck('disabled')
+
+    expect(result.status).not.toBe(0)
+  }, SUBPROCESS_TIMEOUT_MS)
+})
