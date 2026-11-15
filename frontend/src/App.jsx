@@ -92,10 +92,9 @@ function SiteShell() {
                       <Route path="/contato" element={<Contato />} />
                       <Route path="/personalizados" element={<Personalizados />} />
 
-                      <Route path="/carrinho" element={<Carrinho />} />
-
                       {/* COMPRA, CONTA E PÁGINAS LEGAIS */}
                       <Route element={<CommerceLayout />}>
+                        <Route path="/carrinho" element={<CommerceGate><Carrinho /></CommerceGate>} />
                         <Route path="/checkout" element={<CommerceGate><CheckoutPage /></CommerceGate>} />
                         <Route path="/pedido/:code" element={<OrderPage />} />
                         <Route path="/login" element={<CommerceGate><CustomerAuthPage mode="login" /></CommerceGate>} />

@@ -2,11 +2,15 @@ import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { CartContext } from '../context/CartContext';
+import { useOnlineSales } from '../context/storefrontContext.js';
 
 export default function CartIcon() {
     const { carrinho } = useContext(CartContext);
+    const vendeOnline = useOnlineSales();
 
     const cartCount = carrinho.length;
+
+    if (!vendeOnline) return null;
 
     return (
         <Link

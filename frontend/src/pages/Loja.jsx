@@ -5,6 +5,7 @@ import { FaShoppingCart, FaEye, FaWhatsapp } from "react-icons/fa";
 import FilterBar from "../components/FilterBar";
 import Loading from "../components/Loading";
 import { CartContext } from "../context/CartContext";
+import { useOnlineSales } from "../context/storefrontContext";
 
 import { formatarPreco, itemParaCarrinho, listarProdutos } from "../services/catalogo";
 
@@ -13,6 +14,7 @@ import "../styles/style.css";
 export default function Loja() {
     const navigate = useNavigate();
     const { adicionarAoCarrinho } = useContext(CartContext);
+    const vendeOnline = useOnlineSales();
 
     const [produtos, setProdutos] = useState([]);
     const [filteredProdutos, setFilteredProdutos] = useState([]);
@@ -95,13 +97,16 @@ export default function Loja() {
                         </h1>
 
                         <p className="hero-subtitle-loja">
-                            Escolha sua peça artesanal, adicione ao carrinho e compre com
-                            facilidade.
+                            {vendeOnline
+                                ? "Escolha sua peça artesanal, adicione ao carrinho e compre com facilidade."
+                                : "Escolha sua peça artesanal e faça o pedido pelo WhatsApp."}
                         </p>
 
-                        <Link to="/carrinho" className="btn btn-primary">
-                            <FaShoppingCart /> Ver Carrinho
-                        </Link>
+                        {vendeOnline && (
+                            <Link to="/carrinho" className="btn btn-primary">
+                                <FaShoppingCart /> Ver Carrinho
+                            </Link>
+                        )}
                     </div>
                 </div>
             </section>
@@ -157,6 +162,7 @@ export default function Loja() {
                                             </a>
                                         </div>
 
+                                        {vendeOnline ? (
                                         <div className="loja-card-actions">
                                             <button
                                                 className="btn btn-secondary"
@@ -174,6 +180,18 @@ export default function Loja() {
                                                 Comprar
                                             </button>
                                         </div>
+                                        ) : (
+                                        <div className="loja-card-actions">
+                                            <a
+                                                className="btn btn-primary"
+                                                href={`https://wa.me/5561999952341?text=${encodeURIComponent(`Olá! Quero encomendar: ${produto.nome}`)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <FaWhatsapp /> Encomendar pelo WhatsApp
+                                            </a>
+                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaWhatsapp } from "react-icons/fa";
 import { CartContext } from "../context/CartContext";
+import { useOnlineSales } from "../context/storefrontContext";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import { IMAGEM_PADRAO, formatarPreco, itemDoCarrinho, obterProduto } from "../services/catalogo";
@@ -15,6 +16,7 @@ export default function Produto() {
     const { id: slug } = useParams();
     const navigate = useNavigate();
     const { adicionarAoCarrinho } = useContext(CartContext);
+    const vendeOnline = useOnlineSales();
 
     const [produto, setProduto] = useState(null);
     const [estado, setEstado] = useState("carregando");
@@ -156,7 +158,7 @@ export default function Produto() {
                             )}
                         </div>
 
-                        {disponivel > 0 && (
+                        {vendeOnline && disponivel > 0 && (
                             <div className="produto-quantidade">
                                 <label htmlFor="quantidade">Quantidade:</label>
                                 <div className="quantidade-control">
@@ -175,16 +177,18 @@ export default function Produto() {
                         )}
 
                         <div className="produto-acoes">
-                            <button className="btn btn-primary btn-full" onClick={handleAddToCart} disabled={disponivel <= 0}>
-                                Adicionar ao Carrinho
-                            </button>
+                            {vendeOnline && (
+                                <button className="btn btn-primary btn-full" onClick={handleAddToCart} disabled={disponivel <= 0}>
+                                    Adicionar ao Carrinho
+                                </button>
+                            )}
                             <a
                                 href={`https://wa.me/${WHATSAPP}?text=${textoWhats}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="btn btn-secondary btn-full"
+                                className={`btn ${vendeOnline ? "btn-secondary" : "btn-primary"} btn-full`}
                             >
-                                <FaWhatsapp /> Falar via WhatsApp
+                                <FaWhatsapp /> {vendeOnline ? "Falar via WhatsApp" : "Encomendar pelo WhatsApp"}
                             </a>
                         </div>
 

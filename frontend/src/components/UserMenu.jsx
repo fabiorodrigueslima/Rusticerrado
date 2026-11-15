@@ -2,11 +2,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { FaBox, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
 import { useCustomerAuth } from '../context/customerAuthContext.jsx';
+import { useOnlineSales } from '../context/storefrontContext.js';
 
 // Menu da conta do cliente (sessão por cookie seguro, igual ao Brinco de Princesa).
 export default function UserMenu() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { user, loading, signOut } = useCustomerAuth();
+    const vendeOnline = useOnlineSales();
     const navigate = useNavigate();
     const menuRef = useRef(null);
 
@@ -30,7 +32,8 @@ export default function UserMenu() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    if (loading) return null;
+    // Contas de cliente só existem com as vendas ligadas.
+    if (loading || !vendeOnline) return null;
 
     if (!user) {
         return (
