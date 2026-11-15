@@ -3,10 +3,10 @@
  */
 
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Outlet, Routes, Route } from "react-router-dom";
 
 import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext";
+import { CustomerAuthProvider } from "./context/customerAuthContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import { FilterProvider } from "./context/FilterContext";
@@ -23,22 +23,31 @@ import Home from "./pages/Home";
 import Loja from "./pages/Loja";
 import Produto from "./pages/Produto";
 import Carrinho from "./pages/Carrinho";
-import Checkout from "./pages/Checkout";
-import Sucesso from "./pages/Sucesso";
 import Contato from "./pages/Contato";
-import Login from "./pages/Login";
-import Cadastro from "./pages/Cadastro";
-import Perfil from "./pages/Perfil";
-import Pedidos from "./pages/Pedidos";
 import Personalizados from "./pages/Personalizados";
 import NotFound from "./components/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
-import EditarPerfil from "./pages/EditarPerfil";
-import MinhasCompras from "./pages/MinhasCompras";
-import MinhaConta from "./pages/MinhaConta";
+
+// Compra, conta do cliente e páginas legais (vindas do Brinco de Princesa)
+import { CommerceGate } from "./components/common/CommerceGate.jsx";
+import { CheckoutPage } from "./pages/loja/CheckoutPage.jsx";
+import { OrderPage } from "./pages/loja/OrderPage.jsx";
+import { CustomerAuthPage } from "./pages/loja/CustomerAuthPage.jsx";
+import { CustomerAccountPage } from "./pages/loja/CustomerAccountPage.jsx";
+import { CustomerActivationPage } from "./pages/loja/CustomerActivationPage.jsx";
+import { LegalPage } from "./pages/loja/LegalPage.jsx";
 
 // Estilos
 import "./styles/style.css";
+import "./styles/commerce.css";
+
+// Páginas de compra e conta usam o visual do checkout (classes em commerce.css).
+function CommerceLayout() {
+  return (
+    <div className="rc-commerce">
+      <Outlet />
+    </div>
+  );
+}
 
 // O painel é só para a equipe da loja: ele só é baixado quando alguém abre /admin.
 const AdminPage = lazy(() =>
@@ -64,7 +73,7 @@ function SiteShell() {
   return (
       <ThemeProvider>
         <NotificationProvider>
-          <AuthProvider>
+          <CustomerAuthProvider>
             <CartProvider>
               <FilterProvider>
                 <div className="app">
@@ -83,78 +92,27 @@ function SiteShell() {
                       <Route path="/contato" element={<Contato />} />
                       <Route path="/personalizados" element={<Personalizados />} />
 
-                      {/* AUTENTICAÇÃO */}
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/cadastro" element={<Cadastro />} />
+                      <Route path="/carrinho" element={<Carrinho />} />
 
-                      {/* ROTAS PROTEGIDAS */}
-                      <Route
-                        path="/carrinho"
-                        element={<Carrinho />}
-                      />
+                      {/* COMPRA, CONTA E PÁGINAS LEGAIS */}
+                      <Route element={<CommerceLayout />}>
+                        <Route path="/checkout" element={<CommerceGate><CheckoutPage /></CommerceGate>} />
+                        <Route path="/pedido/:code" element={<OrderPage />} />
+                        <Route path="/login" element={<CommerceGate><CustomerAuthPage mode="login" /></CommerceGate>} />
+                        <Route path="/cadastro" element={<CommerceGate><CustomerAuthPage mode="register" /></CommerceGate>} />
+                        <Route path="/recuperar-senha" element={<CommerceGate><CustomerAuthPage mode="forgot" /></CommerceGate>} />
+                        <Route path="/redefinir-senha" element={<CommerceGate><CustomerAuthPage mode="reset" /></CommerceGate>} />
+                        <Route path="/ativar-conta" element={<CommerceGate><CustomerActivationPage /></CommerceGate>} />
+                        <Route path="/minha-conta" element={<CommerceGate><CustomerAccountPage /></CommerceGate>} />
+                        <Route path="/privacidade" element={<LegalPage type="privacy" />} />
+                        <Route path="/termos" element={<LegalPage type="terms" />} />
+                        <Route path="/trocas-e-devolucoes" element={<LegalPage type="returns" />} />
+                      </Route>
 
-                      <Route
-                        path="/checkout"
-                        element={
-                          <ProtectedRoute>
-                            <Checkout />
-                          </ProtectedRoute>
-                        }
-                      />
-
-                      <Route
-                        path="/minha-conta"
-                        element={
-                          <ProtectedRoute>
-                            <MinhaConta />
-                          </ProtectedRoute>
-                        }
-                      />
-
-                      <Route
-                        path="/sucesso"
-                        element={
-                          <ProtectedRoute>
-                            <Sucesso />
-                          </ProtectedRoute>
-                        }
-                      />
-
-                      <Route
-                        path="/perfil"
-                        element={
-                          <ProtectedRoute>
-                            <Perfil />
-                          </ProtectedRoute>
-                        }
-                      />
-
-                      <Route
-                        path="/pedidos"
-                        element={
-                          <ProtectedRoute>
-                            <Pedidos />
-                          </ProtectedRoute>
-                        }
-                      />
-
-                      <Route
-                        path="/editar-perfil"
-                        element={
-                          <ProtectedRoute>
-                            <EditarPerfil />
-                          </ProtectedRoute>
-                        }
-                      />
-
-                      <Route
-                        path="/compras"
-                        element={
-                          <ProtectedRoute>
-                            <MinhasCompras />
-                          </ProtectedRoute>
-                        }
-                      />
+                      {/* Endereços antigos da área do cliente */}
+                      {["/perfil", "/pedidos", "/compras", "/editar-perfil", "/sucesso"].map((path) => (
+                        <Route key={path} path={path} element={<Navigate to="/minha-conta" replace />} />
+                      ))}
 
                       {/* 404 */}
                       <Route path="*" element={<NotFound />} />
@@ -171,7 +129,7 @@ function SiteShell() {
                 </div>
               </FilterProvider>
             </CartProvider>
-          </AuthProvider>
+          </CustomerAuthProvider>
         </NotificationProvider>
       </ThemeProvider>
   );

@@ -20,7 +20,7 @@ describe("payment provider boundary", () => {
       },
     });
     await service.create({
-      code: "BP-X",
+      code: "RC-X",
       token: "token",
       method: "PIX",
       idempotencyKey: "1234567890abcdef",
@@ -46,11 +46,11 @@ describe("payment provider boundary", () => {
     const log = vi.spyOn(console, "error").mockImplementation(() => {});
     const provider = { name: "official", verifyWebhook: vi.fn(async () => ({ status: "APPROVED" })) };
     for (const created of [true, false]) {
-      const repository = { processWebhook: vi.fn(async () => ({ latePayment: true, incident: { type: "LATE_PAYMENT", created, reference: "BP-1" } })) };
+      const repository = { processWebhook: vi.fn(async () => ({ latePayment: true, incident: { type: "LATE_PAYMENT", created, reference: "RC-1" } })) };
       await createPaymentService({ provider, repository }).webhook({ providerName: "official", payload: {} });
     }
     expect(log).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(log.mock.calls[0][0])).toEqual({ event: "PAYMENT_INCIDENT_OPENED", type: "LATE_PAYMENT", reference: "BP-1" });
+    expect(JSON.parse(log.mock.calls[0][0])).toEqual({ event: "PAYMENT_INCIDENT_OPENED", type: "LATE_PAYMENT", reference: "RC-1" });
     log.mockRestore();
   });
   it("processes only the normalized event returned after provider verification", async () => {

@@ -16,7 +16,7 @@ const variants = []
 async function placeOrder(stock = 1) {
   const variantId = Number((await admin.query({ text: "INSERT INTO app.produto_variantes(produto_id,sku,nome,preco,estoque,ativa) VALUES($1,$2,'Única',100,$3,TRUE) RETURNING id", values: [productId, `RES-${randomUUID()}`, stock] })).rows[0].id)
   variants.push(variantId)
-  const code = `BP-6${randomUUID().replaceAll('-', '').slice(0, 15).toUpperCase()}`
+  const code = `RC-6${randomUUID().replaceAll('-', '').slice(0, 15).toUpperCase()}`
   const accessToken = randomUUID()
   await orderRepository.create({
     keyHash: hash(`k-${code}`), requestHash: hash(code), publicCode: code, accessToken, accessTokenHash: hash(accessToken), customerId,

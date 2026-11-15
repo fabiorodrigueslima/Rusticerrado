@@ -127,7 +127,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
       values: [`evt-${suffix}%`],
     });
     await admin.query(
-      `DELETE FROM app.pagamento_ocorrencias WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%')`,
+      `DELETE FROM app.pagamento_ocorrencias WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%')`,
     );
     await admin.query({
       text: `DELETE FROM app.movimentos_estoque WHERE variante_id=ANY($1)`,
@@ -138,22 +138,22 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
       values: [[variantId, expiryVariantId, highVariantId]],
     });
     await admin.query({
-      text: `DELETE FROM app.pagamentos WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%')`,
+      text: `DELETE FROM app.pagamentos WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%')`,
     });
     await admin.query(
-      `DELETE FROM app.pedido_status_historico WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%')`,
+      `DELETE FROM app.pedido_status_historico WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%')`,
     );
     await admin.query(
-      `DELETE FROM app.pedido_itens WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%')`,
+      `DELETE FROM app.pedido_itens WHERE pedido_id IN (SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%')`,
     );
     await admin.query(
-      `DELETE FROM app.idempotency_keys WHERE escopo='CREATE_ORDER' AND recurso_id IN (SELECT id::text FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%')`,
+      `DELETE FROM app.idempotency_keys WHERE escopo='CREATE_ORDER' AND recurso_id IN (SELECT id::text FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%')`,
     );
     const customers = await admin.query(
-      `SELECT cliente_id FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%'`,
+      `SELECT cliente_id FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%'`,
     );
     await admin.query(
-      `DELETE FROM app.pedidos WHERE codigo_publico LIKE 'BP-7%'`,
+      `DELETE FROM app.pedidos WHERE codigo_publico LIKE 'RC-7%'`,
     );
     for (const row of customers.rows)
       await admin.query({
@@ -176,7 +176,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
   });
 
   it("rolls back completely when authoritative price changed", async () => {
-    const bad = input(`key-rollback-${suffix}`, "BP-7000000000000003");
+    const bad = input(`key-rollback-${suffix}`, "RC-7000000000000003");
     bad.quote.items[0].unitPrice = "1.00";
     await expect(orderRepo.create(bad)).rejects.toMatchObject({
       code: "PRICE_CHANGED",
@@ -184,7 +184,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
     expect(
       (
         await admin.query(
-          `SELECT count(*)::integer count FROM app.pedidos WHERE codigo_publico='BP-7000000000000003'`,
+          `SELECT count(*)::integer count FROM app.pedidos WHERE codigo_publico='RC-7000000000000003'`,
         )
       ).rows[0].count,
     ).toBe(0);
@@ -193,7 +193,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
   it("rolls back customer and idempotency data after an intermediate database failure", async () => {
     const invalid = input(
       `key-mid-rollback-${suffix}`,
-      "BP-7000000000000005",
+      "RC-7000000000000005",
       `mid-rollback-${suffix}@example.com`,
     );
     invalid.quote.total = "0.00"; // Violates the database total invariant after idempotency insertion.
@@ -219,7 +219,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
   it("expires and releases a reservation idempotently", async () => {
     const expiring = input(
       `key-expiry-${suffix}`,
-      "BP-7000000000000004",
+      "RC-7000000000000004",
       `expiry-${suffix}@example.com`,
     );
     expiring.quote.items[0].variantId = expiryVariantId;
@@ -272,8 +272,8 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
   });
 
   it("allows only one concurrent reservation for physical stock one", async () => {
-    const a = input(`key-a-${suffix}`, "BP-7000000000000001");
-    const b = input(`key-b-${suffix}`, "BP-7000000000000002");
+    const a = input(`key-a-${suffix}`, "RC-7000000000000001");
+    const b = input(`key-b-${suffix}`, "RC-7000000000000002");
     const results = await Promise.allSettled([
       orderRepo.create(a),
       orderRepo.create(b),
@@ -297,7 +297,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
     const attempts = Array.from({ length: 20 }, (_, index) => {
       const value = input(
         `key-high-${index}-${suffix}`,
-        `BP-71${String(index).padStart(14, "0")}`,
+        `RC-71${String(index).padStart(14, "0")}`,
       );
       value.quote.items[0].variantId = highVariantId;
       return orderRepo.create(value);

@@ -114,7 +114,7 @@ describe('payment methods chosen in the panel', () => {
     const fetchImpl = vi.fn(async () => ({ ok: true, json: async () => ({ id: 'pref-1', init_point: 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=1' }) }))
     const provider = createMercadoPagoProvider({ fetchImpl, config: { ...config, NODE_ENV: 'production' }, now: () => NOW, tokenSource: async () => 'APP_USR-conectado', methodsSource: async () => ({ pix: true, credit: true, debit: false, boleto: true, maxInstallments: 4 }) })
     const deadline = new Date(NOW + 30 * 60000).toISOString()
-    await provider.createPayment({ reference: 'BP-1', amount: '100.00', shipping: '0.00', items: [{ variantId: 1, productName: 'Brinco', quantity: 1, unitPrice: '100.00' }], method: 'PIX', idempotencyKey: 'k'.repeat(20), payer: { email: 'c@example.com' }, expiresAt: deadline })
+    await provider.createPayment({ reference: 'RC-1', amount: '100.00', shipping: '0.00', items: [{ variantId: 1, productName: 'Brinco', quantity: 1, unitPrice: '100.00' }], method: 'PIX', idempotencyKey: 'k'.repeat(20), payer: { email: 'c@example.com' }, expiresAt: deadline })
     const [, request] = fetchImpl.mock.calls[0]
     const body = JSON.parse(request.body)
     expect(request.headers.Authorization).toBe('Bearer APP_USR-conectado')
@@ -125,6 +125,6 @@ describe('payment methods chosen in the panel', () => {
 
   it('refuses to charge while no Mercado Pago account is connected', async () => {
     const provider = createMercadoPagoProvider({ fetchImpl: vi.fn(), config, now: () => NOW, tokenSource: async () => null })
-    await expect(provider.createPayment({ reference: 'BP-1', amount: '10.00', items: [], idempotencyKey: 'k'.repeat(20), expiresAt: new Date(NOW + 600000).toISOString() })).rejects.toMatchObject({ code: 'PAYMENT_NOT_CONNECTED' })
+    await expect(provider.createPayment({ reference: 'RC-1', amount: '10.00', items: [], idempotencyKey: 'k'.repeat(20), expiresAt: new Date(NOW + 600000).toISOString() })).rejects.toMatchObject({ code: 'PAYMENT_NOT_CONNECTED' })
   })
 })

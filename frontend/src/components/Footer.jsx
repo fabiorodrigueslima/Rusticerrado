@@ -48,6 +48,9 @@ export default function Footer() {
                         <li><Link to="/loja">Loja</Link></li>
                         <li><Link to="/contato">Contato</Link></li>
                         <li><Link to="/personalizados">Personalizados</Link></li>
+                        <li><Link to="/privacidade">Privacidade</Link></li>
+                        <li><Link to="/termos">Termos de Uso</Link></li>
+                        <li><Link to="/trocas-e-devolucoes">Trocas e Devoluções</Link></li>
                     </ul>
                 </div>
 

@@ -38,7 +38,7 @@ async function variant(stock = 1) {
 
 async function order() {
   const variantId = await variant();
-  const code = `BP-8${String(++sequence).padStart(15, "0")}`;
+  const code = `RC-8${String(++sequence).padStart(15, "0")}`;
   const accessToken = `token-${code}-${suffix}`;
   const created = await orderRepo.create({
     keyHash: hash(`key-${code}-${suffix}`), requestHash: hash(`req-${code}`), publicCode: code, accessToken, accessTokenHash: hash(accessToken), customerId,
@@ -76,13 +76,13 @@ describe("payment incidents and recovery with isolated PostgreSQL", () => {
 
   afterAll(async () => {
     if (!admin) return;
-    const orders = "(SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'BP-8%')";
+    const orders = "(SELECT id FROM app.pedidos WHERE codigo_publico LIKE 'RC-8%')";
     for (const table of ["pagamento_ocorrencias", "pagamentos", "movimentos_estoque", "reservas_estoque", "pedido_status_historico", "pedido_itens"])
       await admin.query(`DELETE FROM app.${table} WHERE pedido_id IN ${orders}`);
     await admin.query({ text: "DELETE FROM app.webhook_eventos WHERE gateway_event_id LIKE $1", values: [`evt-inc-${suffix}%`] });
-    await admin.query(`DELETE FROM app.idempotency_keys WHERE recurso_id IN (SELECT id::text FROM app.pedidos WHERE codigo_publico LIKE 'BP-8%')`);
-    await admin.query(`DELETE FROM app.email_outbox WHERE event_key LIKE ANY(ARRAY(SELECT 'order-received:'||id FROM app.pedidos WHERE codigo_publico LIKE 'BP-8%' UNION ALL SELECT 'payment-confirmed:'||id FROM app.pedidos WHERE codigo_publico LIKE 'BP-8%' UNION ALL SELECT 'ops-alert:order-paid:'||id FROM app.pedidos WHERE codigo_publico LIKE 'BP-8%'))`);
-    await admin.query("DELETE FROM app.pedidos WHERE codigo_publico LIKE 'BP-8%'");
+    await admin.query(`DELETE FROM app.idempotency_keys WHERE recurso_id IN (SELECT id::text FROM app.pedidos WHERE codigo_publico LIKE 'RC-8%')`);
+    await admin.query(`DELETE FROM app.email_outbox WHERE event_key LIKE ANY(ARRAY(SELECT 'order-received:'||id FROM app.pedidos WHERE codigo_publico LIKE 'RC-8%' UNION ALL SELECT 'payment-confirmed:'||id FROM app.pedidos WHERE codigo_publico LIKE 'RC-8%' UNION ALL SELECT 'ops-alert:order-paid:'||id FROM app.pedidos WHERE codigo_publico LIKE 'RC-8%'))`);
+    await admin.query("DELETE FROM app.pedidos WHERE codigo_publico LIKE 'RC-8%'");
     await admin.query({ text: "DELETE FROM app.produto_variantes WHERE id=ANY($1)", values: [variants] });
     await admin.query({ text: "DELETE FROM app.produtos WHERE id=$1", values: [productId] });
     await admin.query({ text: "DELETE FROM app.clientes WHERE id=$1", values: [customerId] });

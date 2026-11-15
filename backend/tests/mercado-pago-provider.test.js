@@ -23,7 +23,7 @@ describe("Mercado Pago Checkout Pro provider", () => {
     );
     const provider = createMercadoPagoProvider({ fetchImpl, config, now: () => Date.parse("2026-10-29T12:00:00Z") });
     const result = await provider.createPayment({
-      reference: "BP-1234567890ABCDEF",
+      reference: "RC-1234567890ABCDEF",
       amount: "120.50",
       method: "PIX",
       idempotencyKey: "1234567890abcdef",
@@ -46,7 +46,7 @@ describe("Mercado Pago Checkout Pro provider", () => {
   it("closes the checkout when the stock reservation ends and excludes delayed-settlement methods", async () => {
     const fetchImpl = vi.fn(async () => jsonResponse({ id: "pref-2", init_point: "https://mercadopago.test/checkout/pref-2" }));
     const provider = createMercadoPagoProvider({ fetchImpl, config, now: () => Date.parse("2026-10-29T12:00:00Z") });
-    await provider.createPayment({ reference: "BP-1", amount: "10.00", method: "PIX", idempotencyKey: "1234567890abcdef", expiresAt: "2026-10-29T12:25:00.000Z" });
+    await provider.createPayment({ reference: "RC-1", amount: "10.00", method: "PIX", idempotencyKey: "1234567890abcdef", expiresAt: "2026-10-29T12:25:00.000Z" });
     const body = JSON.parse(fetchImpl.mock.calls[0][1].body);
     expect(body).toMatchObject({
       expires: true,
@@ -61,7 +61,7 @@ describe("Mercado Pago Checkout Pro provider", () => {
     const fetchImpl = vi.fn();
     const provider = createMercadoPagoProvider({ fetchImpl, config, now: () => Date.parse("2026-10-29T12:00:00Z") });
     for (const expiresAt of [undefined, "invalid", "2026-10-29T11:59:59Z"])
-      await expect(provider.createPayment({ reference: "BP-1", amount: "10.00", method: "PIX", idempotencyKey: "1234567890abcdef", expiresAt })).rejects.toMatchObject({ code: "RESERVATION_EXPIRING" });
+      await expect(provider.createPayment({ reference: "RC-1", amount: "10.00", method: "PIX", idempotencyKey: "1234567890abcdef", expiresAt })).rejects.toMatchObject({ code: "RESERVATION_EXPIRING" });
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
@@ -74,7 +74,7 @@ describe("Mercado Pago Checkout Pro provider", () => {
     const fetchImpl = vi.fn(async () =>
       jsonResponse({
         id: 98765,
-        external_reference: "BP-1234567890ABCDEF",
+        external_reference: "RC-1234567890ABCDEF",
         status: "approved",
         transaction_amount: 120.5,
         currency_id: "BRL",
@@ -92,7 +92,7 @@ describe("Mercado Pago Checkout Pro provider", () => {
     });
     expect(event).toMatchObject({
       paymentId: "98765",
-      reference: "BP-1234567890ABCDEF",
+      reference: "RC-1234567890ABCDEF",
       status: "APPROVED",
       amount: "120.50",
       currency: "BRL",

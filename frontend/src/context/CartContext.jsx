@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect } from 'react';
+ 
+import { createContext, useContext, useState, useEffect } from 'react';
 
 export const CartContext = createContext();
 
@@ -8,7 +9,8 @@ export function CartProvider({ children }) {
     const [carrinho, setCarrinho] = useState(() => {
         try {
             const salvo = JSON.parse(localStorage.getItem('rusticerrado_carrinho') ?? '[]');
-            return Array.isArray(salvo) ? salvo : [];
+            // Só itens com variação (os do catálogo do banco); itens antigos, sem ela, saem.
+            return Array.isArray(salvo) ? salvo.filter((item) => Number.isInteger(item?.varianteId) && Number.isInteger(item?.quantidade) && item.quantidade > 0) : [];
         } catch {
             return [];
         }
@@ -92,4 +94,17 @@ export function CartProvider({ children }) {
             {children}
         </CartContext.Provider>
     );
+}
+
+// Formato que o servidor usa para conferir o carrinho e criar o pedido.
+export function useCart() {
+    const contexto = useContext(CartContext);
+    if (!contexto) throw new Error('useCart deve ser usado dentro de CartProvider');
+    const { carrinho, limparCarrinho, removerDoCarrinho, atualizarQuantidade } = contexto;
+    return {
+        items: carrinho.map((item) => ({ variantId: item.varianteId, quantity: item.quantidade })),
+        clearCart: limparCarrinho,
+        removeItem: (variantId) => removerDoCarrinho(`v${variantId}`),
+        updateQuantity: (variantId, quantity) => atualizarQuantidade(`v${variantId}`, quantity),
+    };
 }

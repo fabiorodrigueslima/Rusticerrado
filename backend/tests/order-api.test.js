@@ -16,7 +16,7 @@ describe("orders API security boundary", () => {
   });
   it("prevents caching of protected order responses", async () => {
     const response = await request(app)
-      .get("/api/v1/orders/BP-1234567890ABCDEF")
+      .get("/api/v1/orders/RC-1234567890ABCDEF")
       .set("X-Order-Token", "invalid");
     expect(response.headers["cache-control"]).toContain("no-store");
     expect(response.headers.pragma).toBe("no-cache");

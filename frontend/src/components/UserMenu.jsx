@@ -1,50 +1,33 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useContext, useEffect, useRef } from 'react';
-import { FaUser, FaUserCog, FaBox, FaSignOutAlt } from 'react-icons/fa';
-import { AuthContext } from '../context/AuthContext';
+import { useEffect, useRef, useState } from 'react';
+import { FaBox, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
+import { useCustomerAuth } from '../context/customerAuthContext.jsx';
 
+// Menu da conta do cliente (sessão por cookie seguro, igual ao Brinco de Princesa).
 export default function UserMenu() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const { user, logout, loading } = useContext(AuthContext);
+    const { user, loading, signOut } = useCustomerAuth();
     const navigate = useNavigate();
     const menuRef = useRef(null);
 
-    const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-
-    const fotoUsuario = user?.foto
-        ? user.foto.startsWith("data:image")
-            ? user.foto
-            : user.foto.startsWith("http")
-                ? user.foto
-                : `http://localhost:5000${user.foto}`
-        : defaultAvatar;
-
-    const toggleDropdown = (e) => {
-        e.stopPropagation();
-        setIsDropdownOpen(prev => !prev);
-    };
-
-    const closeDropdown = () => {
-        setIsDropdownOpen(false);
-    };
+    const nome = user?.name ?? user?.nome ?? '';
+    const closeDropdown = () => setIsDropdownOpen(false);
 
     const handleLogout = async () => {
-        await logout();
-        closeDropdown();
-        navigate('/');
+        try {
+            await signOut();
+        } finally {
+            closeDropdown();
+            navigate('/');
+        }
     };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setIsDropdownOpen(false);
-            }
+            if (menuRef.current && !menuRef.current.contains(event.target)) setIsDropdownOpen(false);
         };
-
         document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     if (loading) return null;
@@ -62,47 +45,24 @@ export default function UserMenu() {
         <div className="user-menu-container" ref={menuRef}>
             <button
                 type="button"
-                onClick={toggleDropdown}
+                onClick={(event) => { event.stopPropagation(); setIsDropdownOpen((open) => !open); }}
                 className="user-avatar-btn"
+                aria-label="Minha conta"
+                aria-expanded={isDropdownOpen}
             >
-                <img
-                    src={fotoUsuario}
-                    alt="Perfil"
-                    className="user-avatar"
-                    onError={(e) => {
-                        e.currentTarget.src = defaultAvatar;
-                    }}
-                />
+                <FaUserCircle className="user-avatar" aria-hidden="true" />
             </button>
 
             {isDropdownOpen && (
                 <div className="user-dropdown">
-
-                    <div className="dropdown-header">
-                        Olá, {user?.nome || 'Usuário'}
-                    </div>
-
-                    <Link to="/perfil" onClick={closeDropdown}>
-                        <FaUser /> Meu Perfil
-                    </Link>
-
+                    <div className="dropdown-header">Olá, {nome.split(' ')[0] || 'cliente'}</div>
                     <Link to="/minha-conta" onClick={closeDropdown}>
-                        <FaUserCog /> Minha Conta
+                        <FaBox /> Minha conta e pedidos
                     </Link>
-
-                    <Link to="/compras" onClick={closeDropdown}>
-                        <FaBox /> Minhas Compras
-                    </Link>
-
                     <hr />
-
-                    <button
-                        onClick={handleLogout}
-                        className="logout-btn"
-                    >
+                    <button onClick={handleLogout} className="logout-btn">
                         <FaSignOutAlt /> Sair
                     </button>
-
                 </div>
             )}
         </div>

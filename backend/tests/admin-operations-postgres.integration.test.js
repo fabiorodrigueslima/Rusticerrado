@@ -33,7 +33,7 @@ async function customerSession() {
 const as = (session, method, path) => request(app)[method](`/api/v1${path}`).set('Origin', origin).set('Cookie', session.cookie).set('X-CSRF-Token', session.csrf)
 
 async function placeOrder(customerId) {
-  const code = `BP-9${randomUUID().replaceAll('-', '').slice(0, 15).toUpperCase()}`
+  const code = `RC-9${randomUUID().replaceAll('-', '').slice(0, 15).toUpperCase()}`
   const accessToken = randomUUID()
   await orderRepository.create({
     keyHash: hash(`key-${code}`), requestHash: hash(code), publicCode: code, accessToken, accessTokenHash: hash(accessToken), customerId,

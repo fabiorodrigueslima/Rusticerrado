@@ -15,7 +15,7 @@ const response = body => ({ok:true,json:async()=>body});
 describe('production integration contracts',()=>{
   it.each([['20.00','120.00'],['0.00','100.00']])('includes shipping %s in the authoritative total',async(shipping,amount)=>{
     const fetchImpl=vi.fn(async()=>response({id:'pref',init_point:'https://checkout.example.com'}));
-    await createMercadoPagoProvider({config,fetchImpl}).createPayment({reference:'BP-TEST',amount,shipping,items:[{quantity:2,unitPrice:'33.33'},{quantity:1,unitPrice:'33.34'}],idempotencyKey:'test-key',expiresAt:new Date(Date.now()+20*60000)});
+    await createMercadoPagoProvider({config,fetchImpl}).createPayment({reference:'RC-TEST',amount,shipping,items:[{quantity:2,unitPrice:'33.33'},{quantity:1,unitPrice:'33.34'}],idempotencyKey:'test-key',expiresAt:new Date(Date.now()+20*60000)});
     const body=JSON.parse(fetchImpl.mock.calls[0][1].body);
     expect(body.items.reduce((sum,item)=>sum+toCents(item.unit_price)*item.quantity,0)+toCents(body.shipments.cost)).toBe(toCents(amount));
     expect(body.metadata.payment_attempt).toBe('test-key');
@@ -41,13 +41,13 @@ describe('production integration contracts',()=>{
   it('replays a stored preference without another external call',async()=>{
     const provider={name:'mercado-pago',createPayment:vi.fn()};
     const repository={prepare:vi.fn(async()=>({replayed:true,checkoutUrl:'https://checkout.example.com'}))};
-    const result=await createPaymentService({provider,repository,orders:{get:async()=>({status:'PENDING_PAYMENT',total:'120.00'})}}).create({code:'BP-X',token:'test',method:'PIX',idempotencyKey:'1234567890abcdef'});
+    const result=await createPaymentService({provider,repository,orders:{get:async()=>({status:'PENDING_PAYMENT',total:'120.00'})}}).create({code:'RC-X',token:'test',method:'PIX',idempotencyKey:'1234567890abcdef'});
     expect(result.replayed).toBe(true);expect(provider.createPayment).not.toHaveBeenCalled();
   });
   it('marks ambiguous provider failures instead of blindly retrying',async()=>{
     const repository={prepare:vi.fn(async()=>({id:1})),uncertain:vi.fn()};
     const provider={name:'mercado-pago',createPayment:vi.fn(async()=>{throw new Error('timeout')})};
-    await expect(createPaymentService({provider,repository,orders:{get:async()=>({status:'PENDING_PAYMENT',total:'120.00'})}}).create({code:'BP-X',token:'test',method:'PIX',idempotencyKey:'1234567890abcdef'})).rejects.toThrow('timeout');
+    await expect(createPaymentService({provider,repository,orders:{get:async()=>({status:'PENDING_PAYMENT',total:'120.00'})}}).create({code:'RC-X',token:'test',method:'PIX',idempotencyKey:'1234567890abcdef'})).rejects.toThrow('timeout');
     expect(repository.uncertain).toHaveBeenCalledWith(1);
   });
   it('keeps the Supabase secret key on the server when authorizing an upload',async()=>{

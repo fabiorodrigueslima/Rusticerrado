@@ -1,0 +1,20 @@
+import { useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { PageMeta } from '../../components/common/PageMeta.jsx'
+import { customerForgot, customerReset } from '../../services/lojaApi.js'
+import { useCustomerAuth } from '../../context/customerAuthContext.jsx'
+import { TurnstileWidget } from '../../components/common/TurnstileWidget.jsx'
+import { useHumanCheck } from '../../context/useHumanCheck.js'
+
+// Only same-site paths are accepted after login, never another origin.
+ 
+export const safeNext=(value)=>typeof value==='string'&&/^\/(?![/\\])/.test(value)?value:'/minha-conta'
+export function CustomerAuthPage({mode}){
+  const navigate=useNavigate();const [params]=useSearchParams();const { signIn, signUp } = useCustomerAuth();const [form,setForm]=useState({name:'',email:'',phone:'',password:'',token:params.get('token')??''});const [message,setMessage]=useState('');const [loading,setLoading]=useState(false)
+  // Anti-robot check only on the forms that create accounts or send e-mails.
+  const checked=mode==='register'||mode==='forgot';const human=useHumanCheck(mode==='register'?'register':'forgot')
+  const update=(event)=>setForm({...form,[event.target.name]:event.target.value})
+  const submit=async(event)=>{event.preventDefault();if(checked&&!human.ready){setMessage('Confirme que você não é um robô.');return}setLoading(true);setMessage('');try{if(mode==='register')await signUp({name:form.name,email:form.email,phone:form.phone,password:form.password},human.token);else if(mode==='login')await signIn({email:form.email,password:form.password});else if(mode==='forgot'){const result=await customerForgot({email:form.email},undefined,human.token);setMessage(result.data.developmentResetToken?`Ambiente de desenvolvimento: token ${result.data.developmentResetToken}`:'Se a conta existir, você receberá as instruções.');return}else await customerReset({token:form.token,password:form.password});navigate(safeNext(params.get('next')),{replace:true})}catch(error){setMessage(error.message)}finally{setLoading(false);if(checked)human.reset()}}
+  const titles={register:'Criar conta',login:'Entrar',forgot:'Recuperar senha',reset:'Redefinir senha'}
+  return <section className="checkout-page container customer-auth-page"><PageMeta title={titles[mode]} description="Conta de cliente RustiCerrado." noindex/><form className="checkout-form customer-auth-form" onSubmit={submit}><p className="eyebrow">Conta RustiCerrado</p><fieldset><legend>{titles[mode]}</legend>{mode==='register'&&<><label>Nome<input name="name" value={form.name} onChange={update} required autoComplete="name"/></label><label>Telefone<input name="phone" value={form.phone} onChange={update} required autoComplete="tel"/></label></>}{mode!=='reset'&&<label>E-mail<input name="email" type="email" value={form.email} onChange={update} required autoComplete="email"/></label>}{mode==='reset'&&<label>Token de recuperação<input name="token" value={form.token} onChange={update} required/></label>}{mode!=='forgot'&&<label>Senha<input name="password" type="password" minLength="8" value={form.password} onChange={update} required autoComplete={mode==='login'?'current-password':'new-password'}/></label>}</fieldset>{checked&&<TurnstileWidget {...human.widget}/>}{mode==='register'&&<p><Link to="/ativar-conta">Já possui cadastro sem senha? Ativar conta</Link></p>}<p className="customer-auth-message" role="status">{message}</p><button className="button button-primary" disabled={loading}>{loading?'Aguarde…':titles[mode]}</button>{mode==='login'&&<p className="customer-auth-links"><Link to="/ativar-conta">Ativar cadastro existente</Link><span aria-hidden="true">·</span><Link to="/recuperar-senha">Esqueci minha senha</Link><span aria-hidden="true">·</span><Link to="/cadastro">Criar conta</Link></p>}</form></section>
+}

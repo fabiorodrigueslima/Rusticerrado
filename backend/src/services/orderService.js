@@ -21,7 +21,7 @@ export function createOrderService({ checkout = checkoutService, repository = or
       if (!quote.selectedShipping || quote.total == null) throw new AppError(409, 'FINAL_QUOTE_REQUIRED', 'Uma cotação real de entrega precisa ser selecionada.')
       if (input.expectedTotal && input.expectedTotal !== quote.total) throw new AppError(409, 'QUOTE_CHANGED', 'O valor da entrega mudou. Revise a cotação antes de pagar.')
       const accessToken = randomBytes(32).toString('base64url')
-      return repository.create({ ...input, quote, keyHash: hash(idempotencyKey), requestHash: hash(stable(input)), publicCode: `BP-${randomBytes(8).toString('hex').toUpperCase()}`, accessToken, accessTokenHash: hash(accessToken) })
+      return repository.create({ ...input, quote, keyHash: hash(idempotencyKey), requestHash: hash(stable(input)), publicCode: `RC-${randomBytes(8).toString('hex').toUpperCase()}`, accessToken, accessTokenHash: hash(accessToken) })
     },
     async get(code, accessToken) {
       if (!accessToken) throw new AppError(401, 'ORDER_TOKEN_REQUIRED', 'Token de acesso ao pedido obrigatório.')

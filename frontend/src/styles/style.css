@@ -6462,3 +6462,16 @@ ul {
   color: var(--secondary-dark);
   text-decoration: underline;
 }
+.carrinho-aviso {
+  color: #9b1c1c;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.carrinho-nota {
+  margin: 0.75rem 0;
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+.carrinho-item-indisponivel {
+  opacity: 0.75;
+}
