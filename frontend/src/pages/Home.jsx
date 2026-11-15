@@ -9,13 +9,7 @@ import Loading from "../components/Loading";
 
 import logoRusticerrado from "../assets/img/RustiCerrado.oficial.png";
 
-// ✅ IMPORTAR IMAGENS CORRETAMENTE
-import tabuaChurrasco from "../assets/img/Tábua de Churrasco.jpeg";
-import abridorMagnetico from "../assets/img/Abridor magnetico.jpeg";
-import portaJoias from "../assets/img/Porta Joias.jpeg";
-import resina from "../assets/img/Resina.png";
-import portaFaca from "../assets/img/Porta Faca.jpeg";
-import tabuaDeServir from "../assets/img/Tábua de Servir.jpeg";
+import { listarProdutos } from "../services/catalogo";
 
 import "../styles/style.css";
 
@@ -23,61 +17,21 @@ export default function Home() {
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Peças publicadas no painel: primeiro as marcadas como destaque, depois as mais novas.
     useEffect(() => {
-        // Simular carregamento
-        setTimeout(() => {
-            setProdutos([
-                {
-                    id: 1,
-                    nome: "Tábua de Churrasco",
-                    descricao: "Tábua artesanal em madeira e resina",
-                    preco: 150.0,
-                    imagem: tabuaChurrasco,
-                },
-                {
-                    id: 2,
-                    nome: "Abridor Magnético",
-                    descricao: "Abridor de garrafas com design único",
-                    preco: 45.0,
-                    imagem: abridorMagnetico,
-                },
-                {
-                    id: 3,
-                    nome: "Porta Joias",
-                    descricao: "Organizador de joias em madeira e resina",
-                    preco: 85.0,
-                    imagem: portaJoias,
-                },
-                {
-                    id: 4,
-                    nome: "Resina Decorativa",
-                    descricao: "Peça artesanal em resina pura",
-                    preco: 120.0,
-                    imagem: resina,
-                },
-                {
-                    id: 5,
-                    nome: "Porta Faca",
-                    descricao: "Organizador de facas em madeira e resina",
-                    preco: 55.0,
-                    imagem: portaFaca,
-                },
-                {
-                    id: 6,
-                    nome: "Tábua de Servir",
-                    descricao: "Tábua decorativa e funcional",
-                    preco: 180.0,
-                    imagem: tabuaDeServir,
-                },
-            ]);
-
-            setLoading(false);
-        }, 500);
+        const controller = new AbortController();
+        listarProdutos({ ordem: "newest", limite: 24 }, controller.signal)
+            .then((lista) => {
+                const destaques = lista.filter((produto) => produto.destaque);
+                const outras = lista.filter((produto) => !produto.destaque);
+                setProdutos([...destaques, ...outras].slice(0, 6));
+            })
+            .catch(() => setProdutos([]))
+            .finally(() => {
+                if (!controller.signal.aborted) setLoading(false);
+            });
+        return () => controller.abort();
     }, []);
-
-    if (loading) {
-        return <Loading />;
-    }
 
     return (
         <div className="home">
@@ -113,11 +67,19 @@ export default function Home() {
                         <h2>Peças em Destaque</h2>
                     </div>
 
-                    <div className="produtos-grid">
-                        {produtos.map((produto) => (
-                            <ProductCard key={produto.id} produto={produto} />
-                        ))}
-                    </div>
+                    {loading ? (
+                        <Loading />
+                    ) : produtos.length > 0 ? (
+                        <div className="produtos-grid">
+                            {produtos.map((produto) => (
+                                <ProductCard key={produto.id} produto={produto} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="no-products">
+                            <p>Novas peças chegando em breve. Fale com a gente no WhatsApp!</p>
+                        </div>
+                    )}
 
                     <div style={{ textAlign: "center", marginTop: "40px" }}>
                         <Link to="/loja" className="btn btn-primary">

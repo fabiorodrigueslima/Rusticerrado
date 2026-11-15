@@ -6,14 +6,7 @@ import FilterBar from "../components/FilterBar";
 import Loading from "../components/Loading";
 import { CartContext } from "../context/CartContext";
 
-import tabuaChurrasco from "../assets/img/Tábua de Churrasco.jpeg";
-import abridorMagnetico from "../assets/img/Abridor magnetico.jpeg";
-import portaJoias from "../assets/img/Porta Joias.jpeg";
-import resina from "../assets/img/Resina.png";
-import portaFaca from "../assets/img/Porta Faca.jpeg";
-import tabuaDeServir from "../assets/img/Tábua de Servir.jpeg";
-import chaveiroPersonalizado from "../assets/img/Chaveiro Personalizado.jpeg";
-import petisqueiraDeMadeira from "../assets/img/Pestiqueira de madeira.jpeg";
+import { formatarPreco, itemParaCarrinho, listarProdutos } from "../services/catalogo";
 
 import "../styles/style.css";
 
@@ -26,79 +19,21 @@ export default function Loja() {
     const [loading, setLoading] = useState(true);
     const [searchValue, setSearchValue] = useState("");
     const [sortValue, setSortValue] = useState("nome");
+    const [erro, setErro] = useState("");
+    const [adicionando, setAdicionando] = useState(null);
 
+    // Peças publicadas pela dona no painel.
     useEffect(() => {
-        setTimeout(() => {
-            const allProdutos = [
-                {
-                    id: 1,
-                    nome: "Tábua de Churrasco",
-                    descricao: "Tábua artesanal em madeira e resina.",
-                    preco: 150.0,
-                    imagem: tabuaChurrasco,
-                    estoque: 5,
-                },
-                {
-                    id: 2,
-                    nome: "Abridor Magnético",
-                    descricao: "Abridor de garrafas com design único.",
-                    preco: 45.0,
-                    imagem: abridorMagnetico,
-                    estoque: 10,
-                },
-                {
-                    id: 3,
-                    nome: "Porta Joias",
-                    descricao: "Organizador de joias em madeira e resina.",
-                    preco: 85.0,
-                    imagem: portaJoias,
-                    estoque: 4,
-                },
-                {
-                    id: 4,
-                    nome: "Resina Decorativa",
-                    descricao: "Peça artesanal em resina pura.",
-                    preco: 120.0,
-                    imagem: resina,
-                    estoque: 6,
-                },
-                {
-                    id: 5,
-                    nome: "Porta Faca",
-                    descricao: "Organizador de facas em madeira.",
-                    preco: 55.0,
-                    imagem: portaFaca,
-                    estoque: 7,
-                },
-                {
-                    id: 6,
-                    nome: "Tábua de Servir",
-                    descricao: "Tábua decorativa e funcional.",
-                    preco: 180.0,
-                    imagem: tabuaDeServir,
-                    estoque: 3,
-                },
-                {
-                    id: 7,
-                    nome: "Chaveiro Artesanal",
-                    descricao: "Chaveiro personalizado artesanal.",
-                    preco: 25.0,
-                    imagem: chaveiroPersonalizado,
-                    estoque: 20,
-                },
-                {
-                    id: 8,
-                    nome: "Petisqueira de Madeira",
-                    descricao: "Petisqueira artesanal em madeira.",
-                    preco: 85.0,
-                    imagem: petisqueiraDeMadeira,
-                    estoque: 5,
-                },
-            ];
-
-            setProdutos(allProdutos);
-            setLoading(false);
-        }, 500);
+        const controller = new AbortController();
+        listarProdutos({ ordem: "name", limite: 48 }, controller.signal)
+            .then(setProdutos)
+            .catch((error) => {
+                if (error.name !== "AbortError") setErro("Não foi possível carregar as peças agora. Tente de novo em instantes ou fale com a gente no WhatsApp.");
+            })
+            .finally(() => {
+                if (!controller.signal.aborted) setLoading(false);
+            });
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {
@@ -119,30 +54,25 @@ export default function Loja() {
         setFilteredProdutos(filtered);
     }, [produtos, searchValue, sortValue]);
 
-    function formatPrice(valor) {
-        return valor.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-        });
+    const formatPrice = formatarPreco;
+
+    // O botão da lista usa a primeira variação disponível da peça.
+    async function adicionar(produto, irParaCarrinho) {
+        setAdicionando(produto.slug);
+        try {
+            const item = await itemParaCarrinho(produto.slug);
+            adicionarAoCarrinho(item);
+            if (irParaCarrinho) navigate("/carrinho");
+            else alert(`${item.nome} foi adicionado ao carrinho!`);
+        } catch (error) {
+            alert(error.message || "Não foi possível adicionar ao carrinho.");
+        } finally {
+            setAdicionando(null);
+        }
     }
 
-    function handleAdicionarCarrinho(produto) {
-        adicionarAoCarrinho({
-            ...produto,
-            quantidade: 1,
-        });
-
-        alert(`${produto.nome} foi adicionado ao carrinho!`);
-    }
-
-    function handleComprarAgora(produto) {
-        adicionarAoCarrinho({
-            ...produto,
-            quantidade: 1,
-        });
-
-        navigate("/carrinho");
-    }
+    const handleAdicionarCarrinho = (produto) => adicionar(produto, false);
+    const handleComprarAgora = (produto) => adicionar(produto, true);
 
     function handleClearFilters() {
         setSearchValue("");
@@ -192,7 +122,7 @@ export default function Loja() {
                             {filteredProdutos.map((produto) => (
                                 <div className="product-card loja-card" key={produto.id}>
                                     <div className="product-image-wrapper">
-                                        <img src={produto.imagem} alt={produto.nome} />
+                                        <img src={produto.imagem} alt={produto.imagemAlt ?? produto.nome} loading="lazy" />
 
                                         <div className="produto-overlay">
                                             <Link to={`/produto/${produto.id}`} className="btn-ver">
@@ -207,18 +137,17 @@ export default function Loja() {
                                         <p className="produto-descricao">{produto.descricao}</p>
 
                                         <p className="produto-estoque">
-                                            {produto.estoque > 0
-                                                ? `Em estoque: ${produto.estoque}`
-                                                : "Fora de estoque"}
+                                            {produto.emEstoque ? "Disponível" : "Esgotado no momento"}
                                         </p>
 
                                         <div className="produto-footer">
                                             <span className="produto-preco">
+                                                {produto.precoOriginal && <s className="produto-preco-original">{formatPrice(produto.precoOriginal)}</s>}{" "}
                                                 {formatPrice(produto.preco)}
                                             </span>
 
                                             <a
-                                                href={`https://wa.me/5561999952341?text=Olá! Tenho interesse no produto: ${produto.nome}`}
+                                                href={`https://wa.me/5561999952341?text=${encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome}`)}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="btn-whats"
@@ -232,7 +161,7 @@ export default function Loja() {
                                             <button
                                                 className="btn btn-secondary"
                                                 onClick={() => handleAdicionarCarrinho(produto)}
-                                                disabled={produto.estoque <= 0}
+                                                disabled={!produto.emEstoque || adicionando === produto.slug}
                                             >
                                                 <FaShoppingCart /> Adicionar
                                             </button>
@@ -240,7 +169,7 @@ export default function Loja() {
                                             <button
                                                 className="btn btn-primary"
                                                 onClick={() => handleComprarAgora(produto)}
-                                                disabled={produto.estoque <= 0}
+                                                disabled={!produto.emEstoque || adicionando === produto.slug}
                                             >
                                                 Comprar
                                             </button>
@@ -251,7 +180,9 @@ export default function Loja() {
                         </div>
                     ) : (
                         <div className="no-products">
-                            <p>Nenhum produto encontrado.</p>
+                            <p role={erro ? "alert" : undefined}>
+                                {erro || (produtos.length ? "Nenhum produto encontrado." : "Novas peças chegando em breve.")}
+                            </p>
                         </div>
                     )}
                 </div>

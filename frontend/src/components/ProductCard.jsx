@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
+import { formatarPreco } from '../services/catalogo';
 
 export default function ProductCard({ produto }) {
     return (
         <div className="product-card">
             <div className="product-image-wrapper">
-                <img src={produto.imagem} alt={produto.nome} />
+                <img src={produto.imagem} alt={produto.imagemAlt ?? produto.nome} loading="lazy" />
                 <div className="produto-overlay">
                     <Link to={`/produto/${produto.id}`} className="btn-ver">
                         Ver Detalhes
@@ -19,10 +20,11 @@ export default function ProductCard({ produto }) {
 
                 <div className="produto-footer">
                     <span className="produto-preco">
-                        R$ {produto.preco.toFixed(2).replace('.', ',')}
+                        {produto.precoOriginal && <s className="produto-preco-original">{formatarPreco(produto.precoOriginal)}</s>}{' '}
+                        {formatarPreco(produto.preco)}
                     </span>
                     <a
-                        href={`https://wa.me/5561999952341?text=Olá! Tenho interesse no produto: ${produto.nome}`}
+                        href={`https://wa.me/5561999952341?text=${encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-whats"

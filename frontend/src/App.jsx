@@ -2,6 +2,7 @@
  * App.jsx - Aplicação Principal RustiCerrado
  */
 
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { CartProvider } from "./context/CartContext";
@@ -9,6 +10,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import { FilterProvider } from "./context/FilterContext";
+import { StorefrontProvider } from "./context/StorefrontProvider";
 
 import WhatsAppButton from "./components/WhatsAppButton";
 
@@ -38,9 +40,28 @@ import MinhaConta from "./pages/MinhaConta";
 // Estilos
 import "./styles/style.css";
 
-function App() {
+// O painel é só para a equipe da loja: ele só é baixado quando alguém abre /admin.
+const AdminPage = lazy(() =>
+  import("./pages/admin/AdminPage.jsx").then((module) => ({ default: module.AdminPage })),
+);
+const AdminInvitePage = lazy(() =>
+  import("./pages/admin/AdminInvitePage.jsx").then((module) => ({ default: module.AdminInvitePage })),
+);
+const AdminForgotPasswordPage = lazy(() =>
+  import("./pages/admin/AdminPasswordPage.jsx").then((module) => ({ default: module.AdminForgotPasswordPage })),
+);
+const AdminResetPasswordPage = lazy(() =>
+  import("./pages/admin/AdminPasswordPage.jsx").then((module) => ({ default: module.AdminResetPasswordPage })),
+);
+const adminLoading = (
+  <main className="admin-login">
+    <p role="status">Carregando o painel…</p>
+  </main>
+);
+
+// Site da loja: cabeçalho, páginas e rodapé.
+function SiteShell() {
   return (
-    <Router>
       <ThemeProvider>
         <NotificationProvider>
           <AuthProvider>
@@ -153,6 +174,26 @@ function App() {
           </AuthProvider>
         </NotificationProvider>
       </ThemeProvider>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <StorefrontProvider>
+        <Suspense fallback={adminLoading}>
+          <Routes>
+            {/* PAINEL (fora do layout do site) */}
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/convite" element={<AdminInvitePage />} />
+            <Route path="/admin/esqueci-a-senha" element={<AdminForgotPasswordPage />} />
+            <Route path="/admin/redefinir-senha" element={<AdminResetPasswordPage />} />
+
+            {/* SITE */}
+            <Route path="/*" element={<SiteShell />} />
+          </Routes>
+        </Suspense>
+      </StorefrontProvider>
     </Router>
   );
 }

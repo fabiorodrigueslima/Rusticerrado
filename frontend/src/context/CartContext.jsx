@@ -3,19 +3,16 @@ import { createContext, useState, useEffect } from 'react';
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
-    const [carrinho, setCarrinho] = useState([]);
-
-    // Carregar carrinho do localStorage ao montar
-    useEffect(() => {
-        const carrinhoSalvo = localStorage.getItem('rusticerrado_carrinho');
-        if (carrinhoSalvo) {
-            try {
-                setCarrinho(JSON.parse(carrinhoSalvo));
-            } catch (error) {
-                console.error('Erro ao carregar carrinho:', error);
-            }
+    // Lê o carrinho salvo ANTES da primeira tela. (Antes ele era lido depois e o efeito
+    // abaixo gravava o carrinho vazio por cima, apagando o que a pessoa tinha escolhido.)
+    const [carrinho, setCarrinho] = useState(() => {
+        try {
+            const salvo = JSON.parse(localStorage.getItem('rusticerrado_carrinho') ?? '[]');
+            return Array.isArray(salvo) ? salvo : [];
+        } catch {
+            return [];
         }
-    }, []);
+    });
 
     // Salvar carrinho no localStorage sempre que mudar
     useEffect(() => {

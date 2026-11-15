@@ -76,10 +76,12 @@ const rawAdminUrl = process.env.DATABASE_ADMIN_URL
 if (!rawAdminUrl || rawAdminUrl.includes('COLE_AQUI') || rawAdminUrl.includes('[YOUR-PASSWORD]')) {
   fail('Cole em DATABASE_ADMIN_URL (backend/.env) a URI do Session pooler do Supabase, com a senha do banco.')
 }
-if (process.env.DB_SSL !== 'true') fail('Use DB_SSL=true em backend/.env: o Supabase exige conexão segura.')
+const localHosts = new Set(['localhost', '127.0.0.1', '::1'])
+// Sem TLS só um banco de teste no próprio computador; o Supabase sempre usa conexão segura.
+if (process.env.DB_SSL !== 'true' && !localHosts.has(new URL(rawAdminUrl).hostname)) fail('Use DB_SSL=true em backend/.env: o Supabase exige conexão segura.')
 
 const { password: newRuntimePassword } = await ensureRuntimeUrl(new URL(rawAdminUrl))
-const { adminUrl } = resolveAdminConnection()
+const { adminUrl, runtimeUrl } = resolveAdminConnection()
 
 const client = new Client({
   connectionString: adminUrl.toString(),
@@ -105,10 +107,10 @@ try {
 
   const runtime = await client.query('SELECT 1 FROM pg_roles WHERE rolname = $1', [RUNTIME_ROLE])
   if (runtime.rowCount === 0) {
-    if (!newRuntimePassword) {
-      fail('O papel rustic_app não existe, mas DATABASE_URL já tem uma senha. Apague a linha DATABASE_URL de backend/.env e rode de novo.')
-    }
-    await client.query(`CREATE ROLE ${RUNTIME_ROLE} LOGIN PASSWORD ${client.escapeLiteral(newRuntimePassword)} NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT`)
+    // Papel novo: usa a senha recém-gerada ou a que já está em DATABASE_URL.
+    const password = newRuntimePassword ?? decodeURIComponent(runtimeUrl.password)
+    if (!password) fail('DATABASE_URL está sem senha. Apague a linha DATABASE_URL de backend/.env e rode de novo.')
+    await client.query(`CREATE ROLE ${RUNTIME_ROLE} LOGIN PASSWORD ${client.escapeLiteral(password)} NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT`)
   } else if (newRuntimePassword) {
     await client.query(`ALTER ROLE ${RUNTIME_ROLE} WITH PASSWORD ${client.escapeLiteral(newRuntimePassword)}`)
   }
