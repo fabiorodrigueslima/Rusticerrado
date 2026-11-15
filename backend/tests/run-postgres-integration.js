@@ -141,7 +141,7 @@ if (migrationResult.error) throw migrationResult.error
 if (migrationResult.status !== 0) process.exit(migrationResult.status ?? 1)
 
 for (const file of [
- 'development-seed-postgres.integration.test.js','catalog-postgres.integration.test.js','courses-postgres.integration.test.js',
+ 'catalog-postgres.integration.test.js',
  'orders-postgres.integration.test.js','payment-incidents-postgres.integration.test.js','csrf-multitab-postgres.integration.test.js','admin-operations-postgres.integration.test.js','admin-team-postgres.integration.test.js','admin-password-reset-postgres.integration.test.js','admin-payments-postgres.integration.test.js','runtime-privileges-postgres.integration.test.js','login-throttle-postgres.integration.test.js','payment-resilience-postgres.integration.test.js','runtime-postgres.integration.test.js','admin-postgres.integration.test.js',
  'customer-privacy-postgres.integration.test.js','a05-a06-postgres.integration.test.js','production-smoke-postgres.integration.test.js'
 ]) {

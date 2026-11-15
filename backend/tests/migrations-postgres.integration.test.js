@@ -85,6 +85,7 @@ describe("PostgreSQL migrations", () => {
       "023_payment_connection.sql",
       "024_runtime_least_privilege.sql",
       "025_course_admin.sql",
+      "026_rusticerrado_categories.sql",
     ]);
     expect(first.pending).toBe(0);
     expect(second.applied).toEqual([]);
@@ -114,16 +115,17 @@ describe("PostgreSQL migrations", () => {
       "023_payment_connection.sql",
       "024_runtime_least_privilege.sql",
       "025_course_admin.sql",
+      "026_rusticerrado_categories.sql",
     ]);
     expect(recorded.rows[0]).toMatchObject({ version: 1, name: "baseline" });
     expect(recorded.rows[0].checksum.trim()).toMatch(/^[a-f0-9]{64}$/);
 
     const categories = await client.query(
-      `SELECT slug, ativa FROM app.categorias WHERE slug IN ('brincos','aneis','colares','pulseiras','resina','florais') ORDER BY slug`,
+      "SELECT slug FROM app.categorias WHERE ativa ORDER BY ordem",
     );
-    expect(
-      categories.rows.filter((row) => row.ativa).map((row) => row.slug),
-    ).toEqual(["aneis", "brincos", "colares", "pulseiras"]);
+    expect(categories.rows.map((row) => row.slug)).toEqual([
+      "tabuas", "petisqueiras", "cozinha", "abridores", "chaveiros", "decoracao", "personalizados",
+    ]);
     const courseTables = await client.query(
       "SELECT to_regclass('app.cursos') cursos,to_regclass('app.curso_sessoes') sessoes",
     );

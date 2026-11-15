@@ -13,7 +13,6 @@ import {
   adjustStock,
   categories,
   collections,
-  courses,
   createProduct,
   product,
   setPrimaryImage,
@@ -49,8 +48,6 @@ import {
   resolvePaymentIncident,
   privacyRequests,
   updatePrivacyRequest,
-  createCourse,
-  updateCourse,
 } from "../controllers/adminController.js";
 import {
   adminListSchema,
@@ -72,7 +69,6 @@ import {
   inviteTokenSchema,
   inviteAcceptSchema,
   adminActiveSchema,
-  courseSchema,
 } from "../validators/adminValidators.js";
 
 export const adminRouter = Router();
@@ -157,9 +153,6 @@ adminRouter.post(
   validateRequest(statusSchema, "body"),
   updateOrderStatus,
 );
-adminRouter.get("/courses", courses);
-adminRouter.post("/courses",requireCsrf,requireRole("OWNER","MANAGER"),validateRequest(courseSchema,"body"),createCourse);
-adminRouter.put("/courses/:id",requireCsrf,requireRole("OWNER","MANAGER"),validateRequest(idParamsSchema,"params"),validateRequest(courseSchema,"body"),updateCourse);
 adminRouter.get("/categories", categories);
 adminRouter.get("/collections", collections);
 adminRouter.post("/categories",requireCsrf,requireRole("OWNER","MANAGER"),validateRequest(categorySchema,"body"),createCategory);
@@ -190,7 +183,7 @@ adminRouter.put(
   updateSettings,
 );
 
-// A photo for a product (productId) or the cover of a course (courseId): exactly one of them.
-const directImageSchema = z.object({productId:z.number().int().positive().optional(),courseId:z.number().int().positive().optional(),mime:z.enum(['image/jpeg','image/png','image/webp']),bytes:z.number().int().positive().max(5242880),alt:z.string().trim().min(2).max(180),primary:z.boolean().default(false)}).strict().refine((value)=>Boolean(value.productId)!==Boolean(value.courseId),{message:'Informe a peça ou o curso.'});
+// A photo for a product: the browser sends it straight to the storage with a one-time authorization.
+const directImageSchema = z.object({productId:z.number().int().positive(),mime:z.enum(['image/jpeg','image/png','image/webp']),bytes:z.number().int().positive().max(5242880),alt:z.string().trim().min(2).max(180),primary:z.boolean().default(false)}).strict();
 adminRouter.post('/images/sign',requireCsrf,requireRole('OWNER','MANAGER'),validateRequest(directImageSchema,'body'),async(req,res)=>res.status(201).json({data:await directUploadService.prepare(req.validated.body)}));
 adminRouter.post('/images/complete',requireCsrf,requireRole('OWNER','MANAGER'),validateRequest(z.object({id:z.string().uuid()}).strict(),'body'),async(req,res)=>res.json({data:await directUploadService.complete(req.validated.body.id)}));

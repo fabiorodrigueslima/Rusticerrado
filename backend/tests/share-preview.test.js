@@ -4,7 +4,7 @@ import { app } from '../src/app.js'
 import { createSharePreviewService, previewImage, sharePreviewService, shortDescription } from '../src/services/sharePreviewService.js'
 import { AppError } from '../src/utils/AppError.js'
 
-const origin = 'https://www.brincosdeprincesa.com.br'
+const origin = 'https://www.rusticerrado.com.br'
 const product = (overrides = {}) => ({
   name: 'Brinco Folha <Dourada>',
   description: 'Feito à mão com folha do Cerrado.',

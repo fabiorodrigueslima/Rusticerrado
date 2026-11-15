@@ -106,7 +106,7 @@ describe('environment configuration', () => {
     delete process.env.EMAIL_WEBHOOK_URL
     delete process.env.EMAIL_WEBHOOK_TOKEN
     vi.stubEnv('RESEND_API_KEY', 're_test_only')
-    vi.stubEnv('EMAIL_FROM', 'Brinco de Princesa <pedidos@brincosdeprincesa.com.br>')
+    vi.stubEnv('EMAIL_FROM', 'RustiCerrado <pedidos@rusticerrado.com.br>')
     const { env } = await import('../src/config/env.js')
     expect(env.EMAIL_PROVIDER).toBe('resend')
     vi.resetModules()

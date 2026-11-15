@@ -9,15 +9,15 @@ describe('product repository', () => {
     const repository = createProductRepository(dbQuery)
     const hostileSearch = "flor%' OR TRUE; DROP TABLE app.produtos; --"
 
-    await repository.list({ q: hostileSearch, category: 'brincos', collection: undefined, sort: 'price_asc', page: 2, limit: 12 })
+    await repository.list({ q: hostileSearch, category: 'tabuas', collection: undefined, sort: 'price_asc', page: 2, limit: 12 })
 
     expect(dbQuery).toHaveBeenCalledTimes(2)
     const countCall = dbQuery.mock.calls[0][0]
     const listCall = dbQuery.mock.calls[1][0]
     expect(countCall.text).not.toContain(hostileSearch)
     expect(listCall.text).not.toContain(hostileSearch)
-    expect(countCall.values).toEqual([`%${hostileSearch}%`, 'brincos'])
-    expect(listCall.values).toEqual([`%${hostileSearch}%`, 'brincos', 12, 12])
+    expect(countCall.values).toEqual([`%${hostileSearch}%`, 'tabuas'])
+    expect(listCall.values).toEqual([`%${hostileSearch}%`, 'tabuas', 12, 12])
     expect(listCall.text).toContain('ORDER BY menor_preco ASC, p.id ASC')
   })
 

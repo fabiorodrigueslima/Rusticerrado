@@ -10,7 +10,6 @@
     "db:check": "node --env-file-if-exists=.env src/scripts/checkDatabase.js",
     "db:status": "node --env-file-if-exists=.env src/scripts/migrationStatus.js",
     "db:migrate": "node --env-file-if-exists=.env src/scripts/runMigrations.js",
-    "db:seed:dev": "node --env-file-if-exists=.env src/scripts/runDevelopmentSeed.js",
     "admin:create": "node --env-file-if-exists=.env src/scripts/createAdmin.js",
     "jobs:expire-orders": "node --env-file-if-exists=.env src/scripts/expireOrders.js",
     "jobs:send-emails": "node --env-file-if-exists=.env src/scripts/sendEmails.js",

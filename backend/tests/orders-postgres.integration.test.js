@@ -80,7 +80,7 @@ describe("orders, stock and payment with isolated PostgreSQL", () => {
       })
     ).rows[0].id;
     const category = await admin.query(
-      "SELECT id FROM app.categorias WHERE slug='brincos'",
+      "SELECT id FROM app.categorias WHERE slug='tabuas'",
     );
     productId = (
       await admin.query({

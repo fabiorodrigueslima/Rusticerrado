@@ -4,9 +4,9 @@ import { renderEmail } from '../src/providers/emailTemplates.js'
 
 const config = {
   RESEND_API_KEY: 're_test_only',
-  EMAIL_FROM: 'RustiCerrado <pedidos@brincosdeprincesa.com.br>',
+  EMAIL_FROM: 'RustiCerrado <pedidos@rusticerrado.com.br>',
   EMAIL_REPLY_TO: 'loja@example.com',
-  PUBLIC_FRONTEND_URL: 'https://www.brincosdeprincesa.com.br',
+  PUBLIC_FRONTEND_URL: 'https://www.rusticerrado.com.br',
   EXTERNAL_REQUEST_TIMEOUT_MS: 4000,
 }
 const provider = (response = { ok: true }) => {
@@ -24,7 +24,7 @@ describe('emails sent through Resend', () => {
     expect(request.headers).toMatchObject({ Authorization: 'Bearer re_test_only', 'Idempotency-Key': 'order-received:7' })
     expect(body).toMatchObject({ from: config.EMAIL_FROM, to: ['cliente@example.com'], reply_to: 'loja@example.com', subject: 'Recebemos seu pedido BDP-123' })
     expect(body.text).toMatch(/R\$\s89,90/)
-    expect(body.html).toContain('https://www.brincosdeprincesa.com.br/minha-conta')
+    expect(body.html).toContain('https://www.rusticerrado.com.br/minha-conta')
   })
 
   it('tells the customer the order was shipped, with the tracking code and link', async () => {
@@ -34,12 +34,12 @@ describe('emails sent through Resend', () => {
     expect(withLink.html).toContain('href="https://rastreio.example/AA123456789BR"')
     const withoutLink = renderEmail('order-shipped', { code: 'BDP-9', trackingCode: 'AA123456789BR' }, { siteUrl: config.PUBLIC_FRONTEND_URL })
     expect(withoutLink.text).toContain('rastreamento.correios.com.br')
-    expect(withoutLink.html).toContain('https://www.brincosdeprincesa.com.br/minha-conta')
+    expect(withoutLink.html).toContain('https://www.rusticerrado.com.br/minha-conta')
   })
 
   it('sends password recovery with the reset link', async () => {
     const { fetchImpl, email } = provider()
-    await email.sendPasswordReset({ email: 'cliente@example.com', resetUrl: 'https://www.brincosdeprincesa.com.br/redefinir-senha?token=abc' })
+    await email.sendPasswordReset({ email: 'cliente@example.com', resetUrl: 'https://www.rusticerrado.com.br/redefinir-senha?token=abc' })
     const body = JSON.parse(fetchImpl.mock.calls[0][1].body)
     expect(body.subject).toBe('Crie uma nova senha')
     expect(body.html).toContain('redefinir-senha?token=abc')
@@ -60,7 +60,7 @@ describe('emails sent through Resend', () => {
 })
 
 describe('email texts', () => {
-  const site = { siteUrl: 'https://www.brincosdeprincesa.com.br/' }
+  const site = { siteUrl: 'https://www.rusticerrado.com.br/' }
 
   it('has a text for every email the store sends', () => {
     for (const [template, variables] of [
@@ -79,7 +79,7 @@ describe('email texts', () => {
     const email = renderEmail('ops-alert', { title: 'Nova venda paga no site', reference: 'BDP-9' }, site)
     expect(email.subject).toBe('[Loja] Nova venda paga no site')
     expect(email.text).toContain('BDP-9')
-    expect(email.html).toContain('https://www.brincosdeprincesa.com.br/admin')
+    expect(email.html).toContain('https://www.rusticerrado.com.br/admin')
   })
 
   it('escapes text so nothing can inject HTML', () => {

@@ -37,7 +37,7 @@ describe('catalog with isolated PostgreSQL', () => {
 
     const category = await adminClient.query(
       'SELECT id FROM app.categorias WHERE slug = $1',
-      ['brincos'],
+      ['tabuas'],
     )
 
     const collection = await adminClient.query({
@@ -133,7 +133,7 @@ describe('catalog with isolated PostgreSQL', () => {
 
   it('lists a seeded product with filters and server-side price', async () => {
     const result = await catalogService.listProducts({
-      q: 'Floral', category: 'brincos', collection: collectionSlug,
+      q: 'Floral', category: 'tabuas', collection: collectionSlug,
       sort: 'price_asc', page: 1, limit: 12,
     })
 
@@ -158,7 +158,7 @@ describe('catalog with isolated PostgreSQL', () => {
 
   it('combines search, category, collection and promotion filters', async () => {
     const result = await catalogService.listProducts({
-      q: 'Floral', category: 'brincos', collection: collectionSlug,
+      q: 'Floral', category: 'tabuas', collection: collectionSlug,
       promotions: true, sort: 'newest', page: 1, limit: 1,
     })
     expect(result.pagination).toMatchObject({ total: 1, totalPages: 1 })
@@ -187,7 +187,7 @@ describe('catalog with isolated PostgreSQL', () => {
     const categories = await catalogService.listCategories()
     const collections = await catalogService.listCollections()
 
-    expect(categories.find((category) => category.slug === 'brincos')).toMatchObject({ productCount: 1 })
+    expect(categories.find((category) => category.slug === 'tabuas')).toMatchObject({ productCount: 1 })
     expect(collections.find((collection) => collection.slug === collectionSlug)).toMatchObject({ productCount: 1 })
   })
 

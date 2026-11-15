@@ -15,7 +15,7 @@ const KEY = randomBytes(32).toString('base64')
 const oauthConfig = {
   MERCADO_PAGO_CLIENT_ID: '1234567890', MERCADO_PAGO_CLIENT_SECRET: 'client-secret-only-for-tests', PAYMENT_TOKEN_KEY: KEY,
   MERCADO_PAGO_AUTH_URL: 'https://auth.mercadopago.com/authorization', MERCADO_PAGO_API_URL: 'https://api.mercadopago.com',
-  PUBLIC_BACKEND_URL: 'https://www.brincosdeprincesa.com.br', EXTERNAL_REQUEST_TIMEOUT_MS: 4000,
+  PUBLIC_BACKEND_URL: 'https://www.rusticerrado.com.br', EXTERNAL_REQUEST_TIMEOUT_MS: 4000,
 }
 let admin, owner, manager
 const createdAdmins = []

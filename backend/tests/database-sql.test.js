@@ -20,8 +20,7 @@ describe('manual PostgreSQL schema', () => {
       readSql('migrations/001_baseline.sql'),
       readSql('migrations/004_orders_payments.sql'),
       readSql('migrations/005_admin_security.sql'),
-      readSql('seeds/development/001_catalog_demo.sql'),
-    ])).resolves.toHaveLength(10)
+    ])).resolves.toHaveLength(9)
   })
 
   it('defines every mandatory table', async () => {
@@ -68,14 +67,10 @@ describe('manual PostgreSQL schema', () => {
     expect(permissions).toContain('REVOKE TEMPORARY ON DATABASE rusticerrado FROM rustic_app;')
   })
 
-  it('defines immutable migrations and an explicitly demonstrative seed', async () => {
+  it('defines immutable migrations', async () => {
     const baseline = await readSql('migrations/001_baseline.sql')
-    const developmentSeed = await readSql('seeds/development/001_catalog_demo.sql')
 
     expect(baseline).toContain("table_name <> 'schema_migrations'")
     expect(baseline).not.toMatch(/DROP\s+(TABLE|SCHEMA|DATABASE)/i)
-    expect(developmentSeed).toContain('DADOS DE DESENVOLVIMENTO')
-    expect(developmentSeed).toContain('ON CONFLICT')
-    expect(developmentSeed).not.toMatch(/password|secret|token/i)
   })
 })

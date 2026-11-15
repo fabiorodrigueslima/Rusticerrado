@@ -47,17 +47,3 @@ export function resolveAdminConnection({ target = 'development' } = {}) {
 
   return { adminUrl, runtimeUrl }
 }
-
-export function assertDevelopmentSeedTarget(adminUrl) {
-  const name = databaseName(adminUrl)
-
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('O seed de desenvolvimento é proibido em NODE_ENV=production')
-  }
-  if (name.endsWith('_test')) {
-    throw new Error('O seed de desenvolvimento não pode usar o banco de testes')
-  }
-  if (name !== 'rusticerrado') {
-    throw new Error('O seed de desenvolvimento só pode usar rusticerrado')
-  }
-}

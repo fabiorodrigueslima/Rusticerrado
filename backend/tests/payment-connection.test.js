@@ -11,8 +11,8 @@ const config = {
   PAYMENT_TOKEN_KEY: KEY,
   MERCADO_PAGO_AUTH_URL: 'https://auth.mercadopago.com/authorization',
   MERCADO_PAGO_API_URL: 'https://api.mercadopago.com',
-  PUBLIC_BACKEND_URL: 'https://www.brincosdeprincesa.com.br',
-  PUBLIC_FRONTEND_URL: 'https://www.brincosdeprincesa.com.br',
+  PUBLIC_BACKEND_URL: 'https://www.rusticerrado.com.br',
+  PUBLIC_FRONTEND_URL: 'https://www.rusticerrado.com.br',
   EXTERNAL_REQUEST_TIMEOUT_MS: 4000,
 }
 const NOW = Date.parse('2026-11-13T12:00:00Z')
@@ -58,7 +58,7 @@ describe('"Conectar Mercado Pago" (OAuth with PKCE)', () => {
     const service = createPaymentConnectionService({ db: fake.db, tx: fake.tx, config, now: () => NOW })
     const url = new URL((await service.startAuthorization(5)).authorizationUrl)
     expect(url.origin + url.pathname).toBe('https://auth.mercadopago.com/authorization')
-    expect(Object.fromEntries(url.searchParams)).toMatchObject({ client_id: '1234567890', response_type: 'code', platform_id: 'mp', code_challenge_method: 'S256', redirect_uri: 'https://www.brincosdeprincesa.com.br/api/v1/admin/payments/mercado-pago/callback' })
+    expect(Object.fromEntries(url.searchParams)).toMatchObject({ client_id: '1234567890', response_type: 'code', platform_id: 'mp', code_challenge_method: 'S256', redirect_uri: 'https://www.rusticerrado.com.br/api/v1/admin/payments/mercado-pago/callback' })
     const state = url.searchParams.get('state')
     const stored = fake.states.get(createHash('sha256').update(state).digest('hex'))
     expect(stored.admin_id).toBe(5)

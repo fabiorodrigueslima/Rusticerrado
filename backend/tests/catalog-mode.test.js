@@ -27,7 +27,7 @@ describe('catalog-only publication', () => {
     catalogProduction();
     vi.stubEnv('EMAIL_PROVIDER', 'resend');
     vi.stubEnv('RESEND_API_KEY', 're_test_only');
-    vi.stubEnv('EMAIL_FROM', 'Brinco de Princesa <nao-responda@brincosdeprincesa.com.br>');
+    vi.stubEnv('EMAIL_FROM', 'RustiCerrado <nao-responda@rusticerrado.com.br>');
     const { env } = await import('../src/config/env.js');
     expect(env.EMAIL_PROVIDER).toBe('resend');
     expect(env.PAYMENT_PROVIDER).toBe('disabled');

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createAdminAuthService } from '../src/services/adminAuthService.js'
 
-const config = { PUBLIC_FRONTEND_URL: 'https://www.brincosdeprincesa.com.br/', NODE_ENV: 'production', ADMIN_SESSION_HOURS: 8 }
+const config = { PUBLIC_FRONTEND_URL: 'https://www.rusticerrado.com.br/', NODE_ENV: 'production', ADMIN_SESSION_HOURS: 8 }
 function setup({ admin = { id: 7, email: 'neide@example.com', ativo: true }, sendFails = false } = {}) {
   const repository = {
     findByEmail: vi.fn(async () => admin),
@@ -19,7 +19,7 @@ describe('panel password recovery', () => {
     expect(await service.forgot('Neide@Example.com', 'req-1')).toEqual({ accepted: true })
     const { resetUrl, email: to } = email.sendPasswordReset.mock.calls[0][0]
     expect(to).toBe('neide@example.com')
-    expect(resetUrl).toMatch(/^https:\/\/www\.brincosdeprincesa\.com\.br\/admin\/redefinir-senha#[A-Za-z0-9_-]{43}$/)
+    expect(resetUrl).toMatch(/^https:\/\/www\.rusticerrado\.com\.br\/admin\/redefinir-senha#[A-Za-z0-9_-]{43}$/)
     const token = resetUrl.split('#')[1]
     const [adminId, storedHash] = repository.createReset.mock.calls[0]
     expect(adminId).toBe(7)

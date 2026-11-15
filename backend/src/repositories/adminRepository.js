@@ -4,7 +4,7 @@ import { AppError } from "../utils/AppError.js";
 export const adminRepository = {
   async dashboard() {
     const result = await query(
-      `SELECT (SELECT count(*)::integer FROM app.produtos WHERE status='ACTIVE') active_products,(SELECT count(*)::integer FROM app.pedidos WHERE status='PENDING_PAYMENT') pending_orders,(SELECT count(*)::integer FROM app.pedidos WHERE status='PAID') paid_orders,(SELECT count(*)::integer FROM app.reservas_estoque WHERE status='ACTIVE') active_reservations,(SELECT count(*)::integer FROM app.cursos WHERE status='PUBLISHED') published_courses,(SELECT count(*)::integer FROM app.pagamento_ocorrencias WHERE status='OPEN') open_payment_incidents,(SELECT count(*)::integer FROM app.privacy_requests WHERE status IN ('OPEN','IN_REVIEW')) open_privacy_requests,(SELECT count(*)::integer FROM app.privacy_requests WHERE status IN ('OPEN','IN_REVIEW') AND prazo_em<now()) overdue_privacy_requests`,
+      `SELECT (SELECT count(*)::integer FROM app.produtos WHERE status='ACTIVE') active_products,(SELECT count(*)::integer FROM app.pedidos WHERE status='PENDING_PAYMENT') pending_orders,(SELECT count(*)::integer FROM app.pedidos WHERE status='PAID') paid_orders,(SELECT count(*)::integer FROM app.reservas_estoque WHERE status='ACTIVE') active_reservations,(SELECT count(*)::integer FROM app.pagamento_ocorrencias WHERE status='OPEN') open_payment_incidents,(SELECT count(*)::integer FROM app.privacy_requests WHERE status IN ('OPEN','IN_REVIEW')) open_privacy_requests,(SELECT count(*)::integer FROM app.privacy_requests WHERE status IN ('OPEN','IN_REVIEW') AND prazo_em<now()) overdue_privacy_requests`,
     );
     return result.rows[0];
   },
@@ -254,26 +254,6 @@ export const adminRepository = {
       });
       return { status };
     });
-  },
-  async courses() {
-    return (
-      await query(
-        `SELECT c.id,c.nome,c.slug,c.resumo,c.descricao,c.carga_horaria,c.certificado,c.imagem_url,c.imagem_alt,c.status,c.destaque,c.publicado_em,c.atualizado_em,count(s.id)::integer sessoes FROM app.cursos c LEFT JOIN app.curso_sessoes s ON s.curso_id=c.id GROUP BY c.id ORDER BY c.atualizado_em DESC LIMIT 100`,
-      )
-    ).rows;
-  },
-  // A course goes live with status PUBLISHED; the first publication date is kept afterwards.
-  async createCourse(value) {
-    return (await query({ text: `INSERT INTO app.cursos(nome,slug,resumo,descricao,carga_horaria,certificado,status,destaque,publicado_em)
-      VALUES($1,$2,$3,$4,$5,$6,$7::varchar,$8,CASE WHEN $7::varchar='PUBLISHED' THEN now() ELSE NULL END) RETURNING id`,
-      values: [value.name,value.slug,value.summary,value.description,value.workload,value.certificate,value.status,value.featured] })).rows[0];
-  },
-  async updateCourse(id, value) {
-    const result = await query({ text: `UPDATE app.cursos SET nome=$1,slug=$2,resumo=$3,descricao=$4,carga_horaria=$5,certificado=$6,status=$7::varchar,destaque=$8,
-      publicado_em=CASE WHEN $7::varchar='PUBLISHED' THEN COALESCE(publicado_em,now()) ELSE publicado_em END WHERE id=$9 RETURNING id`,
-      values: [value.name,value.slug,value.summary,value.description,value.workload,value.certificate,value.status,value.featured,id] });
-    if (!result.rowCount) throw new AppError(404, "COURSE_NOT_FOUND", "Curso não encontrado.");
-    return result.rows[0];
   },
   async categories() {
     return (

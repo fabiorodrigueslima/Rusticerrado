@@ -37,5 +37,3 @@ export const adminResetSchema = z.object({ token: z.string().regex(/^[A-Za-z0-9_
 // Payment methods chosen in the panel. At least one must stay on.
 export const paymentMethodsSchema = z.object({ pix: z.boolean(), credit: z.boolean(), debit: z.boolean(), boleto: z.boolean(), maxInstallments: z.number().int().min(1).max(12) }).strict().refine((value) => value.pix || value.credit || value.debit || value.boleto, { message: 'Deixe pelo menos uma forma de pagamento ligada.', path: ['pix'] })
 
-// Course form in the panel. Workload is free text ("8 horas", "2 encontros de 4h").
-export const courseSchema=z.object({name:z.string().trim().min(2).max(160),slug:z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(180),summary:z.string().trim().max(300).default(''),description:z.string().trim().max(10000).default(''),workload:z.string().trim().max(60).default(''),certificate:z.boolean().default(false),status:z.enum(['DRAFT','PUBLISHED','ARCHIVED']).default('DRAFT'),featured:z.boolean().default(false)}).strict()

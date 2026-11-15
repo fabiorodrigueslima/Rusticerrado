@@ -125,9 +125,6 @@ export async function updateOrderStatus(req, res) {
     ),
   });
 }
-export async function courses(_req, res) {
-  res.json({ data: await adminRepository.courses() });
-}
 export async function categories(_req, res) {
   res.json({ data: await adminRepository.categories() });
 }
@@ -226,11 +223,3 @@ export async function acceptInvite(req,res) {
   res.status(201).json({ data: admin });
 }
 export async function removeAdmin(req,res) { res.json({data:await audited(req,'ADMIN_REMOVE','ADMIN_USER',()=>adminTeamService.remove(req.validated.params.id,req.admin.admin_id))}); }
-
-// Courses: created and edited in the panel; a course leaves the site by being archived.
-export async function createCourse(req, res) {
-  res.status(201).json({ data: await audited(req, "COURSE_CREATE", "COURSE", () => adminRepository.createCourse(req.validated.body)) });
-}
-export async function updateCourse(req, res) {
-  res.json({ data: await audited(req, "COURSE_UPDATE", "COURSE", () => adminRepository.updateCourse(req.validated.params.id, req.validated.body)) });
-}

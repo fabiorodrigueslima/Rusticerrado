@@ -5,7 +5,7 @@ import sharePreview, { config as previewConfig } from '../../netlify/edge-functi
 const event = (path, extra = {}) => ({
   httpMethod: 'GET',
   path,
-  headers: { host: 'www.brincosdeprincesa.com.br', 'x-nf-client-connection-ip': '200.1.2.3', ...(extra.headers ?? {}) },
+  headers: { host: 'www.rusticerrado.com.br', 'x-nf-client-connection-ip': '200.1.2.3', ...(extra.headers ?? {}) },
   multiValueHeaders: {},
   queryStringParameters: extra.query ?? null,
   multiValueQueryStringParameters: null,
@@ -53,11 +53,11 @@ describe('Netlify function adapter', () => {
 })
 
 describe('link-preview edge function', () => {
-  const at = (userAgent) => new Request('https://www.brincosdeprincesa.com.br/produto/brinco-folha', { headers: { 'user-agent': userAgent } })
+  const at = (userAgent) => new Request('https://www.rusticerrado.com.br/produto/brinco-folha', { headers: { 'user-agent': userAgent } })
 
   it('sends only preview robots to the API and lets everyone else see the site', () => {
     expect(previewConfig.path).toBe('/produto/*')
-    expect(String(sharePreview(at('WhatsApp/2.23.20.0')))).toBe('https://www.brincosdeprincesa.com.br/.netlify/functions/api/produto/brinco-folha')
+    expect(String(sharePreview(at('WhatsApp/2.23.20.0')))).toBe('https://www.rusticerrado.com.br/.netlify/functions/api/produto/brinco-folha')
     expect(String(sharePreview(at('facebookexternalhit/1.1')))).toContain('/.netlify/functions/api/produto/')
     expect(sharePreview(at('Mozilla/5.0 (iPhone) Safari/604.1'))).toBeUndefined()
     expect(sharePreview(at('Googlebot/2.1'))).toBeUndefined()
