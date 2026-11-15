@@ -11,13 +11,28 @@ RustiCerrado, elas **não são apagadas nem alteradas**.
 ## Passo 1 — Abrir o projeto
 
 1. Entre em **console.neon.tech** e abra o projeto do RustiCerrado.
-2. Confira a região em **Settings → General**. O ideal é **South America (São Paulo)**,
-   perto dos clientes. Se for outra, funciona do mesmo jeito, só um pouco mais lento.
+2. A região do projeto é **AWS US East 1 (Virgínia)** e não pode ser mudada. Ela é boa para
+   o site: o servidor roda nas funções do Netlify, nos Estados Unidos, perto do banco.
+
+## O site antigo usa este mesmo banco: teste num branch
+
+O site antigo do RustiCerrado ainda está no ar e usa este projeto do Neon. O site novo fica
+numa área separada (`app`) e o `db:setup` não mexe nas tabelas antigas, mas, enquanto o site
+novo está em teste, o mais seguro é nem encostar no banco do site antigo:
+
+1. No Neon, abra **Branches** → **Create branch**.
+2. Nome: `site-novo`. Parent: o branch principal (**production** ou `main`). Crie.
+
+O branch é uma cópia instantânea do banco (com os dados antigos). Tudo o que fizermos nele
+(peças de teste, pedidos de teste) **não aparece no site antigo**, e o site antigo segue igual.
+
+No lançamento do site novo, o `db:setup` roda uma vez no branch principal (passo 2 com
+**production** no lugar de `site-novo`) e o site novo passa a usar o principal.
 
 ## Passo 2 — Copiar o endereço de conexão do dono do banco
 
 1. No painel do projeto, clique em **Connect**.
-2. Escolha o branch **production** (ou `main`), o banco **neondb** e o papel **neondb_owner**.
+2. Escolha o branch **site-novo** (durante os testes), o banco **neondb** e o papel **neondb_owner**.
 3. **Desligue** a opção **Connection pooling** (o endereço não pode ter `-pooler`).
 4. Clique em **Show password** e copie o endereço inteiro. Ele é assim:
    `postgresql://neondb_owner:SENHA@ep-xxxx-xxxx.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`

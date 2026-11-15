@@ -33,6 +33,11 @@ function quoteIdentifier(identifier) {
   return `"${String(identifier).replaceAll('"', '""')}"`
 }
 
+// Regra do banco exclusivo do Brinco que mexe na área pública (schema public). Este banco pode
+// ser dividido com outro sistema (o site antigo do RustiCerrado usa o schema public), então o
+// setup não toca nela. No PostgreSQL 15+ essa permissão já vem fechada de fábrica.
+const SHARED_DATABASE_SKIPPED = ['REVOKE CREATE ON SCHEMA public FROM PUBLIC;']
+
 // Os arquivos de database/ foram escritos para o psql: linhas que começam com "\" são
 // comandos do psql e ficam de fora. O nome do banco local vira o banco atual.
 async function readSql(fileName, currentDatabase) {
@@ -40,6 +45,7 @@ async function readSql(fileName, currentDatabase) {
   return sql
     .split(/\r?\n/)
     .filter((line) => !line.trimStart().startsWith('\\'))
+    .filter((line) => !SHARED_DATABASE_SKIPPED.includes(line.trim()))
     .join('\n')
     .replaceAll('ON DATABASE rusticerrado', `ON DATABASE ${quoteIdentifier(currentDatabase)}`)
 }
