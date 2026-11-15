@@ -18,11 +18,12 @@ export function shortDescription(text) {
   return `${cut.slice(0, cut.lastIndexOf(' ') > 0 ? cut.lastIndexOf(' ') : DESCRIPTION_LIMIT).replace(/[\s,.;:!?-]+$/, '')}…`
 }
 
-// Previews use the photo as it is: resizing on the fly would need a paid Supabase plan.
+// Previews look best at 1200x630: Cloudinary crops and compresses the photo on the fly.
+// Other storages (Supabase on the free plan) send the photo as it is.
 export function previewImage(url, origin) {
   if (!url) return origin + FALLBACK_IMAGE
   if (url.startsWith('/')) return origin + url
-  return url
+  return url.replace(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)/, '$1c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/')
 }
 
 function page({ title, description, image, url, type }) {

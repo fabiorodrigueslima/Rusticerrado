@@ -11,7 +11,7 @@ O projeto segue o mesmo modelo do Brinco de Princesa:
 | Banco de dados | `database/` | PostgreSQL no Neon |
 | Hospedagem | `netlify/` e `netlify.toml` | Netlify |
 
-Fotos dos produtos: Supabase Storage (`npm run storage:setup` cria o bucket; veja [docs/SUPABASE.md](docs/SUPABASE.md)).
+Fotos dos produtos: Cloudinary (veja [docs/CLOUDINARY.md](docs/CLOUDINARY.md)). O código também aceita o Supabase Storage ([docs/SUPABASE.md](docs/SUPABASE.md)).
 
 Não é preciso instalar PostgreSQL no computador: o banco fica no Neon, para testar e para o site no ar.
 

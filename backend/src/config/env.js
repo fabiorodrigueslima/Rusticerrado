@@ -109,7 +109,7 @@ const schema = z
     // Store inbox for operational alerts (payment incidents, LGPD deadlines).
     OPS_ALERT_EMAIL: z.string().trim().email().max(254).optional(),
     STORAGE_PROVIDER: z
-      .enum(["disabled", "local", "http", "supabase"])
+      .enum(["disabled", "local", "http", "supabase", "cloudinary"])
       .default("disabled"),
     STORAGE_HTTP_URL: z.string().url().optional(),
     STORAGE_HTTP_TOKEN: z.string().min(1).optional(),
@@ -119,11 +119,16 @@ const schema = z
     SUPABASE_SECRET_KEY: z.string().trim().min(1).optional(),
     SUPABASE_STORAGE_BUCKET: z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{1,62}$/).default("rusticerrado"),
     SUPABASE_STORAGE_FOLDER: z.string().trim().regex(/^[a-z0-9_-]+$/).default("produtos"),
+    // Cloudinary (como no Brinco de Princesa): nome da conta, chave e segredo (só no servidor).
+    CLOUDINARY_CLOUD_NAME: z.string().trim().min(1).optional(),
+    CLOUDINARY_API_KEY: z.string().trim().min(1).optional(),
+    CLOUDINARY_API_SECRET: z.string().trim().min(1).optional(),
+    CLOUDINARY_FOLDER: z.string().trim().min(1).default("rusticerrado/produtos"),
   })
-  // Catalog mode keeps commerce providers off; product photos may still use Supabase Storage
+  // Catalog mode keeps commerce providers off; product photos may still use Supabase or Cloudinary
   // so the store can be prepared before sales open. E-mail stays as configured: the panel's
   // password recovery needs it even without sales (order e-mails only exist in commerce mode).
-  .transform(value => value.SITE_MODE === 'catalog' ? { ...value, PAYMENT_PROVIDER: 'disabled', SHIPPING_PROVIDER: 'disabled', STORAGE_PROVIDER: value.STORAGE_PROVIDER === 'supabase' ? 'supabase' : 'disabled' } : value)
+  .transform(value => value.SITE_MODE === 'catalog' ? { ...value, PAYMENT_PROVIDER: 'disabled', SHIPPING_PROVIDER: 'disabled', STORAGE_PROVIDER: ['supabase', 'cloudinary'].includes(value.STORAGE_PROVIDER) ? value.STORAGE_PROVIDER : 'disabled' } : value)
   .superRefine((value, context) => {
     if (value.NODE_ENV === 'production') {
       const issue = (field) => context.addIssue({ code: 'custom', path: [field], message: 'configuração de produção inválida' });
@@ -226,11 +231,15 @@ const schema = z
     const supabase = value.STORAGE_PROVIDER === "supabase";
     requireField(supabase, "SUPABASE_URL", "obrigatória para Supabase Storage");
     requireField(supabase, "SUPABASE_SECRET_KEY", "obrigatória para Supabase Storage");
-    if (value.NODE_ENV === "production" && value.SITE_MODE !== 'catalog' && value.STORAGE_PROVIDER !== "supabase")
+    const cloudinary = value.STORAGE_PROVIDER === "cloudinary";
+    requireField(cloudinary, "CLOUDINARY_CLOUD_NAME", "obrigatória para Cloudinary");
+    requireField(cloudinary, "CLOUDINARY_API_KEY", "obrigatória para Cloudinary");
+    requireField(cloudinary, "CLOUDINARY_API_SECRET", "obrigatória para Cloudinary");
+    if (value.NODE_ENV === "production" && value.SITE_MODE !== 'catalog' && !["supabase", "cloudinary"].includes(value.STORAGE_PROVIDER))
       context.addIssue({
         code: "custom",
         path: ["STORAGE_PROVIDER"],
-        message: "deve ser 'supabase' em produção",
+        message: "deve ser 'cloudinary' ou 'supabase' em produção",
       });
   });
 

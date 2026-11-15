@@ -80,7 +80,7 @@ describe('shared serverless state with isolated PostgreSQL',()=>{
     const product=(await query('SELECT id FROM app.produtos LIMIT 1')).rows[0];
     let signedId;
     const publicUrl=path=>'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/'+path;
-    const storage={signUpload: async id=>{signedId='produtos/'+id+'.png';return {publicId:signedId,uploadUrl:'https://abcdefgh.supabase.co/upload',method:'PUT',headers:{}}},publicUrl,inspect:async()=>({public_id:signedId,resource_type:'image',format:'png',bytes:12,secure_url:publicUrl(signedId)})};
+    const storage={signUpload: async id=>{signedId='produtos/'+id+'.png';return {publicId:signedId,uploadUrl:'https://abcdefgh.supabase.co/upload',method:'PUT',headers:{}}},publicUrl,ownsUrl:(url,path)=>url===publicUrl(path),inspect:async()=>({public_id:signedId,resource_type:'image',format:'png',bytes:12,secure_url:publicUrl(signedId)})};
     const service=createDirectUploadService({db:query,tx,storage});
     const intent=await service.prepare({productId:Number(product.id),mime:'image/png',bytes:12,alt:'Test image',primary:false});
     const [a,b]=await Promise.all([service.complete(intent.id),service.complete(intent.id)]);

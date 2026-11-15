@@ -21,8 +21,8 @@ async function prepareImage(file) {
   return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
 }
 
-// A product photo: the server authorizes it, the browser sends it straight to Supabase
-// Storage and the server checks what arrived before adding it to the product.
+// A product photo: the server authorizes it, the browser sends it straight to the photo
+// storage (Cloudinary or Supabase) and the server checks what arrived before adding it.
 export function AdminImageUpload({ productId, csrfToken, onUploaded, defaultAlt = '', buttonLabel = 'Enviar foto' }) {
   const [message,setMessage] = useState('');
   const [busy,setBusy] = useState(false);
@@ -37,7 +37,16 @@ export function AdminImageUpload({ productId, csrfToken, onUploaded, defaultAlt 
       if (file.size > MAX_BYTES) throw new Error('A foto continua maior que 5 MB. Tente outra foto.');
       setMessage('Enviando a foto…');
       const { data } = await mutateAdminResource('images/sign','POST',{ productId:Number(productId), primary:form.elements.primary.checked, mime:file.type, bytes:file.size, alt:form.elements.alt.value },csrfToken);
-      const uploaded = await fetch(data.uploadUrl,{ method:data.method ?? 'PUT', headers:data.headers ?? { 'Content-Type':file.type }, body:file, credentials:'omit' });
+      // Cloudinary recebe um formulário assinado (fields); o Supabase recebe o arquivo num PUT.
+      let uploaded;
+      if (data.fields) {
+        const body = new FormData();
+        for (const [key,value] of Object.entries(data.fields)) body.append(key,String(value));
+        body.append('file',file);
+        uploaded = await fetch(data.uploadUrl,{ method:'POST', body, credentials:'omit' });
+      } else {
+        uploaded = await fetch(data.uploadUrl,{ method:data.method ?? 'PUT', headers:data.headers ?? { 'Content-Type':file.type }, body:file, credentials:'omit' });
+      }
       if (!uploaded.ok) throw new Error('Não foi possível enviar a foto. Tente novamente.');
       await mutateAdminResource('images/complete','POST',{ id:data.id },csrfToken);
       setMessage('Foto cadastrada.'); form.reset(); onUploaded?.();

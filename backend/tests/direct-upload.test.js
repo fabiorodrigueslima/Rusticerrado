@@ -6,7 +6,8 @@ describe('direct upload registration',()=>{
   const asset = {public_id:'products/id',resource_type:'image',format:'png',bytes:123,secure_url:'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/products/id'};
   function setup(value=asset,row=intent) {
     const query=vi.fn(async(sql)=>sql.includes('FROM app.image_upload_intents')?{rows:[row]}:sql.startsWith('INSERT INTO app.produto_imagens')?{rows:[{id:7}]}:{rows:[{id:7}],rowCount:1});
-    const storage={inspect:vi.fn(async()=>value),publicUrl:(path)=>'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/'+path};
+    const publicUrl=(path)=>'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/'+path;
+    const storage={inspect:vi.fn(async()=>value),publicUrl,ownsUrl:(url,path)=>url===publicUrl(path)};
     return {query,storage,service:createDirectUploadService({tx:work=>work({query}),storage})};
   }
   it('checks the authoritative cloud asset before registering it',async()=>{

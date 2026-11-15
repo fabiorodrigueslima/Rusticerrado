@@ -16,7 +16,7 @@ describe('legal pages follow how the store sells', () => {
     expect(text).not.toContain('O site é um catálogo')
     expect(text).toContain('coloque no carrinho')
     expect(text).toContain('código de rastreio')
-    for (const processor of ['Mercado Pago', 'Netlify', 'Neon', 'Supabase']) expect(text).toContain(processor)
+    for (const processor of ['Mercado Pago', 'Netlify', 'Neon', 'Cloudinary']) expect(text).toContain(processor)
     expect(Object.keys(pages)).toEqual(['privacy', 'terms', 'returns'])
   })
 })

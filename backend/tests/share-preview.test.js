@@ -56,6 +56,7 @@ describe('link preview of a product', () => {
   it('makes site photos absolute and uses the logo when there is no photo', () => {
     expect(previewImage('/images/brinco.png', origin)).toBe(`${origin}/images/brinco.png`)
     expect(previewImage(undefined, origin)).toBe(`${origin}/brand/rusticerrado-logo.png`)
+    expect(previewImage('https://res.cloudinary.com/loja/image/upload/v1/rusticerrado/produtos/a.jpg', origin)).toBe('https://res.cloudinary.com/loja/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/v1/rusticerrado/produtos/a.jpg')
   })
 
   it('answers preview robots at /produto/:slug with HTML', async () => {

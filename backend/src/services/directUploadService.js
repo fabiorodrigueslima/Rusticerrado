@@ -26,7 +26,7 @@ export function createDirectUploadService({ db = query, tx = transaction, storag
         if (new Date(intent.expires_at) <= new Date()) throw new AppError(410,'UPLOAD_EXPIRED','Upload expirado.');
         // Authoritative lookup: never trust URL, size, format or ownership from the browser.
         const asset = await storage.inspect(intent.public_id);
-        if (asset.public_id !== intent.public_id || asset.resource_type !== 'image' || asset.format !== extensionFor(intent.mime) || asset.bytes !== intent.bytes || asset.bytes > IMAGE_MAX_BYTES || asset.secure_url !== storage.publicUrl(intent.public_id)) throw new AppError(422,'IMAGE_INVALID','Imagem enviada não corresponde ao arquivo autorizado.');
+        if (asset.public_id !== intent.public_id || asset.resource_type !== 'image' || asset.format !== extensionFor(intent.mime) || asset.bytes !== intent.bytes || asset.bytes > IMAGE_MAX_BYTES || !storage.ownsUrl(asset.secure_url, intent.public_id)) throw new AppError(422,'IMAGE_INVALID','Imagem enviada não corresponde ao arquivo autorizado.');
         await client.query('SELECT id FROM app.produtos WHERE id=$1 FOR UPDATE', [intent.product_id]);
         if (intent.is_primary) await client.query('UPDATE app.produto_imagens SET principal=FALSE WHERE produto_id=$1', [intent.product_id]);
         const inserted = await client.query(`INSERT INTO app.produto_imagens(produto_id,url,alt_text,mime_type,ordem,principal,storage_key)
