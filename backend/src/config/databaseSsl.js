@@ -5,7 +5,8 @@ import { resolve } from 'node:path'
 // O Supabase assina o certificado do banco com uma CA própria, que não vem no Node:
 // informe o PEM em DB_SSL_CA (texto; "\n" literal é aceito) ou o caminho em DB_SSL_CA_FILE
 // (relativo à pasta onde o servidor roda: backend/ no computador). No Netlify use DB_SSL_CA.
-// Não usar import.meta aqui: no Netlify a função é empacotada como CommonJS e ele vira {}.
+// Não usar o "meta" dos módulos ES aqui: no Netlify a função é empacotada como CommonJS
+// e ele vira um objeto vazio (veja tests/netlify-bundle-safety.test.js).
 export function databaseSsl(source = process.env) {
   if (source.DB_SSL !== true && source.DB_SSL !== 'true') return false
 
