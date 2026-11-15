@@ -35,7 +35,7 @@ No lançamento do site novo, o `db:setup` roda uma vez no branch principal (pass
 2. Escolha o branch **site-novo** (durante os testes), o banco **neondb** e o papel **neondb_owner**.
 3. **Desligue** a opção **Connection pooling** (o endereço não pode ter `-pooler`).
 4. Clique em **Show password** e copie o endereço inteiro. Ele é assim:
-   `postgresql://neondb_owner:SENHA@ep-xxxx-xxxx.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
+   `postgresql://neondb_owner:SENHA@ep-nome-do-banco.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
 5. Abra `backend/.env` e cole na linha `DATABASE_ADMIN_URL=`.
 
 > Pode colar com o `?sslmode=require...` do fim: o servidor tira esses parâmetros e usa a

@@ -55,7 +55,7 @@ Em **Project configuration → Environment variables**. 🔒 = segredo (marque *
 | `DB_POOL_MAX` | `3` |
 
 **`DATABASE_URL` no Netlify:** é a mesma linha `DATABASE_URL` do `backend/.env`, trocando o
-endereço do servidor pelo endereço **com `-pooler`** (ex.: `ep-blue-forest-xxxx-pooler.c-7…`).
+endereço do servidor pelo endereço **com `-pooler`** (ex.: `ep-nome-do-banco-pooler.c-7.us-east-1.aws.neon.tech`).
 O Claude pode montar essa linha e cadastrá-la para você, sem precisar copiar senha.
 
 `NODE_ENV` e `TRUST_PROXY` não precisam ser cadastradas: a função já usa `production` e `1`.
