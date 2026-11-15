@@ -6,7 +6,9 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
   edge_functions = "netlify/edge-functions"
-  # O plano grátis tem 300 créditos por mês e cada publicação gasta 15. Só publica a main
+  # O plano grátis tem 300 créditos por mês e cada publicação gasta 15. Só publica a branch de
+  # produção escolhida no Netlify (durante os testes, estrutura/frontend-backend; a main ainda
+  # alimenta o site antigo na Vercel)
   # (sem prévias de PR) e só quando muda algo que vai para o site.
   # Exit 0 = skip. The same commit again (first deploy, or "Trigger deploy" after changing a
   # variable) always builds.

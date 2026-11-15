@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /carrinho
+Disallow: /checkout
+Disallow: /pedido/
+Disallow: /minha-conta
+Disallow: /login
+Disallow: /cadastro
+Disallow: /recuperar-senha
+Disallow: /redefinir-senha
+Disallow: /ativar-conta
+
+Sitemap: https://www.rusticerrado.com.br/sitemap.xml
