@@ -2,24 +2,8 @@ import { randomBytes } from "node:crypto";
 import { storageProvider } from "../providers/storageProvider.js";
 import { adminRepository } from "../repositories/adminRepository.js";
 import { AppError } from "../utils/AppError.js";
+import { IMAGE_TYPES as types } from "../utils/imageFormat.js";
 
-const types = {
-  "image/jpeg": {
-    ext: "jpg",
-    magic: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
-  },
-  "image/png": {
-    ext: "png",
-    magic: (b) =>
-      b.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])),
-  },
-  "image/webp": {
-    ext: "webp",
-    magic: (b) =>
-      b.subarray(0, 4).toString() === "RIFF" &&
-      b.subarray(8, 12).toString() === "WEBP",
-  },
-};
 export const imageService = {
   async upload({ productId, alt, mime, buffer, primary }) {
     const type = types[mime];

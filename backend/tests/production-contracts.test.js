@@ -1,9 +1,9 @@
-import { createHmac, createHash } from 'node:crypto';
+import { createHmac } from 'node:crypto';
 import { describe, it, expect, vi } from 'vitest';
 import express from 'express';
 import request from 'supertest';
 import { createMercadoPagoProvider } from '../src/providers/paymentProvider.js';
-import { createCloudinaryStorageProvider } from '../src/providers/storageProvider.js';
+import { createSupabaseStorageProvider } from '../src/providers/storageProvider.js';
 import { createHttpEmailProvider } from '../src/providers/emailProvider.js';
 import { createPaymentService } from '../src/services/paymentService.js';
 import { createJobRouter } from '../src/routes/jobRoutes.js';
@@ -50,12 +50,11 @@ describe('production integration contracts',()=>{
     await expect(createPaymentService({provider,repository,orders:{get:async()=>({status:'PENDING_PAYMENT',total:'120.00'})}}).create({code:'BP-X',token:'test',method:'PIX',idempotencyKey:'1234567890abcdef'})).rejects.toThrow('timeout');
     expect(repository.uncertain).toHaveBeenCalledWith(1);
   });
-  it('signs all Cloudinary delete parameters and keeps upload secret server-side',async()=>{
-    const fetchImpl=vi.fn(async()=>response({result:'ok'}));
-    const storage=createCloudinaryStorageProvider({config:{CLOUDINARY_FOLDER:'products',CLOUDINARY_CLOUD_NAME:'test',CLOUDINARY_API_KEY:'key',CLOUDINARY_API_SECRET:'secret',EXTERNAL_REQUEST_TIMEOUT_MS:1000},now:()=>123,fetchImpl});
-    await storage.delete('products/image');
-    expect(fetchImpl.mock.calls[0][1].body.get('signature')).toBe(createHash('sha1').update('invalidate=true&public_id=products/image&timestamp=123secret').digest('hex'));
-    const upload=storage.signUpload('id');expect(upload.fields.overwrite).toBe(false);expect(upload.fields.allowed_formats).toBe('jpg,png,webp');expect(JSON.stringify(upload)).not.toContain('secret');
+  it('keeps the Supabase secret key on the server when authorizing an upload',async()=>{
+    const fetchImpl=vi.fn(async()=>response({url:'/object/upload/sign/rusticerrado/produtos/id.webp?token=one-time'}));
+    const storage=createSupabaseStorageProvider({config:{SUPABASE_URL:'https://abcdefgh.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_server_only',SUPABASE_STORAGE_BUCKET:'rusticerrado',SUPABASE_STORAGE_FOLDER:'produtos',EXTERNAL_REQUEST_TIMEOUT_MS:1000},fetchImpl});
+    const upload=await storage.signUpload('id','image/webp');
+    expect(upload.headers['x-upsert']).toBe('false');expect(upload.publicId).toBe('produtos/id.webp');expect(JSON.stringify(upload)).not.toContain('sb_secret_server_only');
   });
   it.each(['order-received','payment-confirmed','password-reset','account-activation'])('sends the %s template with a stable idempotency key',async(template)=>{
     const fetchImpl=vi.fn(async()=>response({}));

@@ -59,7 +59,7 @@ const checks = [
   ],
   [
     "Storage provider",
-    env.STORAGE_PROVIDER === "cloudinary" ||
+    env.STORAGE_PROVIDER === "supabase" ||
       (env.NODE_ENV !== "production" && env.STORAGE_PROVIDER !== "disabled"),
     env.NODE_ENV === "production" ? "required" : "optional",
   ],

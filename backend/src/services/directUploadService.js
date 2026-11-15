@@ -1,20 +1,18 @@
 import { randomUUID } from 'node:crypto';
-import { env } from '../config/env.js';
 import { query, transaction } from '../config/database.js';
 import { storageProvider } from '../providers/storageProvider.js';
 import { AppError } from '../utils/AppError.js';
-
-const formats = { 'image/jpeg':'jpg','image/png':'png','image/webp':'webp' };
+import { IMAGE_MAX_BYTES, extensionFor } from '../utils/imageFormat.js';
 
 // Photos go straight from the browser to the storage with a one-time signed authorization.
 export function createDirectUploadService({ db = query, tx = transaction, storage = storageProvider } = {}) {
   return {
     async prepare(input) {
-      if (env.STORAGE_PROVIDER !== 'cloudinary' && !storage.signUpload) throw new AppError(503,'STORAGE_NOT_CONFIGURED','Upload direto não configurado.');
+      if (!storage.signUpload) throw new AppError(503,'STORAGE_NOT_CONFIGURED','Upload direto não configurado.');
+      const product = await db('SELECT id FROM app.produtos WHERE id=$1', [input.productId]);
+      if (!product.rowCount) throw new AppError(404,'PRODUCT_NOT_FOUND','Produto não encontrado.');
       const id = randomUUID();
-      const signed = storage.signUpload(id);
-        const product = await db('SELECT id FROM app.produtos WHERE id=$1', [input.productId]);
-        if (!product.rowCount) throw new AppError(404,'PRODUCT_NOT_FOUND','Produto não encontrado.');
+      const signed = await storage.signUpload(id, input.mime);
       await db(`INSERT INTO app.image_upload_intents(id,product_id,curso_id,public_id,mime,bytes,alt,is_primary,expires_at)
         VALUES($1,$2,$3,$4,$5,$6,$7,$8,now()+interval '1 hour')`, [id,input.productId,null,signed.publicId,input.mime,input.bytes,input.alt,Boolean(input.primary)]);
       return { id, ...signed };
@@ -28,7 +26,7 @@ export function createDirectUploadService({ db = query, tx = transaction, storag
         if (new Date(intent.expires_at) <= new Date()) throw new AppError(410,'UPLOAD_EXPIRED','Upload expirado.');
         // Authoritative lookup: never trust URL, size, format or ownership from the browser.
         const asset = await storage.inspect(intent.public_id);
-        if (asset.public_id !== intent.public_id || asset.resource_type !== 'image' || asset.format !== formats[intent.mime] || asset.bytes !== intent.bytes || asset.bytes > 5242880 || !asset.secure_url?.startsWith('https://res.cloudinary.com/')) throw new AppError(422,'IMAGE_INVALID','Imagem enviada não corresponde ao arquivo autorizado.');
+        if (asset.public_id !== intent.public_id || asset.resource_type !== 'image' || asset.format !== extensionFor(intent.mime) || asset.bytes !== intent.bytes || asset.bytes > IMAGE_MAX_BYTES || asset.secure_url !== storage.publicUrl(intent.public_id)) throw new AppError(422,'IMAGE_INVALID','Imagem enviada não corresponde ao arquivo autorizado.');
         await client.query('SELECT id FROM app.produtos WHERE id=$1 FOR UPDATE', [intent.product_id]);
         if (intent.is_primary) await client.query('UPDATE app.produto_imagens SET principal=FALSE WHERE produto_id=$1', [intent.product_id]);
         const inserted = await client.query(`INSERT INTO app.produto_imagens(produto_id,url,alt_text,mime_type,ordem,principal,storage_key)

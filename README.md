@@ -11,7 +11,7 @@ O projeto segue o mesmo modelo do Brinco de Princesa:
 | Banco de dados | `database/` | PostgreSQL no Supabase |
 | Hospedagem | `netlify/` e `netlify.toml` | Netlify |
 
-Fotos dos produtos: Supabase Storage (em preparação).
+Fotos dos produtos: Supabase Storage (`npm run storage:setup` cria o bucket; veja [docs/SUPABASE.md](docs/SUPABASE.md)).
 
 Não é preciso instalar PostgreSQL no computador: o banco fica no Supabase, para testar e para o site no ar.
 
@@ -38,6 +38,7 @@ Precisa de Node 24 e npm 11.
 
 ```bash
 npm run db:setup      # prepara o banco no Supabase (pode repetir)
+npm run storage:setup # cria o bucket de fotos no Supabase (pode repetir)
 npm run db:check      # testa a conexão com o banco
 npm run db:migrate    # aplica as migrations novas
 npm run setup:check   # confere a configuração do servidor

@@ -19,9 +19,8 @@ function runSetupCheck(storageProvider, storageConfig = {}) {
     SHIPPING_PROVIDER: 'superfrete',
     SUPERFRETE_TOKEN: 'test-token',
     SUPERFRETE_ORIGIN_CEP: '01001000',
-    CLOUDINARY_CLOUD_NAME: 'test-cloud',
-    CLOUDINARY_API_KEY: 'test-key',
-    CLOUDINARY_API_SECRET: 'test-secret',
+    SUPABASE_URL: 'https://abcdefgh.supabase.co',
+    SUPABASE_SECRET_KEY: 'sb_secret_test',
     STORAGE_PROVIDER: storageProvider,
     SUPERFRETE_API_BASE_URL:'https://api.superfrete.com/api/v0',
     CRON_SECRET:'test-cron-secret-12345678901234567890',
@@ -42,8 +41,8 @@ function runSetupCheck(storageProvider, storageConfig = {}) {
 const SUBPROCESS_TIMEOUT_MS = 30_000
 
 describe('production setup check', () => {
-  it('passes only with complete Cloudinary storage configuration', () => {
-    const result = runSetupCheck('cloudinary')
+  it('passes only with complete Supabase storage configuration', () => {
+    const result = runSetupCheck('supabase')
 
     expect(result.status).toBe(0)
     expect(result.stdout).toContain('Storage provider')

@@ -19,9 +19,8 @@ describe('environment configuration', () => {
     vi.stubEnv('SHIPPING_PROVIDER', 'superfrete')
     vi.stubEnv('SUPERFRETE_TOKEN', 'test-token')
     vi.stubEnv('SUPERFRETE_ORIGIN_CEP', '01001000')
-    vi.stubEnv('CLOUDINARY_CLOUD_NAME', 'test-cloud')
-    vi.stubEnv('CLOUDINARY_API_KEY', 'test-key')
-    vi.stubEnv('CLOUDINARY_API_SECRET', 'test-secret')
+    vi.stubEnv('SUPABASE_URL', 'https://abcdefgh.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test')
     vi.stubEnv('PUBLIC_BACKEND_URL', 'https://api.example.com')
     vi.stubEnv('PUBLIC_FRONTEND_URL', 'https://shop.example.com')
 
@@ -42,7 +41,7 @@ describe('environment configuration', () => {
     await expect(import('../src/config/env.js')).rejects.toThrow(/SHIPPING_PROVIDER/)
   })
 
-  function stubProductionStorage(storageProvider = 'cloudinary') {
+  function stubProductionStorage(storageProvider = 'supabase') {
     vi.stubEnv('NODE_ENV', 'production')
     vi.stubEnv('DATABASE_URL', 'postgresql://user:pass@localhost:5432/rusticerrado')
     vi.stubEnv('FRONTEND_ORIGINS', 'https://shop.example.com')
@@ -64,9 +63,8 @@ describe('environment configuration', () => {
     delete process.env.STORAGE_HTTP_URL
     delete process.env.STORAGE_HTTP_TOKEN
     delete process.env.STORAGE_PUBLIC_URL
-    vi.stubEnv('CLOUDINARY_CLOUD_NAME', 'test-cloud')
-    vi.stubEnv('CLOUDINARY_API_KEY', 'test-key')
-    vi.stubEnv('CLOUDINARY_API_SECRET', 'test-secret')
+    vi.stubEnv('SUPABASE_URL', 'https://abcdefgh.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test')
   }
 
   it.each([
@@ -133,22 +131,21 @@ describe('environment configuration', () => {
   })
 
   it.each([
-    ['cloud name', 'CLOUDINARY_CLOUD_NAME'],
-    ['API key', 'CLOUDINARY_API_KEY'],
-    ['API secret', 'CLOUDINARY_API_SECRET'],
-  ])('rejects Cloudinary storage without %s', async (_label, missingField) => {
+    ['project URL', 'SUPABASE_URL'],
+    ['secret key', 'SUPABASE_SECRET_KEY'],
+  ])('rejects Supabase storage without %s', async (_label, missingField) => {
     stubProductionStorage()
     delete process.env[missingField]
 
-    await expect(import('../src/config/env.js')).rejects.toThrow(/CLOUDINARY_/)
+    await expect(import('../src/config/env.js')).rejects.toThrow(/SUPABASE_/)
   })
 
-  it('accepts complete Cloudinary storage in production', async () => {
+  it('accepts complete Supabase storage in production', async () => {
     stubProductionStorage()
 
     const { env } = await import('../src/config/env.js')
 
-    expect(env.STORAGE_PROVIDER).toBe('cloudinary')
+    expect(env.STORAGE_PROVIDER).toBe('supabase')
   })
 
   it('accepts local storage in development', async () => {

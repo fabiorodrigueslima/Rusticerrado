@@ -3,10 +3,10 @@ import { createDirectUploadService } from '../src/services/directUploadService.j
 
 describe('direct upload registration',()=>{
   const intent = {id:'id',public_id:'products/id',product_id:1,mime:'image/png',bytes:123,alt:'Flower',is_primary:false,expires_at:new Date(Date.now()+60000)};
-  const asset = {public_id:'products/id',resource_type:'image',format:'png',bytes:123,secure_url:'https://res.cloudinary.com/test/image/upload/products/id.png'};
+  const asset = {public_id:'products/id',resource_type:'image',format:'png',bytes:123,secure_url:'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/products/id'};
   function setup(value=asset,row=intent) {
     const query=vi.fn(async(sql)=>sql.includes('FROM app.image_upload_intents')?{rows:[row]}:sql.startsWith('INSERT INTO app.produto_imagens')?{rows:[{id:7}]}:{rows:[{id:7}],rowCount:1});
-    const storage={inspect:vi.fn(async()=>value)};
+    const storage={inspect:vi.fn(async()=>value),publicUrl:(path)=>'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/'+path};
     return {query,storage,service:createDirectUploadService({tx:work=>work({query}),storage})};
   }
   it('checks the authoritative cloud asset before registering it',async()=>{

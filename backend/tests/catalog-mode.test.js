@@ -33,22 +33,21 @@ describe('catalog-only publication', () => {
     expect(env.PAYMENT_PROVIDER).toBe('disabled');
   }, COLD_IMPORT_TIMEOUT_MS);
 
-  it('keeps Cloudinary photo storage in catalog mode, but never local or HTTP storage', async () => {
+  it('keeps Supabase photo storage in catalog mode, but never local or HTTP storage', async () => {
     catalogProduction();
-    vi.stubEnv('STORAGE_PROVIDER', 'cloudinary');
-    vi.stubEnv('CLOUDINARY_CLOUD_NAME', 'demo');
-    vi.stubEnv('CLOUDINARY_API_KEY', 'key');
-    vi.stubEnv('CLOUDINARY_API_SECRET', 'secret');
-    expect((await import('../src/config/env.js')).env.STORAGE_PROVIDER).toBe('cloudinary');
+    vi.stubEnv('STORAGE_PROVIDER', 'supabase');
+    vi.stubEnv('SUPABASE_URL', 'https://abcdefgh.supabase.co');
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test');
+    expect((await import('../src/config/env.js')).env.STORAGE_PROVIDER).toBe('supabase');
     vi.resetModules();
     vi.stubEnv('STORAGE_PROVIDER', 'local');
     expect((await import('../src/config/env.js')).env.STORAGE_PROVIDER).toBe('disabled');
   }, COLD_IMPORT_TIMEOUT_MS);
 
-  it('still requires the Cloudinary credentials when catalog mode uses Cloudinary', async () => {
+  it('still requires the Supabase credentials when catalog mode uses Supabase', async () => {
     catalogProduction();
-    vi.stubEnv('STORAGE_PROVIDER', 'cloudinary');
-    await expect(import('../src/config/env.js')).rejects.toThrow(/CLOUDINARY_CLOUD_NAME/);
+    vi.stubEnv('STORAGE_PROVIDER', 'supabase');
+    await expect(import('../src/config/env.js')).rejects.toThrow(/SUPABASE_URL/);
   }, COLD_IMPORT_TIMEOUT_MS);
 
   it('keeps HTTPS and database requirements in catalog production', async () => {

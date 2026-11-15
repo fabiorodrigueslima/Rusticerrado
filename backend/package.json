@@ -7,6 +7,7 @@
     "dev": "node --env-file-if-exists=.env --watch src/server.js",
     "start": "node --env-file-if-exists=.env src/server.js",
     "db:setup": "node --env-file-if-exists=.env src/scripts/setupSupabase.js",
+    "storage:setup": "node --env-file-if-exists=.env src/scripts/setupStorage.js",
     "db:check": "node --env-file-if-exists=.env src/scripts/checkDatabase.js",
     "db:status": "node --env-file-if-exists=.env src/scripts/migrationStatus.js",
     "db:migrate": "node --env-file-if-exists=.env src/scripts/runMigrations.js",

@@ -10,8 +10,8 @@ const product = (overrides = {}) => ({
   description: 'Feito à mão com folha do Cerrado.',
   seo: { title: null, description: null },
   images: [
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1/produtos/folha-2.jpg', primary: false },
-    { url: 'https://res.cloudinary.com/demo/image/upload/v1/produtos/folha-1.jpg', primary: true },
+    { url: 'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/produtos/folha-2.jpg', primary: false },
+    { url: 'https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/produtos/folha-1.jpg', primary: true },
   ],
   ...overrides,
 })
@@ -23,7 +23,7 @@ describe('link preview of a product', () => {
     expect(status).toBe(200)
     expect(html).toContain('<meta property="og:title" content="Brinco Folha &lt;Dourada&gt; | RustiCerrado">')
     expect(html).toContain('<meta property="og:description" content="Feito à mão com folha do Cerrado.">')
-    expect(html).toContain('<meta property="og:image" content="https://res.cloudinary.com/demo/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/v1/produtos/folha-1.jpg">')
+    expect(html).toContain('<meta property="og:image" content="https://abcdefgh.supabase.co/storage/v1/object/public/rusticerrado/produtos/folha-1.jpg">')
     expect(html).toContain(`<meta property="og:url" content="${origin}/produto/brinco-folha">`)
     expect(html).toContain('<meta property="og:type" content="product">')
     expect(html).not.toContain('<Dourada>')
