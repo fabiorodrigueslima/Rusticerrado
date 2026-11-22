@@ -1,16 +1,52 @@
-# React + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🌿 RustiCerrado — Loja Virtual
 
-Currently, two official plugins are available:
+**Loja virtual de produtos artesanais e personalizados, com carrinho, conta do cliente e pagamento por Pix.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<a href="https://rusticerrado.vercel.app"><img src="https://img.shields.io/badge/🌐_Ver_site_no_ar-rusticerrado.vercel.app-0b5cad?style=for-the-badge" alt="Site no ar"/></a> <img src="https://img.shields.io/badge/status-em%20desenvolvimento-orange?style=for-the-badge" alt="status"/>
 
-## React Compiler
+<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React"/> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"/> <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/> <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express"/> <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/> <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT"/> <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel"/>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+</div>
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📌 Sobre o projeto
+
+E-commerce que estou desenvolvendo para um cliente. O comprador navega pela loja, monta o carrinho, finaliza a compra e acompanha seus pedidos.
+
+## ✨ Funcionalidades
+
+- **Vitrine** e página de cada produto
+- **Produtos personalizados** sob encomenda
+- **Carrinho** e **checkout** com pagamento por **Pix**
+- **Cadastro, login** e edição de perfil
+- **Minhas compras** e acompanhamento de **pedidos**
+- Página de **contato**
+
+## 🧠 Destaques técnicos
+
+- Front-end **React + Vite** com Context API e hooks próprios
+- API em **Node.js** (funções serverless na Vercel e servidor Express)
+- Autenticação com **JWT** e senhas protegidas com **bcrypt**
+- Banco de dados **PostgreSQL**
+
+## 🚀 Como rodar localmente
+
+```bash
+git clone https://github.com/fabiorodrigueslima/Rusticerrado.git
+cd Rusticerrado
+npm install
+npm run dev
+```
+
+---
+
+## 👨‍💻 Autor
+
+**Fabio Rodrigues de Lima** — Desenvolvedor Full Stack
+
+[![Portfólio](https://img.shields.io/badge/Portfólio-fabiorodriguesdev.com.br-0b5cad?style=flat-square)](https://fabiorodriguesdev.com.br)
+[![GitHub](https://img.shields.io/badge/GitHub-fabiorodrigueslima-181717?style=flat-square&logo=github)](https://github.com/fabiorodrigueslima)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Fabio%20Rodrigues-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/f%C3%A1bio-rodrigues-a89b543a4)
