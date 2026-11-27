@@ -70,7 +70,7 @@ export default function Footer() {
                         <FaPhone /> {formatPhone()}
                     </p>
                     <p>
-                        <FaEnvelope /> contato@rusticerrado.com.br
+                        <FaEnvelope /> rusticerrado@gmail.com
                     </p>
                     <p>
                         <FaMapMarkerAlt /> Brasília - DF

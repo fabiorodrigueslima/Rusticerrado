@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 import FeatureCard from "../components/FatureCard";
-import TestimonialCard from "../components/TestimonialCard";
 import Loading from "../components/Loading";
 
 import logoRusticerrado from "../assets/img/RustiCerrado.oficial.png";
@@ -123,30 +122,8 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* DEPOIMENTOS */}
-            <section className="section depoimentos">
-                <div className="container">
-                    <h2>O que dizem nossos clientes</h2>
-
-                    <div className="grid-3">
-                        <TestimonialCard
-                            stars="★★★★★"
-                            text="Produto incrível!"
-                            author="Ricardo"
-                        />
-                        <TestimonialCard
-                            stars="★★★★★"
-                            text="Muito bem feito!"
-                            author="Ana"
-                        />
-                        <TestimonialCard
-                            stars="★★★★★"
-                            text="Super recomendo!"
-                            author="Marcos"
-                        />
-                    </div>
-                </div>
-            </section>
+            {/* DEPOIMENTOS: volta quando a loja tiver avaliações reais (Google, Instagram ou WhatsApp).
+                O cartão continua pronto em components/TestimonialCard.jsx. */}
 
             {/* CTA */}
             <section className="section cta-section">

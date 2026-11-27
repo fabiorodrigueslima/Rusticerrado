@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-    FaPhone,
+    FaStore,
     FaEnvelope,
     FaMapMarkerAlt,
     FaWhatsapp,
@@ -118,11 +118,10 @@ export default function Contato() {
 
                         <div className="info-card">
                             <div className="info-icon">
-                                <FaPhone />
+                                <FaStore />
                             </div>
                             <div>
-                                <h3>Hora de Funcionamento</h3>
-                            
+                                <h3>Horário de Funcionamento</h3>
                                 <small>Segunda a sexta, 9h às 18h</small>
                             </div>
                         </div>
@@ -147,8 +146,7 @@ export default function Contato() {
                             <div>
                                 <h3>Localização</h3>
                                 <p>Brasília - DF</p>
-                                <p>CEP: 71693-154</p>
-                                <p>Rua 51, Lote 31, Vila Nova - São Sebastião/DF</p>
+                                <p>São Sebastião - DF</p>
                             </div>
                         </div>
 
