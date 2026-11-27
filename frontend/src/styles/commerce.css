@@ -22,7 +22,7 @@
   --ink: #2b2420;
   --muted: #6b625b;
   --shadow: 0 24px 70px rgba(61, 47, 30, 0.1);
-  --font-brand: Georgia, "Times New Roman", serif;
+  --font-brand: "Zilla Slab", Georgia, serif; /* mesma fonte de títulos do resto do site */
   color: var(--ink);
 
   & :is(button, input, textarea, select) {
@@ -482,6 +482,82 @@
     .checkout-form fieldset:has(.checkout-field) > legend,
     .checkout-form fieldset:has(.checkout-field) > button {
       grid-column: 1 / -1;
+    }
+  }
+
+  /* Endereço no checkout: CEP com botão, campos lado a lado */
+  .postal-row {
+    display: flex;
+    align-items: flex-end;
+    gap: .75rem;
+  }
+  .postal-row > :first-child {
+    flex: 1;
+  }
+  .field-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .field-pair.city-state {
+    grid-template-columns: 1fr 6rem;
+  }
+  /* Opções de entrega */
+  .shipping-options {
+    display: grid;
+    gap: .75rem;
+    margin: 0;
+    padding: clamp(1rem, 4vw, 1.75rem);
+    border: 1px solid var(--beige);
+    border-radius: 1rem;
+    background: var(--ivory);
+  }
+  .shipping-options legend {
+    font-weight: 700;
+    color: var(--wine);
+  }
+  .shipping-options button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--beige);
+    border-radius: .75rem;
+    background: #fff;
+    text-align: left;
+    cursor: pointer;
+  }
+  .shipping-options button:hover {
+    border-color: var(--wine);
+  }
+  .shipping-options button span {
+    display: grid;
+    gap: .15rem;
+  }
+  .shipping-options small {
+    color: var(--muted);
+  }
+  .review-total {
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-top: 2px solid var(--beige);
+    padding-top: .75rem;
+  }
+  .order-tracking {
+    padding: 1.25rem;
+    border: 1px solid var(--beige);
+    border-radius: 1rem;
+    background: var(--ivory);
+  }
+  @media (max-width: 520px) {
+    .field-pair,
+    .field-pair.city-state {
+      grid-template-columns: 1fr;
+    }
+    .postal-row {
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 }

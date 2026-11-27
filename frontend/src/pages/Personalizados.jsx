@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaWhatsapp } from 'react-icons/fa';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -7,7 +8,27 @@ import "../styles/style.css"
 import { whatsappLink } from "../config/contact.js";
 import chaveiroLogo from "../assets/img/Chaveiro Personalizado.jpeg";
 import chaveiroInicial from "../assets/img/Chaveiro Personalizado1.jpeg";
+import { IMAGEM_PADRAO, listarProdutos } from "../services/catalogo";
+import { CATEGORIA_PERSONALIZADOS, exemplosDosProdutos, LIMITE_EXEMPLOS } from "../utils/exemplosPersonalizados.js";
 import { abrirWhatsApp, mensagemPersonalizado, TIPOS_PERSONALIZADO } from "../utils/mensagemWhatsapp.js";
+
+// Exemplos fixos: aparecem enquanto não houver peças na categoria "Personalizados" do painel.
+const EXEMPLOS_FIXOS = [
+    {
+        chave: 'chaveiro-logo',
+        imagem: chaveiroLogo,
+        alt: 'Chaveiro redondo com a logo de um cliente',
+        titulo: 'Chaveiro com a Logo da sua Empresa',
+        texto: 'Ótimo para brindes, eventos e projetos.'
+    },
+    {
+        chave: 'chaveiro-inicial',
+        imagem: chaveiroInicial,
+        alt: 'Chaveiro em resina no formato da letra K',
+        titulo: 'Chaveiro com Inicial',
+        texto: 'A letra que você escolher, nas cores que você quiser.'
+    }
+];
 
 const FORMULARIO_VAZIO = {
     nome: '',
@@ -20,6 +41,19 @@ const FORMULARIO_VAZIO = {
 
 export default function Personalizados() {
     const [formData, setFormData] = useState(FORMULARIO_VAZIO);
+    const [exemplos, setExemplos] = useState(EXEMPLOS_FIXOS);
+
+    // Peças da categoria "Personalizados" cadastradas no painel substituem os exemplos fixos.
+    useEffect(() => {
+        const controller = new AbortController();
+        listarProdutos({ categoria: CATEGORIA_PERSONALIZADOS, ordem: 'newest', limite: LIMITE_EXEMPLOS * 2 }, controller.signal)
+            .then((lista) => {
+                const doPainel = exemplosDosProdutos(lista, IMAGEM_PADRAO);
+                if (doPainel.length > 0) setExemplos(doPainel);
+            })
+            .catch(() => {});
+        return () => controller.abort();
+    }, []);
 
     const [erros, setErros] = useState({});
     const [alert, setAlert] = useState(null);
@@ -128,16 +162,24 @@ export default function Personalizados() {
                         <div className="personalizados-exemplos">
                             <h2>Exemplos de Personalizações</h2>
                             <div className="exemplos-grid">
-                                <div className="exemplo-card">
-                                    <img src={chaveiroLogo} alt="Chaveiro redondo com a logo de um cliente" loading="lazy" />
-                                    <h4>Chaveiro com a Logo da sua Empresa</h4>
-                                    <p>Ótimo para brindes, eventos e projetos.</p>
-                                </div>
-                                <div className="exemplo-card">
-                                    <img src={chaveiroInicial} alt="Chaveiro em resina no formato da letra K" loading="lazy" />
-                                    <h4>Chaveiro com Inicial</h4>
-                                    <p>A letra que você escolher, nas cores que você quiser.</p>
-                                </div>
+                                {exemplos.map((exemplo) => {
+                                    const conteudo = (
+                                        <>
+                                            <img src={exemplo.imagem} alt={exemplo.alt} loading="lazy" />
+                                            <h4>{exemplo.titulo}</h4>
+                                            {exemplo.texto && <p>{exemplo.texto}</p>}
+                                        </>
+                                    );
+                                    return exemplo.link ? (
+                                        <Link key={exemplo.chave} to={exemplo.link} className="exemplo-card">
+                                            {conteudo}
+                                        </Link>
+                                    ) : (
+                                        <div key={exemplo.chave} className="exemplo-card">
+                                            {conteudo}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
 

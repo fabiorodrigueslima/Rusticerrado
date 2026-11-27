@@ -7,12 +7,10 @@ import { BrowserRouter as Router, Navigate, Outlet, Routes, Route } from "react-
 
 import { CartProvider } from "./context/CartContext";
 import { CustomerAuthProvider } from "./context/customerAuthContext.jsx";
-import { ThemeProvider } from "./context/ThemeContext";
-import { NotificationProvider } from "./context/NotificationContext";
-import { FilterProvider } from "./context/FilterContext";
 import { StorefrontProvider } from "./context/StorefrontProvider";
 
 import WhatsAppButton from "./components/WhatsAppButton";
+import { ScrollToTop } from "./components/common/ScrollToTop.jsx";
 
 // Componentes
 import Navbar from "./components/Navbar";
@@ -25,6 +23,8 @@ import Produto from "./pages/Produto";
 import Carrinho from "./pages/Carrinho";
 import Contato from "./pages/Contato";
 import Personalizados from "./pages/Personalizados";
+import Sobre from "./pages/Sobre";
+import ComoEFeito from "./pages/ComoEFeito";
 import NotFound from "./components/NotFound";
 
 // Compra, conta do cliente e páginas legais (vindas do Brinco de Princesa)
@@ -71,11 +71,8 @@ const adminLoading = (
 // Site da loja: cabeçalho, páginas e rodapé.
 function SiteShell() {
   return (
-      <ThemeProvider>
-        <NotificationProvider>
           <CustomerAuthProvider>
             <CartProvider>
-              <FilterProvider>
                 <div className="app">
 
                   {/* NAVBAR */}
@@ -91,6 +88,8 @@ function SiteShell() {
                       <Route path="/produto/:id" element={<Produto />} />
                       <Route path="/contato" element={<Contato />} />
                       <Route path="/personalizados" element={<Personalizados />} />
+                      <Route path="/sobre" element={<Sobre />} />
+                      <Route path="/como-e-feito" element={<ComoEFeito />} />
 
                       {/* COMPRA, CONTA E PÁGINAS LEGAIS */}
                       <Route element={<CommerceLayout />}>
@@ -126,17 +125,15 @@ function SiteShell() {
                   <WhatsAppButton />
 
                 </div>
-              </FilterProvider>
             </CartProvider>
           </CustomerAuthProvider>
-        </NotificationProvider>
-      </ThemeProvider>
   );
 }
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <StorefrontProvider>
         <Suspense fallback={adminLoading}>
           <Routes>

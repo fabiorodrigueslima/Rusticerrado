@@ -6,6 +6,7 @@ import CartIcon from './CartIcon';
 import "../styles/style.css"
 import logoRusticerrado from '../assets/img/RustiCerrado.oficial.png';
 import { whatsappLink } from "../config/contact.js";
+import { historia, paginaPronta } from "../content/institucional.js";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +44,22 @@ export default function Navbar() {
                         onClick={closeMenu}
                     >
                         Loja
+                    </Link>
+                    {paginaPronta(historia) && (
+                        <Link
+                            to="/sobre"
+                            className="nav-link"
+                            onClick={closeMenu}
+                        >
+                            Nossa História
+                        </Link>
+                    )}
+                    <Link
+                        to="/personalizados"
+                        className="nav-link"
+                        onClick={closeMenu}
+                    >
+                        Personalizados
                     </Link>
                     <Link
                         to="/contato"

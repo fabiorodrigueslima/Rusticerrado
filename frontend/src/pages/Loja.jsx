@@ -6,6 +6,7 @@ import FilterBar from "../components/FilterBar";
 import Loading from "../components/Loading";
 import { CartContext } from "../context/CartContext";
 import { useOnlineSales } from "../context/storefrontContext";
+import { LaunchNotice } from "../components/common/LaunchNotice.jsx";
 
 import { formatarPreco, itemParaCarrinho, listarProdutos } from "../services/catalogo";
 
@@ -114,6 +115,8 @@ export default function Loja() {
 
             <section className="section loja-content">
                 <div className="container">
+                    <LaunchNotice />
+
                     <FilterBar
                         searchValue={searchValue}
                         onSearchChange={setSearchValue}

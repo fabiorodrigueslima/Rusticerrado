@@ -3,6 +3,7 @@ import { FaFacebookF, FaInstagram, FaWhatsapp, FaPhone, FaEnvelope, FaMapMarkerA
 import "../styles/style.css"
 import logoRusticerrado from '../assets/img/RustiCerrado.oficial.png';
 import { contact, formatPhone, whatsappLink } from '../config/contact.js';
+import { historia, paginaPronta, processo } from "../content/institucional.js";
 
 
 export default function Footer() {
@@ -57,6 +58,8 @@ export default function Footer() {
                         <li><Link to="/loja">Loja</Link></li>
                         <li><Link to="/contato">Contato</Link></li>
                         <li><Link to="/personalizados">Personalizados</Link></li>
+                        {paginaPronta(historia) && <li><Link to="/sobre">Nossa História</Link></li>}
+                        {paginaPronta(processo) && <li><Link to="/como-e-feito">Como é feito</Link></li>}
                         <li><Link to="/privacidade">Privacidade</Link></li>
                         <li><Link to="/termos">Termos de Uso</Link></li>
                         <li><Link to="/trocas-e-devolucoes">Trocas e Devoluções</Link></li>
