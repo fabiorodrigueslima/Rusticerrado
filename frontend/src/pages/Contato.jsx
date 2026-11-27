@@ -6,25 +6,20 @@ import {
     FaWhatsapp,
     FaInstagram,
     FaFacebookF,
-    FaPaperPlane,
 } from "react-icons/fa";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Alert from "../components/Alert";
 import "../styles/style.css";
 import { contact, formatPhone, whatsappLink } from "../config/contact.js";
+import { abrirWhatsApp, ASSUNTOS_CONTATO, mensagemContato } from "../utils/mensagemWhatsapp.js";
+
+const FORMULARIO_VAZIO = { nome: "", assunto: "", mensagem: "" };
 
 export default function Contato() {
-    const [formData, setFormData] = useState({
-        nome: "",
-        email: "",
-        telefone: "",
-        assunto: "",
-        mensagem: "",
-    });
+    const [formData, setFormData] = useState(FORMULARIO_VAZIO);
 
     const [erros, setErros] = useState({});
-    const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState(null);
 
     const handleInputChange = (e) => {
@@ -47,8 +42,6 @@ export default function Contato() {
         const novosErros = {};
 
         if (!formData.nome.trim()) novosErros.nome = "Nome é obrigatório";
-        if (!formData.email.trim()) novosErros.email = "Email é obrigatório";
-        if (!formData.telefone.trim()) novosErros.telefone = "Telefone é obrigatório";
         if (!formData.assunto.trim()) novosErros.assunto = "Assunto é obrigatório";
         if (!formData.mensagem.trim()) novosErros.mensagem = "Mensagem é obrigatória";
 
@@ -56,7 +49,8 @@ export default function Contato() {
         return Object.keys(novosErros).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    // O formulário abre o WhatsApp da loja com a mensagem já escrita.
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!validarFormulario()) {
@@ -67,24 +61,13 @@ export default function Contato() {
             return;
         }
 
-        setLoading(true);
+        abrirWhatsApp(whatsappLink(mensagemContato(formData)));
 
-        setTimeout(() => {
-            setAlert({
-                type: "success",
-                message: "Mensagem enviada com sucesso!",
-            });
-
-            setFormData({
-                nome: "",
-                email: "",
-                telefone: "",
-                assunto: "",
-                mensagem: "",
-            });
-
-            setLoading(false);
-        }, 1200);
+        setAlert({
+            type: "success",
+            message: "Abrimos o WhatsApp com a sua mensagem. É só tocar em Enviar!",
+        });
+        setFormData(FORMULARIO_VAZIO);
     };
 
     return (
@@ -138,22 +121,24 @@ export default function Contato() {
                                 <FaPhone />
                             </div>
                             <div>
-                                <h3>Telefone</h3>
-                                <p>{formatPhone()}</p>
+                                <h3>Hora de Funcionamento</h3>
+                            
                                 <small>Segunda a sexta, 9h às 18h</small>
                             </div>
                         </div>
 
-                        <div className="info-card">
-                            <div className="info-icon">
-                                <FaEnvelope />
+                        {/* Só aparece quando o e-mail da loja estiver preenchido em config/contact.js */}
+                        {contact.email && (
+                            <div className="info-card">
+                                <div className="info-icon">
+                                    <FaEnvelope />
+                                </div>
+                                <div>
+                                    <h3>Email</h3>
+                                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                                </div>
                             </div>
-                            <div>
-                                <h3>Email</h3>
-                                <p>contato@rusticerrado.com.br</p>
-                                <small>Resposta em até 24h</small>
-                            </div>
-                        </div>
+                        )}
 
                         <div className="info-card">
                             <div className="info-icon">
@@ -162,7 +147,8 @@ export default function Contato() {
                             <div>
                                 <h3>Localização</h3>
                                 <p>Brasília - DF</p>
-                                <small>Atendimento para todo o Brasil</small>
+                                <p>CEP: 71693-154</p>
+                                <p>Rua 51, Lote 31, Vila Nova - São Sebastião/DF</p>
                             </div>
                         </div>
 
@@ -191,7 +177,7 @@ export default function Contato() {
 
                     <div className="contato-form">
                         <h2>Envie uma Mensagem</h2>
-                        <p>Preencha os dados abaixo que entraremos em contato.</p>
+                        <p>Preencha os campos e toque em enviar: a mensagem abre pronta no WhatsApp da loja.</p>
 
                         <form onSubmit={handleSubmit}>
                             <Input
@@ -200,25 +186,6 @@ export default function Contato() {
                                 value={formData.nome}
                                 onChange={handleInputChange}
                                 error={erros.nome}
-                                required
-                            />
-
-                            <Input
-                                label="Email"
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                error={erros.email}
-                                required
-                            />
-
-                            <Input
-                                label="Telefone"
-                                name="telefone"
-                                value={formData.telefone}
-                                onChange={handleInputChange}
-                                error={erros.telefone}
                                 required
                             />
 
@@ -235,11 +202,9 @@ export default function Contato() {
                                     className={`form-select ${erros.assunto ? "input-error" : ""}`}
                                 >
                                     <option value="">Selecione um assunto</option>
-                                    <option value="produto">Dúvida sobre produto</option>
-                                    <option value="pedido">Dúvida sobre pedido</option>
-                                    <option value="personalizado">Produto personalizado</option>
-                                    <option value="orcamento">Orçamento</option>
-                                    <option value="outro">Outro</option>
+                                    {Object.entries(ASSUNTOS_CONTATO).map(([valor, texto]) => (
+                                        <option key={valor} value={valor}>{texto}</option>
+                                    ))}
                                 </select>
 
                                 {erros.assunto && (
@@ -271,10 +236,9 @@ export default function Contato() {
                                 type="submit"
                                 variant="primary"
                                 size="large"
-                                loading={loading}
                                 className="btn-full"
                             >
-                                <FaPaperPlane /> Enviar Mensagem
+                                <FaWhatsapp /> Enviar pelo WhatsApp
                             </Button>
                         </form>
                     </div>

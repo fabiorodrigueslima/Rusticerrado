@@ -11,6 +11,8 @@
   --accent: #d4af9e; /* Bege Natural */
   --accent-dark: #c49a8a; /* Bege mais escuro */
   --success: #6b8e23; /* Verde Cerrado */
+  --wood-soft: #f5efe6; /* Fundo bege bem claro */
+  --wood-border: #e3d5c3; /* Borda bege */
   --white: #ffffff;
   --black: #1a1a1a;
   --text: #333333;
@@ -26,6 +28,10 @@
   --transition: all 0.3s ease;
   --transition-fast: all 0.15s ease;
   --transition-slow: all 0.5s ease;
+
+  /* Fontes: títulos rústicos e texto fácil de ler */
+  --font-title: "Zilla Slab", Georgia, serif;
+  --font-body: "Source Sans 3 Variable", "Segoe UI", system-ui, sans-serif;
 }
 
 * {
@@ -39,10 +45,17 @@ html {
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-body);
   color: var(--text);
   background: var(--white);
   line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-title);
 }
 
 img {
@@ -120,6 +133,8 @@ ul {
   width: 50px;
   height: 50px;
   object-fit: contain;
+  border-radius: 50%; /* logo redonda */
+  background: var(--white);
   transition: var(--transition);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
@@ -836,7 +851,10 @@ ul {
 }
 
 .sobre-image img {
-  border-radius: 16px;
+  border-radius: 50%; /* logo redonda */
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: var(--white);
   box-shadow: var(--shadow-lg);
   transition: var(--transition);
 }
@@ -1022,6 +1040,8 @@ ul {
 .footer-logo img {
   width: 50px;
   height: 50px;
+  border-radius: 50%; /* logo redonda */
+  background: var(--white);
   filter: brightness(1.2);
 }
 
@@ -1301,7 +1321,7 @@ ul {
 .btn-voltar-checkout {
   background: none;
   border: none;
-  color: #2e7d32;
+  color: var(--secondary);
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
@@ -1330,7 +1350,7 @@ ul {
 
 .checkout-form legend {
   font-weight: 800;
-  color: #2e7d32;
+  color: var(--secondary);
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -1348,14 +1368,14 @@ ul {
 }
 
 .payment-box {
-  background: #f1f8f2;
-  border: 1px solid #c8e6c9;
+  background: var(--wood-soft);
+  border: 1px solid var(--wood-border);
   border-radius: 16px;
   padding: 22px;
 }
 
 .payment-box h3 {
-  color: #2e7d32;
+  color: var(--secondary);
   margin-bottom: 10px;
 }
 
@@ -1385,7 +1405,7 @@ ul {
   align-items: center;
   gap: 8px;
   background: #fff;
-  color: #2e7d32;
+  color: var(--secondary);
   padding: 10px 14px;
   border-radius: 30px;
   font-weight: 700;
@@ -1397,7 +1417,7 @@ ul {
 }
 
 .checkout-resumo h3 {
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -1451,7 +1471,7 @@ ul {
 }
 
 .resumo-total strong {
-  color: #2e7d32;
+  color: var(--secondary);
 }
 
 .checkout-empty {
@@ -1460,7 +1480,7 @@ ul {
 }
 
 .checkout-empty h2 {
-  color: #2e7d32;
+  color: var(--secondary);
   margin-bottom: 10px;
 }
 
@@ -1656,7 +1676,7 @@ ul {
 
 .cadastro-form-container h3 {
   font-size: 30px;
-  color: #2e7d32;
+  color: var(--secondary);
   margin-bottom: 25px;
 }
 
@@ -1684,8 +1704,8 @@ ul {
 }
 
 .input-group input:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.12);
 }
 
 .input-group button {
@@ -1706,7 +1726,7 @@ ul {
 
 .input-group img {
   object-fit: cover;
-  border: 3px solid #2e7d32;
+  border: 3px solid var(--secondary);
 }
 
 .cadastro-form-container label {
@@ -1736,7 +1756,7 @@ ul {
 }
 
 .cadastro-form-container a {
-  color: #2e7d32;
+  color: var(--secondary);
   font-weight: 700;
   text-decoration: none;
 }
@@ -1769,7 +1789,7 @@ ul {
   border-radius: 50%;
   margin-top: 10px;
   object-fit: cover;
-  border: 3px solid #2e7d32;
+  border: 3px solid var(--secondary);
 }
 
 /* Perfil */
@@ -5350,7 +5370,7 @@ ul {
 }
 
 .perfil-header {
-  background: linear-gradient(135deg, #2e7d32, #66bb6a);
+  background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-light));
   color: white;
   padding: 35px;
   display: flex;
@@ -5380,7 +5400,7 @@ ul {
   height: 35px;
   border-radius: 50%;
   border: none;
-  background: #1b5e20;
+  background: var(--secondary-dark);
   color: white;
   cursor: pointer;
 }
@@ -5399,7 +5419,7 @@ ul {
 .perfil-logout {
   margin-left: auto;
   background: white;
-  color: #2e7d32;
+  color: var(--secondary);
   border: none;
   padding: 10px 16px;
   border-radius: 10px;
@@ -5431,9 +5451,9 @@ ul {
 }
 
 .perfil-menu button.active {
-  color: #2e7d32;
-  border-bottom: 3px solid #2e7d32;
-  background: #f1f8f2;
+  color: var(--secondary);
+  border-bottom: 3px solid var(--secondary);
+  background: var(--wood-soft);
 }
 
 .perfil-content {
@@ -5442,7 +5462,7 @@ ul {
 
 .perfil-section h3 {
   font-size: 24px;
-  color: #2e7d32;
+  color: var(--secondary);
   margin-bottom: 20px;
 }
 
@@ -5471,7 +5491,7 @@ ul {
 
 .perfil-edit-btn {
   margin-top: 20px;
-  background: #2e7d32;
+  background: var(--secondary);
   color: white;
   border: none;
   padding: 12px 18px;
@@ -5492,7 +5512,7 @@ ul {
 
 .perfil-empty svg {
   font-size: 45px;
-  color: #2e7d32;
+  color: var(--secondary);
   margin-bottom: 12px;
 }
 
@@ -5547,7 +5567,7 @@ ul {
 .editar-perfil-container h2 {
   text-align: center;
   margin-bottom: 25px;
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 28px;
 }
 
@@ -5565,7 +5585,7 @@ ul {
 }
 
 .btn-voltar:hover {
-  color: #2e7d32;
+  color: var(--secondary);
 }
 
 /* FOTO */
@@ -5581,7 +5601,7 @@ ul {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #2e7d32;
+  border: 4px solid var(--secondary);
   margin-bottom: 10px;
   transition: 0.3s;
 }
@@ -5614,8 +5634,8 @@ ul {
 }
 
 .form-grid input:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.15);
 }
 
 /* SUBTÍTULO */
@@ -5629,7 +5649,7 @@ ul {
 .btn-salvar {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #2e7d32, #43a047);
+  background: linear-gradient(135deg, var(--secondary-dark), var(--secondary));
   color: white;
   border: none;
   border-radius: 12px;
@@ -5685,7 +5705,7 @@ ul {
 }
 
 .minhas-compras-card h2 {
-  color: #2e7d32;
+  color: var(--secondary);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -5700,7 +5720,7 @@ ul {
 
 .compras-vazio svg {
   font-size: 50px;
-  color: #2e7d32;
+  color: var(--secondary);
   margin-bottom: 15px;
 }
 
@@ -5734,8 +5754,8 @@ ul {
 .compra-item span {
   display: inline-block;
   margin-top: 8px;
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--wood-soft);
+  color: var(--secondary);
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 13px;
@@ -5792,7 +5812,7 @@ ul {
 
 .produto-estoque {
   font-size: 14px;
-  color: #2e7d32;
+  color: var(--secondary);
   font-weight: 600;
   margin: 8px 0;
 }
@@ -5822,7 +5842,7 @@ ul {
 }
 
 .carrinho-header {
-  background: linear-gradient(135deg, #2e7d32, #66bb6a);
+  background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-light));
   color: white;
   padding: 45px 20px;
 }
@@ -5899,7 +5919,7 @@ ul {
 }
 
 .item-info strong {
-  color: #2e7d32;
+  color: var(--secondary);
 }
 
 .quantidade-control {
@@ -5912,7 +5932,7 @@ ul {
   width: 34px;
   height: 34px;
   border: none;
-  background: #2e7d32;
+  background: var(--secondary);
   color: white;
   font-size: 18px;
   cursor: pointer;
@@ -5927,7 +5947,7 @@ ul {
 }
 
 .col-total strong {
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 17px;
 }
 
@@ -5957,7 +5977,7 @@ ul {
 }
 
 .carrinho-resumo h3 {
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 24px;
   margin-bottom: 22px;
 }
@@ -5978,7 +5998,7 @@ ul {
 }
 
 .resumo-total strong {
-  color: #2e7d32;
+  color: var(--secondary);
 }
 
 .btn-full {
@@ -5988,13 +6008,13 @@ ul {
 }
 
 .btn-outline {
-  border: 2px solid #2e7d32;
-  color: #2e7d32;
+  border: 2px solid var(--secondary);
+  color: var(--secondary);
   background: transparent;
 }
 
 .btn-outline:hover {
-  background: #2e7d32;
+  background: var(--secondary);
   color: white;
 }
 
@@ -6009,7 +6029,7 @@ ul {
 }
 
 .carrinho-vazio h2 {
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 28px;
   margin-bottom: 10px;
 }
@@ -6052,15 +6072,17 @@ ul {
 }
 
 .contato-hero {
-  background: linear-gradient(135deg, #2e7d32, #1b5e20);
-  color: white;
+  /* mesmo fundo bege da página inicial */
+  background: linear-gradient(135deg, #f5f1ed 0%, #e8dfd5 100%);
+  color: var(--black);
   padding: 80px 20px;
   text-align: center;
 }
 
 .contato-hero-content span {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(139, 111, 71, 0.12);
+  color: var(--secondary-dark);
   padding: 8px 18px;
   border-radius: 30px;
   font-weight: 700;
@@ -6076,7 +6098,7 @@ ul {
   max-width: 650px;
   margin: auto;
   font-size: 18px;
-  opacity: 0.95;
+  color: var(--text-light);
 }
 
 .contato-section {
@@ -6100,7 +6122,7 @@ ul {
 
 .contato-info h2,
 .contato-form h2 {
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 28px;
   margin-bottom: 8px;
 }
@@ -6123,8 +6145,8 @@ ul {
 
 .info-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.12);
-  border-color: #c8e6c9;
+  box-shadow: 0 8px 20px rgba(139, 111, 71, 0.12);
+  border-color: var(--wood-border);
 }
 
 .info-icon {
@@ -6132,8 +6154,8 @@ ul {
   height: 46px;
   min-width: 46px;
   border-radius: 50%;
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--wood-soft);
+  color: var(--secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6155,7 +6177,7 @@ ul {
 }
 
 .info-card a:hover {
-  color: #2e7d32;
+  color: var(--secondary);
 }
 
 .contato-social {
@@ -6176,7 +6198,7 @@ ul {
 }
 
 .contato-social-links a {
-  background: #2e7d32;
+  background: var(--secondary);
   color: white;
   padding: 11px 16px;
   border-radius: 30px;
@@ -6189,7 +6211,7 @@ ul {
 }
 
 .contato-social-links a:hover {
-  background: #1b5e20;
+  background: var(--secondary-dark);
   transform: translateY(-2px);
 }
 
@@ -6199,9 +6221,26 @@ ul {
   gap: 16px;
 }
 
+/* Caixa de texto (Nome), lista (Assunto) e caixa grande (Mensagem): todas iguais */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.form-input,
 .form-select,
 .form-textarea {
   width: 100%;
+  min-height: 50px;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 13px 15px;
@@ -6216,10 +6255,11 @@ ul {
   min-height: 140px;
 }
 
+.form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.12);
 }
 
 .input-error {
@@ -6235,6 +6275,13 @@ ul {
 
 .required {
   color: #d32f2f;
+  margin-left: 2px;
+}
+
+.form-hint {
+  font-size: 14px;
+  color: var(--text-light);
+  margin: -6px 0 18px;
 }
 
 @media (max-width: 900px) {
@@ -6267,7 +6314,7 @@ ul {
 }
 
 .minha-conta-header {
-  background: linear-gradient(135deg, #2e7d32, #66bb6a);
+  background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-light));
   color: white;
   padding: 30px;
   border-radius: 18px;
@@ -6304,7 +6351,7 @@ ul {
 
 .minha-conta-header button {
   background: white;
-  color: #2e7d32;
+  color: var(--secondary);
 }
 
 .conta-grid {
@@ -6321,7 +6368,7 @@ ul {
 }
 
 .conta-box svg {
-  color: #2e7d32;
+  color: var(--secondary);
   font-size: 24px;
   margin-bottom: 12px;
 }
@@ -6346,12 +6393,12 @@ ul {
 }
 
 .conta-actions button {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--wood-soft);
+  color: var(--secondary);
 }
 
 .conta-actions button:hover {
-  background: #2e7d32;
+  background: var(--secondary);
   color: white;
 }
 

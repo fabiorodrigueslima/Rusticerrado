@@ -90,7 +90,7 @@ export default function Home() {
             </section>
 
             {/* QUEM SOMOS */}
-            <section className="section sobre-nos">
+            <section className="section sobre-nos" id="sobre">
                 <div className="container sobre-container">
                     <div className="sobre-image">
                         <img src={logoRusticerrado} alt="RustiCerrado" />

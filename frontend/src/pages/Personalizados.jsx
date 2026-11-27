@@ -1,26 +1,25 @@
 import { useState } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaWhatsapp } from 'react-icons/fa';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Alert from '../components/Alert';
 import "../styles/style.css"
 import { whatsappLink } from "../config/contact.js";
+import { abrirWhatsApp, mensagemPersonalizado, TIPOS_PERSONALIZADO } from "../utils/mensagemWhatsapp.js";
+
+const FORMULARIO_VAZIO = {
+    nome: '',
+    tipo_produto: '',
+    descricao: '',
+    tamanho: '',
+    cores: '',
+    orcamento_aproximado: ''
+};
 
 export default function Personalizados() {
-    const [formData, setFormData] = useState({
-        nome: '',
-        email: '',
-        telefone: '',
-        tipo_produto: '',
-        descricao: '',
-        tamanho: '',
-        cores: '',
-        orcamento_aproximado: '',
-        arquivo: null
-    });
+    const [formData, setFormData] = useState(FORMULARIO_VAZIO);
 
     const [erros, setErros] = useState({});
-    const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState(null);
 
     const handleInputChange = (e) => {
@@ -37,20 +36,10 @@ export default function Personalizados() {
         }
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFormData(prev => ({
-            ...prev,
-            arquivo: file
-        }));
-    };
-
     const validarFormulario = () => {
         const novosErros = {};
 
         if (!formData.nome.trim()) novosErros.nome = 'Nome é obrigatório';
-        if (!formData.email.trim()) novosErros.email = 'Email é obrigatório';
-        if (!formData.telefone.trim()) novosErros.telefone = 'Telefone é obrigatório';
         if (!formData.tipo_produto.trim()) novosErros.tipo_produto = 'Tipo de produto é obrigatório';
         if (!formData.descricao.trim()) novosErros.descricao = 'Descrição é obrigatória';
 
@@ -58,7 +47,8 @@ export default function Personalizados() {
         return Object.keys(novosErros).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    // O formulário abre o WhatsApp da loja com o pedido já escrito.
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!validarFormulario()) {
@@ -69,36 +59,13 @@ export default function Personalizados() {
             return;
         }
 
-        setLoading(true);
+        abrirWhatsApp(whatsappLink(mensagemPersonalizado(formData)));
 
-        try {
-            // Simular envio
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            setAlert({
-                type: 'success',
-                message: 'Solicitação enviada com sucesso! Entraremos em contato em breve.'
-            });
-
-            setFormData({
-                nome: '',
-                email: '',
-                telefone: '',
-                tipo_produto: '',
-                descricao: '',
-                tamanho: '',
-                cores: '',
-                orcamento_aproximado: '',
-                arquivo: null
-            });
-        } catch (error) {
-            setAlert({
-                type: 'error',
-                message: 'Erro ao enviar solicitação. Tente novamente.'
-            });
-        } finally {
-            setLoading(false);
-        }
+        setAlert({
+            type: 'success',
+            message: 'Abrimos o WhatsApp com o seu pedido. Toque em Enviar e, se quiser, mande fotos de referência na conversa.'
+        });
+        setFormData(FORMULARIO_VAZIO);
     };
 
     return (
@@ -181,8 +148,8 @@ export default function Personalizados() {
                         <div className="personalizados-form">
                             <h2>Solicite seu Produto Personalizado</h2>
                             <p className="form-subtitle">
-                                Preencha o formulário abaixo com os detalhes do seu projeto.
-                                Entraremos em contato para confirmar e enviar um orçamento.
+                                Conte sua ideia e toque em enviar: o pedido abre pronto no WhatsApp da loja,
+                                onde combinamos os detalhes e o orçamento.
                             </p>
 
                             <form onSubmit={handleSubmit}>
@@ -192,25 +159,6 @@ export default function Personalizados() {
                                     value={formData.nome}
                                     onChange={handleInputChange}
                                     error={erros.nome}
-                                    required
-                                />
-
-                                <Input
-                                    label="Email"
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    error={erros.email}
-                                    required
-                                />
-
-                                <Input
-                                    label="Telefone"
-                                    name="telefone"
-                                    value={formData.telefone}
-                                    onChange={handleInputChange}
-                                    error={erros.telefone}
                                     required
                                 />
 
@@ -226,12 +174,9 @@ export default function Personalizados() {
                                         className="form-select"
                                     >
                                         <option value="">Selecione um tipo</option>
-                                        <option value="tabua">Tábua de Churrasco</option>
-                                        <option value="bandeja">Bandeja</option>
-                                        <option value="vaso">Vaso</option>
-                                        <option value="luminaria">Luminária</option>
-                                        <option value="caixa">Caixa Decorativa</option>
-                                        <option value="outro">Outro</option>
+                                        {Object.entries(TIPOS_PERSONALIZADO).map(([valor, texto]) => (
+                                            <option key={valor} value={valor}>{texto}</option>
+                                        ))}
                                     </select>
                                     {erros.tipo_produto && <span className="form-error">{erros.tipo_produto}</span>}
                                 </div>
@@ -261,7 +206,7 @@ export default function Personalizados() {
                                 />
 
                                 <Input
-                                    label="Cores Desejadas"
+                                    label="Madeira e Cores"
                                     name="cores"
                                     placeholder="Ex: Madeira clara com resina azul"
                                     value={formData.cores}
@@ -276,36 +221,24 @@ export default function Personalizados() {
                                     onChange={handleInputChange}
                                 />
 
-                                <div className="form-group">
-                                    <label htmlFor="arquivo" className="form-label">
-                                        Anexar Referência (Imagem ou Desenho)
-                                    </label>
-                                    <input
-                                        type="file"
-                                        id="arquivo"
-                                        name="arquivo"
-                                        onChange={handleFileChange}
-                                        accept="image/*,.pdf"
-                                        className="form-file"
-                                    />
-                                    <p className="form-hint">Máximo 5MB. Formatos: JPG, PNG, PDF</p>
-                                </div>
+                                <p className="form-hint">
+                                    Tem uma foto ou desenho de referência? Mande na conversa do WhatsApp depois de enviar.
+                                </p>
 
                                 <Button
                                     type="submit"
                                     variant="primary"
                                     size="large"
-                                    loading={loading}
                                     className="btn-full"
                                 >
-                                    Enviar Solicitação
+                                    <FaWhatsapp /> Enviar pelo WhatsApp
                                 </Button>
                             </form>
 
                             <div className="form-info">
                                 <p>
-                                    <strong>Próximos passos:</strong> Após enviar sua solicitação,
-                                    nossa equipe entrará em contato para discutir os detalhes e enviar um orçamento personalizado.
+                                    <strong>Próximos passos:</strong> depois que você enviar a mensagem no WhatsApp,
+                                    a RustiCerrado responde para combinar os detalhes e passar o orçamento.
                                 </p>
                             </div>
                         </div>
