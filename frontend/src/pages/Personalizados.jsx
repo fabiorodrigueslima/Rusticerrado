@@ -5,6 +5,8 @@ import Button from '../components/Button';
 import Alert from '../components/Alert';
 import "../styles/style.css"
 import { whatsappLink } from "../config/contact.js";
+import chaveiroLogo from "../assets/img/Chaveiro Personalizado.jpeg";
+import chaveiroInicial from "../assets/img/Chaveiro Personalizado1.jpeg";
 import { abrirWhatsApp, mensagemPersonalizado, TIPOS_PERSONALIZADO } from "../utils/mensagemWhatsapp.js";
 
 const FORMULARIO_VAZIO = {
@@ -111,8 +113,8 @@ export default function Personalizados() {
                         </div>
                         <div className="beneficio-card">
                             <FaCheckCircle className="beneficio-icon" />
-                            <h3>Prazo Garantido</h3>
-                            <p>Entrega dentro do prazo combinado ou seu dinheiro de volta.</p>
+                            <h3>Prazo Combinado</h3>
+                            <p>Você sabe antes de fechar o pedido quando a sua peça fica pronta.</p>
                         </div>
                     </div>
                 </div>
@@ -127,19 +129,14 @@ export default function Personalizados() {
                             <h2>Exemplos de Personalizações</h2>
                             <div className="exemplos-grid">
                                 <div className="exemplo-card">
-                                    <img src="/img/exemplo1.jpg" alt="Exemplo 1" />
-                                    <h4>Tábua com Iniciais</h4>
-                                    <p>Gravação de iniciais em madeira e resina</p>
+                                    <img src={chaveiroLogo} alt="Chaveiro redondo com a logo de um cliente" loading="lazy" />
+                                    <h4>Chaveiro com a Logo da sua Empresa</h4>
+                                    <p>Ótimo para brindes, eventos e projetos.</p>
                                 </div>
                                 <div className="exemplo-card">
-                                    <img src="/img/exemplo2.jpg" alt="Exemplo 2" />
-                                    <h4>Cores Personalizadas</h4>
-                                    <p>Escolha as cores que combinam com seu estilo</p>
-                                </div>
-                                <div className="exemplo-card">
-                                    <img src="/img/exemplo3.jpg" alt="Exemplo 3" />
-                                    <h4>Tamanhos Especiais</h4>
-                                    <p>Dimensões customizadas conforme sua necessidade</p>
+                                    <img src={chaveiroInicial} alt="Chaveiro em resina no formato da letra K" loading="lazy" />
+                                    <h4>Chaveiro com Inicial</h4>
+                                    <p>A letra que você escolher, nas cores que você quiser.</p>
                                 </div>
                             </div>
                         </div>

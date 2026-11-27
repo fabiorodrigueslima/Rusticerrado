@@ -6522,3 +6522,118 @@ ul {
 .carrinho-item-indisponivel {
   opacity: 0.75;
 }
+
+/* =========================
+   PÁGINA PERSONALIZADOS
+========================= */
+.personalizados-beneficios h2,
+.personalizados-exemplos h2,
+.personalizados-form h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.beneficio-card {
+  background: var(--white);
+  border: 1px solid var(--wood-border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.beneficio-icon {
+  font-size: 32px;
+  color: var(--secondary);
+  margin-bottom: 12px;
+}
+
+.beneficio-card h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.beneficio-card p {
+  color: var(--text-light);
+}
+
+.personalizados-container {
+  display: grid;
+  gap: 56px;
+}
+
+.exemplos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  justify-content: center;
+  gap: 24px;
+}
+
+.exemplo-card {
+  background: var(--white);
+  border: 1px solid var(--wood-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.exemplo-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.exemplo-card h4 {
+  font-size: 18px;
+  margin: 16px 16px 6px;
+}
+
+.exemplo-card p {
+  margin: 0 16px 18px;
+  color: var(--text-light);
+  font-size: 15px;
+}
+
+.personalizados-form {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--wood-border);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.form-subtitle {
+  text-align: center;
+  color: var(--text-light);
+  margin-bottom: 28px;
+}
+
+.form-info {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: var(--wood-soft);
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+@media (max-width: 600px) {
+  .personalizados-form {
+    padding: 24px 18px;
+  }
+
+  .personalizados-beneficios h2,
+  .personalizados-exemplos h2,
+  .personalizados-form h2 {
+    font-size: 26px;
+  }
+}

@@ -106,18 +106,6 @@ export default function Home() {
                         <p>
                             Criamos peças únicas com qualidade e acabamento profissional.
                         </p>
-
-                        <div className="sobre-stats">
-                            <div>
-                                <strong>+500</strong>
-                                <span>Peças Criadas</span>
-                            </div>
-
-                            <div>
-                                <strong>100%</strong>
-                                <span>Clientes Satisfeitos</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
